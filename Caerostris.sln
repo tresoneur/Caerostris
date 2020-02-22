@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris", "Caerostris.csproj", "{CD99009B-193A-4F09-B01F-8A3B719C510B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAF3A9BB-2EF5-40EC-B1AB-9D3C40D268DC}
+	EndGlobalSection
+EndGlobal
