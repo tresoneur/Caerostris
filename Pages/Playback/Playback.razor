@@ -1,0 +1,22 @@
+﻿@page "/"
+
+@inject SpotifyService Spotify
+
+
+
+<div class="d-flex flex-column h-100">
+    <div>
+        <h3>Playback state for: @username</h3>
+    </div>
+
+    <PlaybackBar />
+</div>
+
+@code{
+    private string username = "unknown";
+
+    protected override async Task OnInitializedAsync()
+    {
+        username = await Spotify.GetUsername();
+    }
+}

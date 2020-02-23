@@ -1,0 +1,89 @@
+﻿@using System.Text
+
+@inject SpotifyService Spotify
+
+<div class="mt-auto px-3 playbackbar">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div class="d-flex flex-column justify-content-center">
+            <div><h4>@GetTrackTitle()</h4></div>
+            <div><p>@GetArtist()</p></div>
+        </div>
+        <div class="d-flex flex-row align-items-center">
+            <button type="button" class="btn btn-outline-light border-0 px-2 m-2">
+                <i class="material-icons md-24">skip_previous</i>
+            </button>
+
+            <button @onclick="PlayPauseButtonClick" type="button" class="btn btn-outline-light px-2 m-2">
+                @if (IsPlaying())
+                {
+                    <i class="material-icons md-36">pause</i>
+                }
+                else
+                {
+                    <i class="material-icons md-36">play_arrow</i>
+                }
+            </button>
+
+            <button type="button" class="btn btn-outline-light border-0 px-2 m-2">
+                <i class="material-icons md-24">skip_next</i>
+            </button>
+        </div>
+        <div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    private PlaybackContext? playback { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Spotify.PlaybackContextChanged +=
+            (p) => { playback = p; StateHasChanged(); };
+    }
+
+    private async void PlayPauseButtonClick()
+    {
+        if (!(playback is null))
+            if (IsPlaying())
+                await Spotify.Pause();
+            else
+                await Spotify.Play();
+    }
+
+    // TODO: Migrate to resource helper
+    private string GetTrackTitle()
+    {
+        if (playback is null)
+            return LoadingMessage();
+        else if (playback.Item is null)
+            return UnavailableMessage("track");
+        else
+            return playback.Item.Name;
+    }
+
+    private string GetArtist()
+    {
+        if (playback is null)
+            return LoadingMessage();
+        else if (playback.Item is null)
+            return string.Empty;
+        else
+            return FormatArtists(playback.Item.Artists);
+    }
+
+    private string UnavailableMessage(string kind) => $"Current {kind} unavailable";
+
+    private string LoadingMessage() => "Loading...";
+
+    private string FormatArtists(List<SimpleArtist> artists)
+    {
+        const string delimiter = ", ";
+        var builder = new StringBuilder();
+        artists.ForEach(artist => { builder.Append($"{artist.Name}{delimiter}"); });
+        return builder.ToString().Substring(0, builder.Length - delimiter.Length);
+    }
+
+    private bool IsPlaying() => playback?.IsPlaying ?? false;
+}
