@@ -1,0 +1,17 @@
+﻿@page "/callback"
+
+@using Caerostris.Services.Spotify
+
+@inject SpotifyService Spotify
+
+
+You should be getting redirected soon...
+
+
+@code 
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await Spotify.ContinueAuthWithImplicitGrantOnCallback();
+    }
+}

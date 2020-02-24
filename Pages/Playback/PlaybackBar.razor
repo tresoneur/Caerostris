@@ -2,9 +2,10 @@
 
 @inject SpotifyService Spotify
 
+
 <div class="mt-auto px-3 playbackbar">
     <div class="d-flex flex-row justify-content-between align-items-center">
-        <div class="d-flex flex-column justify-content-center">
+        <div class="d-flex flex-column justify-content-start track-metadata">
             <div><h4>@GetTrackTitle()</h4></div>
             <div><p>@GetArtist()</p></div>
         </div>
@@ -34,7 +35,9 @@
     </div>
 </div>
 
-@code {
+
+@code 
+{
     private PlaybackContext? playback { get; set; }
 
     protected override void OnInitialized()
@@ -51,6 +54,12 @@
             else
                 await Spotify.Play();
     }
+
+    private async void SkipToNextButtonClick() => 
+        await Spotify.Next();
+
+    private async void SkipToPreviousButtonClick() =>
+        await Spotify.Previous();
 
     // TODO: Migrate to resource helper
     private string GetTrackTitle()

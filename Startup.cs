@@ -1,3 +1,5 @@
+using Blazor.Extensions.Storage;
+using Blazored.Modal;
 using Caerostris.Services.Spotify;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +10,9 @@ namespace Caerostris
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            // The dependency injection module will take care of the Dispose() call
-            services.AddSingleton<SpotifyService>();
+            services.AddStorage();
+            services.AddBlazoredModal();
+            services.AddSpotify();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

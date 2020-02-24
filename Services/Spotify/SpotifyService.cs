@@ -1,4 +1,5 @@
-﻿using SpotifyAPI.Web;
+﻿using Caerostris.Services.Spotify.Auth;
+using SpotifyAPI.Web;
 using SpotifyAPI.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -7,30 +8,24 @@ using System.Threading.Tasks;
 
 namespace Caerostris.Services.Spotify
 {
+    /// <remarks>
+    /// Choose the 'singleton' instantiation mode when using Dependency Injection. The internal state of the class was devised with a per session instantiation policy in mind.
+    /// </remarks>
     public sealed partial class SpotifyService : IDisposable
     {
         private SpotifyWebAPI api;
-        private Proxy dispatcher;
+        private SpotifyWebAPIProxy dispatcher;
 
-        private System.Threading.Timer playbackContextPollingTimer;
-        public event Action<PlaybackContext>? PlaybackContextChanged;
 
-        public SpotifyService()
+        #pragma warning disable CS8618 // Partial constructors aren't a thing, so the initalization of these attributes happens in the Initialize...() methods.
+        public SpotifyService(ImplicitGrantAuthManager injectedAuthManager)
+        #pragma warning restore CS8618
         {
-            api = new SpotifyWebAPI
-            {
-                AccessToken = "BQBRAeKxrTaL0I6I9t2PLXzhjHJW07EdK_4E8QEu3iifw1sRiZ4sJDWIvKwN0MxkKdb7vfvLsMD-EJfTnfOkmlRHUpHx6D8XXNIlNfTSd1BFb302CsbW5rYmcSh1JujPUzuYLo4QdstZUuHIZrxd5y6e87oPsKZqpbUts2Sne6LoZbJOYDnlOkN20wD4hzxpwOGp5kXT8vqHl1plJGW-FCZ15FfISe-mRpZATnb_Gb0MGH6ipZAiBwq1NuOt6PDKM1pAoHYkR3rd",
-                TokenType = "Bearer"
-            };
+            api = new SpotifyWebAPI();
+            dispatcher = new SpotifyWebAPIProxy(api);
 
-            dispatcher = new Proxy(api);
-
-            playbackContextPollingTimer = new System.Threading.Timer(
-                callback: async _ => { await GetPlayback(); },
-                state: null,
-                dueTime: 0,
-                period: 10000
-            );
+            InitializeAuth(injectedAuthManager);
+            InitializePlayback();
         }
 
         public async Task<string> GetUsername()
@@ -41,12 +36,10 @@ namespace Caerostris.Services.Spotify
                 : profile.DisplayName;
         }
 
-        private void FirePlaybackContextChanged(PlaybackContext playback) => 
-            PlaybackContextChanged?.Invoke(playback);
-
         public void Dispose()
         {
             playbackContextPollingTimer.Dispose();
+            authPollingTimer.Dispose();
             api.Dispose();
         }
     }

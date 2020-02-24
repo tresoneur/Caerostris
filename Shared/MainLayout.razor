@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Modal
+@using Caerostris.Pages.Auth
+
+@inherits LayoutComponentBase
 
 <div class="sidebar">
     <NavMenu />
@@ -15,3 +18,6 @@
         @Body
     </div>
 </div>
+
+<AuthDaemon />
+<BlazoredModal />

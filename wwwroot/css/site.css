@@ -235,3 +235,10 @@ app {
     .playbackbar * {
         margin: 0;
     }
+
+    .playbackbar .track-metadata {
+        width: 400px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }

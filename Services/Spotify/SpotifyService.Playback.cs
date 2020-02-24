@@ -8,10 +8,23 @@ namespace Caerostris.Services.Spotify
 {
     public sealed partial class SpotifyService
     {
+        private System.Threading.Timer playbackContextPollingTimer;
+        public event Action<PlaybackContext>? PlaybackContextChanged;
+
+        private void InitializePlayback()
+        {
+            playbackContextPollingTimer = new System.Threading.Timer(
+                callback: async _ => { await GetPlayback(); },
+                state: null,
+                dueTime: 0,
+                period: 10000
+            );
+        }
+
         public async Task<PlaybackContext> GetPlayback()
         {
             var playback = await dispatcher.GetPlayback();
-            FirePlaybackContextChanged(playback);
+            PlaybackContextChanged?.Invoke(playback);
             return playback;
         }
 
@@ -31,6 +44,6 @@ namespace Caerostris.Services.Spotify
         {
             await action();
             await dispatcher.GetPlayback();
-        }
+        }            
     }
 }

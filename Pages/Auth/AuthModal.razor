@@ -1,0 +1,18 @@
+﻿@using Caerostris.Services.Spotify
+
+@inject SpotifyService Spotify
+@inject NavigationManager NavManager
+
+
+<p>Note: this app requires you to connect a Spotify Premium account.</p>
+
+<button @onclick="OnConnectAccountButtonClick" type="button" class="btn btn-primary ml-auto">Connect account</button>
+
+
+@code
+{
+    private async Task OnConnectAccountButtonClick()
+    {
+        await Spotify.StartAuthWithImplicitGrant(NavManager.ToAbsoluteUri("/callback").ToString());
+    }
+}

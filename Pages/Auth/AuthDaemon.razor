@@ -1,0 +1,47 @@
+﻿@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@using Caerostris.Services.Spotify
+
+@inject SpotifyService Spotify
+@inject IModalService ModalService
+
+
+@code
+{
+    /// <summary>
+    /// The AuthDaemon component is responsible for orchestrating the user auth process.
+    /// </summary>
+    // TODO: Display error messages
+
+    protected override async Task OnInitializedAsync()
+    {
+        Spotify.AuthStateChanged += OnAuthStateChanged;
+
+        // The event won't fire if the user hasn't connected their account yet.
+        // Check for auth state right away.
+        if (!(await Spotify.AuthGranted()))
+            OnAuthStateChanged(false);
+    }
+
+    private void OnAuthStateChanged(bool state)
+    {
+        if (!state)
+            ShowModal();
+        else
+            CloseModal();
+    }
+
+    private void ShowModal()
+    {
+        var options = new ModalOptions()
+        {
+            HideCloseButton = true,
+            DisableBackgroundCancel= true
+        };
+
+        ModalService.Show<AuthModal>(title: "Spotify authentication needed", options);
+    }
+
+    private void CloseModal() => ModalService.Cancel();
+}
