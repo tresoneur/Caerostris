@@ -42,6 +42,7 @@ namespace Caerostris.Services.Spotify.Auth
                 builder.Append($"&scope={SpotifyAPI.Web.Util.GetStringAttribute(scope, separator: " ")}");
             builder.Append($"&redirect_uri={redirectURI}");
             builder.Append($"&state={state.State}");
+            builder.Append("&show_dialog=true"); // Spotify won't show the dialog by default even if the request contains new scopes
 
             navigationManager.NavigateTo(builder.ToString(), forceLoad: true);
         }

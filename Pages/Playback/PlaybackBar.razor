@@ -1,16 +1,24 @@
-﻿@using System.Text
+﻿@using System.Globalization;
+@using System.Text
+
 
 @inject SpotifyService Spotify
 
 
-<div class="mt-auto px-3 playbackbar">
-    <div class="d-flex flex-row justify-content-between align-items-center">
+<div class="mt-auto playbackbar">
+    <div class="progress w-100" style="height: 4px;">
+        <div class="progress-bar" style="width: @(progressPercent.ToString("F2", CultureInfo.InvariantCulture))%;"></div>
+    </div>
+    <div class="d-flex flex-row justify-content-between align-items-center px-3">
+
         <div class="d-flex flex-column justify-content-start track-metadata">
-            <div><h4>@GetTrackTitle()</h4></div>
-            <div><p>@GetArtist()</p></div>
+            <div><h4 class="track-title">@GetTrackTitle()</h4></div>
+            <div><p class="track-artist">@GetArtist()</p></div>
         </div>
+
         <div class="d-flex flex-row align-items-center">
-            <button type="button" class="btn btn-outline-light border-0 px-2 m-2">
+
+            <button @onclick="SkipToPreviousButtonClick" type="button" class="btn btn-outline-light border-0 px-2 m-2">
                 <i class="material-icons md-24">skip_previous</i>
             </button>
 
@@ -25,61 +33,91 @@
                 }
             </button>
 
-            <button type="button" class="btn btn-outline-light border-0 px-2 m-2">
+            <button @onclick="SkipToNextButtonClick" type="button" class="btn btn-outline-light border-0 px-2 m-2">
                 <i class="material-icons md-24">skip_next</i>
             </button>
+
         </div>
-        <div>
+
+        <div class="playback-extra-controls">
 
         </div>
     </div>
 </div>
 
 
-@code 
+@code
 {
-    private PlaybackContext? playback { get; set; }
+    private PlaybackContext? playbackContext { get; set; }
+    private double progressPercent = 0;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Spotify.PlaybackContextChanged +=
-            (p) => { playback = p; StateHasChanged(); };
+        Spotify.PlaybackContextChanged += ContextChanged;
+
+        Spotify.PlaybackDisplayUpdate += UpdateDisplay;
+
+
+        if(await Spotify.AuthGranted())
+            playbackContext = await Spotify.GetPlayback();
+    }
+
+    private async void ContextChanged(PlaybackContext context)
+    {
+        await InvokeAsync(() =>
+        {
+            playbackContext = context;
+            StateHasChanged();
+        });
+    }
+
+    private async void UpdateDisplay(int progressMs)
+    {
+        await InvokeAsync(() =>
+        {
+            if (playbackContext is null || playbackContext.Item is null)
+                progressPercent = 0;
+            else
+                progressPercent = ((double)progressMs / (double)playbackContext.Item.DurationMs) * 100d;
+
+            StateHasChanged();
+        });
     }
 
     private async void PlayPauseButtonClick()
     {
-        if (!(playback is null))
+        if (!(playbackContext is null))
             if (IsPlaying())
                 await Spotify.Pause();
             else
                 await Spotify.Play();
     }
 
-    private async void SkipToNextButtonClick() => 
+    private async void SkipToNextButtonClick() =>
         await Spotify.Next();
 
     private async void SkipToPreviousButtonClick() =>
         await Spotify.Previous();
 
-    // TODO: Migrate to resource helper
+    // TODO: Migrate to SpotifyService as extensions
     private string GetTrackTitle()
     {
-        if (playback is null)
+        if (playbackContext is null)
             return LoadingMessage();
-        else if (playback.Item is null)
+        else if (playbackContext.Item is null)
             return UnavailableMessage("track");
         else
-            return playback.Item.Name;
+            return playbackContext.Item.Name;
     }
 
     private string GetArtist()
     {
-        if (playback is null)
+        if (playbackContext is null)
             return LoadingMessage();
-        else if (playback.Item is null)
+        else if (playbackContext.Item is null || playbackContext.Item.Artists is null)
             return string.Empty;
         else
-            return FormatArtists(playback.Item.Artists);
+            return FormatArtists(playbackContext.Item.Artists);
     }
 
     private string UnavailableMessage(string kind) => $"Current {kind} unavailable";
@@ -94,5 +132,5 @@
         return builder.ToString().Substring(0, builder.Length - delimiter.Length);
     }
 
-    private bool IsPlaying() => playback?.IsPlaying ?? false;
+    private bool IsPlaying() => playbackContext?.IsPlaying ?? false;
 }

@@ -15,7 +15,7 @@ namespace Caerostris.Services.Spotify
     {
         private SpotifyWebAPI api;
         private SpotifyWebAPIProxy dispatcher;
-
+               
 
         #pragma warning disable CS8618 // Partial constructors aren't a thing, so the initalization of these attributes happens in the Initialize...() methods.
         public SpotifyService(ImplicitGrantAuthManager injectedAuthManager)
@@ -39,6 +39,7 @@ namespace Caerostris.Services.Spotify
         public void Dispose()
         {
             playbackContextPollingTimer.Dispose();
+            playbackUpdateTimer.Dispose();
             authPollingTimer.Dispose();
             api.Dispose();
         }

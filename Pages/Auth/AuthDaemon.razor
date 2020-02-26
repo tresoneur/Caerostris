@@ -9,10 +9,10 @@
 
 @code
 {
-    /// <summary>
-    /// The AuthDaemon component is responsible for orchestrating the user auth process.
-    /// </summary>
-    // TODO: Display error messages
+        /// <summary>
+        /// The AuthDaemon component is responsible for orchestrating the user auth process.
+        /// </summary>
+        // TODO: Display error messages
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,12 +24,15 @@
             OnAuthStateChanged(false);
     }
 
-    private void OnAuthStateChanged(bool state)
+    private async void OnAuthStateChanged(bool state)
     {
-        if (!state)
-            ShowModal();
-        else
-            CloseModal();
+        await InvokeAsync(() =>
+        {
+            if (!state)
+                ShowModal();
+            else
+                CloseModal();
+        });
     }
 
     private void ShowModal()

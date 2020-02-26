@@ -4,21 +4,54 @@
 
 
 
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100 playback-main">
     <div>
-        <h3>Playback state for: @username</h3>
+        <p class="p-3">Playback state for: @(username ?? "Loading...")</p>
     </div>
-
+    <div class="playback-cover-image-container">
+        @if (!(coverImage is null))
+        {
+            <img class="playback-cover-image" src="@coverImage" style="height: @(coverImagMaxHeight)px; width: auto;"/>
+        }
+    </div>
     <PlaybackBar />
 </div>
 
 
 @code
 {
-    private string username = "unknown";
+    private string? username;
+    private string? coverImage;
+    private int coverImagMaxHeight = 0, coverImageMaxWidth = 0;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        username = await Spotify.GetUsername();
+        Spotify.PlaybackContextChanged += OnPlaybackContextChanged;
+
+        Spotify.AuthStateChanged += OnAuthAcquired;
+
+        if(await Spotify.AuthGranted())
+            username = await Spotify.GetUsername();
+    }
+
+    private async void OnPlaybackContextChanged(PlaybackContext playback)
+    {
+        await InvokeAsync(() =>
+        {
+            var image = playback?.Item?.Album?.Images?.FirstOrDefault();
+            coverImage = image?.Url;
+            coverImageMaxWidth = image?.Width ?? 0;
+            coverImagMaxHeight = image?.Height ?? 0;
+
+            StateHasChanged();
+        });
+    }
+
+    private async void OnAuthAcquired(bool _)
+    {
+        await InvokeAsync(async () =>
+        {
+            username = await Spotify.GetUsername();
+        });
     }
 }
