@@ -1,4 +1,6 @@
 ﻿using Caerostris.Services.Spotify.Auth;
+using Caerostris.Services.Spotify.Player;
+using Caerostris.Services.Spotify.Web;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Models;
 using System;
@@ -14,17 +16,17 @@ namespace Caerostris.Services.Spotify
     public sealed partial class SpotifyService : IDisposable
     {
         private SpotifyWebAPI api;
-        private SpotifyWebAPIProxy dispatcher;
-               
+        private SpotifyWebAPIManager dispatcher;
 
-        #pragma warning disable CS8618 // Partial constructors aren't a thing, so the initalization of these attributes happens in the Initialize...() methods.
-        public SpotifyService(ImplicitGrantAuthManager injectedAuthManager)
+#pragma warning disable CS8618 // Partial constructors aren't a thing, so the initalizations of these attributes happen in the Initialize...() methods.
+        public SpotifyService(ImplicitGrantAuthManager injectedAuthManager, WebPlaybackSDKManager injectedPlayer)
         #pragma warning restore CS8618
         {
             api = new SpotifyWebAPI();
-            dispatcher = new SpotifyWebAPIProxy(api);
+            dispatcher = new SpotifyWebAPIManager(api);
 
             InitializeAuth(injectedAuthManager);
+            InitializePlayer(injectedPlayer);
             InitializePlayback();
         }
 
@@ -35,6 +37,15 @@ namespace Caerostris.Services.Spotify
                 ? profile.Id 
                 : profile.DisplayName;
         }
+
+        private async Task OnError(string message)
+        {
+            Console.WriteLine($"SpotifyService: Temporary error handler: Received error: {message}");
+            await Task.CompletedTask;
+        }
+
+        private void Log(string message) =>
+            Console.WriteLine($"SpotifyService: {message}");
 
         public void Dispose()
         {

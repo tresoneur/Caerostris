@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Models;
 
-namespace Caerostris.Services.Spotify
+namespace Caerostris.Services.Spotify.Web
 {
     /// <remarks>
     /// This class is not intented to follow an actual proxy pattern, because most of the functionality offered by SpotifyWebAPI is never used by this service.
     /// The chief goal of this class is to provide in-memory and LocalStorage caching as well as to automatically supply parameters to SpotifyWebAPI to enable e.g. Track Relinking.
     /// </remarks>
-    public class SpotifyWebAPIProxy
+    public class SpotifyWebAPIManager
     {
         private SpotifyWebAPI api;
 
-        public SpotifyWebAPIProxy(SpotifyWebAPI spotifyWebAPI)
+        public SpotifyWebAPIManager(SpotifyWebAPI spotifyWebAPI)
         {
             api = spotifyWebAPI;
         }
@@ -48,6 +48,16 @@ namespace Caerostris.Services.Spotify
 
         public async Task<ErrorResponse> SkipPlaybackToPrevious() =>
             await api.SkipPlaybackToPreviousAsync();
+
+        public async Task<ErrorResponse> SeekPlayback(int positionMs) =>
+            await api.SeekPlaybackAsync(positionMs);
+
+        public async Task<AvailabeDevices> GetDevices() =>
+            await api.GetDevicesAsync();
+
+        public async Task<ErrorResponse> TransferPlayback(string deviceID, bool play = false) =>
+            await api.TransferPlaybackAsync(deviceID, play);
+
 
         #region Comfort
 

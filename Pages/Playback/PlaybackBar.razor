@@ -57,7 +57,6 @@
 
         Spotify.PlaybackDisplayUpdate += UpdateDisplay;
 
-
         if(await Spotify.AuthGranted())
             playbackContext = await Spotify.GetPlayback();
     }

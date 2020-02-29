@@ -57,6 +57,7 @@ namespace Caerostris.Services.Spotify
                     | Scope.UserReadEmail
                     | Scope.UserReadPlaybackState
                     | Scope.UserModifyPlaybackState
+                    | Scope.Streaming
             );
         }
 
@@ -86,13 +87,13 @@ namespace Caerostris.Services.Spotify
         /// </summary>
         public async Task<bool> AuthGranted()
         {
-            return (!((await authManager.GetCachedToken()) is null));
+            return (!((await GetAuthToken()) is null));
         }
 
         private async Task CheckAuth()
         {
-            string? token = await authManager.GetCachedToken();
-            if(!(token is null))
+            string? token = await GetAuthToken();
+            if (!(token is null))
                 api.AccessToken = token;
 
             bool authGranted = (await AuthGranted());
@@ -102,5 +103,8 @@ namespace Caerostris.Services.Spotify
                 AuthStateChanged?.Invoke(authGranted);
             }
         }
+
+        private async Task<string?> GetAuthToken() =>
+            await authManager.GetToken();
     }
 }

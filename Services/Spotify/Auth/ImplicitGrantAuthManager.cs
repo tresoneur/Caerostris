@@ -51,18 +51,14 @@ namespace Caerostris.Services.Spotify.Auth
         /// Retrieves the cached token from LocalStorage.
         /// </summary>
         /// <returns>The access token of the cached token, if there is a valid token. Null otherwise</returns>
-        public async Task<string?> GetCachedToken()
+        public async Task<string?> GetToken()
         {
             var cachedToken = await localStorage.GetItem<ImplicitGrantToken?>(nameof(ImplicitGrantToken));
 
             if (cachedToken is null)
                 return null;
 
-            var expiryDate = DateTime.Parse(cachedToken.Timestamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-            expiryDate = expiryDate.AddSeconds(cachedToken.ExpiresInSec);
-
-            if(expiryDate < DateTime.UtcNow)
+            if(cachedToken.IsExpired())
             {
                 await localStorage.RemoveItem(nameof(ImplicitGrantToken));
                 return null;
@@ -88,19 +84,14 @@ namespace Caerostris.Services.Spotify.Auth
 
             await localStorage.RemoveItem(nameof(ImplicitGrantWorkflow));
 
-            var timestamp = DateTime.UtcNow.ToString("o");
+            
             var expiresInSec = int.Parse(GetQueryParam("expires_in"));
             var accessToken = GetQueryParam("access_token");
 
             if (accessToken is null)
                 return null;
 
-            var token = new ImplicitGrantToken()
-            {
-                Timestamp = timestamp,
-                ExpiresInSec = expiresInSec,
-                AccessToken = accessToken
-            };
+            var token = new ImplicitGrantToken(expiresInSec, accessToken);
 
             await localStorage.SetItem(nameof(ImplicitGrantToken), token);
 

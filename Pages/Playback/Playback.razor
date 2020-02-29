@@ -11,7 +11,7 @@
     <div class="playback-cover-image-container">
         @if (!(coverImage is null))
         {
-            <img class="playback-cover-image" src="@coverImage" style="height: @(coverImagMaxHeight)px; width: auto;"/>
+            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
         }
     </div>
     <PlaybackBar />
@@ -22,16 +22,17 @@
 {
     private string? username;
     private string? coverImage;
-    private int coverImagMaxHeight = 0, coverImageMaxWidth = 0;
 
     protected async override Task OnInitializedAsync()
     {
         Spotify.PlaybackContextChanged += OnPlaybackContextChanged;
 
-        Spotify.AuthStateChanged += OnAuthAcquired;
+        Spotify.AuthStateChanged += (bool acquired) => { if (acquired) OnAuthAcquired(); };
 
-        if(await Spotify.AuthGranted())
-            username = await Spotify.GetUsername();
+        if (await Spotify.AuthGranted())
+        {
+            await FillUsername();
+        }
     }
 
     private async void OnPlaybackContextChanged(PlaybackContext playback)
@@ -40,18 +41,22 @@
         {
             var image = playback?.Item?.Album?.Images?.FirstOrDefault();
             coverImage = image?.Url;
-            coverImageMaxWidth = image?.Width ?? 0;
-            coverImagMaxHeight = image?.Height ?? 0;
 
             StateHasChanged();
         });
     }
 
-    private async void OnAuthAcquired(bool _)
+    private async void OnAuthAcquired()
     {
         await InvokeAsync(async () =>
         {
-            username = await Spotify.GetUsername();
+            await FillUsername();
         });
+    }
+
+    private async Task FillUsername()
+    {
+        username = await Spotify.GetUsername();
+        StateHasChanged();
     }
 }

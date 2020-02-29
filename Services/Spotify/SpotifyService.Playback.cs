@@ -47,30 +47,54 @@ namespace Caerostris.Services.Spotify
 
         /// <summary>
         /// Retrieves the current state of playback. 
-        /// This method will never return a cached value, so each call results in its own corresponding fetch request. 
+        /// This method will never return a cached value, so each call results in its own corresponding fetch request, even if the playback is local.
         /// Use with care: for regular updates, subscribe to <seealso cref="PlaybackContextChanged"/> instead.
         /// </summary>
         /// <returns>The newly acquired PlaybackContext</returns>
-        public async Task<PlaybackContext> GetPlayback()
-        {
-            return await dispatcher.GetPlayback();
-        }
+        public async Task<PlaybackContext> GetPlayback() =>
+            await dispatcher.GetPlayback();
+
+        public async Task<AvailabeDevices> GetDevices() =>
+            await dispatcher.GetDevices();
+
+        public async Task TransferPlayback(string deviceID) =>
+            await dispatcher.TransferPlayback(deviceID, play: lastKnownPlayback?.IsPlaying ?? false);
 
         public async Task Play() =>
-            await DoPlaybackOperation(dispatcher.ResumePlayback);
+            await DoPlaybackOperation(LocalPlay, dispatcher.ResumePlayback);
 
         public async Task Pause() =>
-            await DoPlaybackOperation(dispatcher.PausePlayback);
+            await DoPlaybackOperation(LocalPause, dispatcher.PausePlayback);
 
         public async Task Next() =>
-            await DoPlaybackOperation(dispatcher.SkipPlaybackToNext);
+            await DoPlaybackOperation(LocalNext, dispatcher.SkipPlaybackToNext);
 
         public async Task Previous() => 
-            await DoPlaybackOperation(dispatcher.SkipPlaybackToPrevious);
+            await DoPlaybackOperation(LocalPrevious, dispatcher.SkipPlaybackToPrevious);
 
-        private async Task DoPlaybackOperation(Func<Task> action)
+        public async Task Seek(int positionMs) =>
+            await DoPlaybackOperation(
+                async () => await LocalSeek(positionMs),
+                async () => await dispatcher.SeekPlayback(positionMs));
+
+        private async Task DoPlaybackOperation(Func<Task> local, Func<Task> remote)
+        {
+            if (isPlaybackLocal)
+                await DoLocalPlaybackOperation(local);
+            else
+                await DoRemotePlaybackOperation(remote);
+        }
+
+        private async Task DoLocalPlaybackOperation(Func<Task> action)
         {
             await action();
+            // The Spotify Web Playback SDK will issue a state update event. The PlaybackContextChanged event is fired from our callback function.
+        }
+
+        private async Task DoRemotePlaybackOperation(Func<Task> action)
+        {
+            await action();
+            await Task.Delay(100); /// The Spotify Web API sends incorrect results when queried too soon after a playback operation.
             FirePlaybackContextChanged(await dispatcher.GetPlayback());
         }
 

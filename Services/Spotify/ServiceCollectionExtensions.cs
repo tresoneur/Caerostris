@@ -1,4 +1,5 @@
 ﻿using Caerostris.Services.Spotify.Auth;
+using Caerostris.Services.Spotify.Player;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Caerostris.Services.Spotify
 
             // Injected SpotifyService dependencies
             services.AddSingleton<ImplicitGrantAuthManager>();
+            services.AddSingleton<WebPlaybackSDKManager>();
 
             return services;
         }
