@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SpotifyAPI.Web;
+using SpotifyAPI.Web.Enums;
 using SpotifyAPI.Web.Models;
 
 namespace Caerostris.Services.Spotify.Web
@@ -58,6 +59,14 @@ namespace Caerostris.Services.Spotify.Web
         public async Task<ErrorResponse> TransferPlayback(string deviceID, bool play = false) =>
             await api.TransferPlaybackAsync(deviceID, play);
 
+        public async Task<ErrorResponse> SetShuffle(bool shuffle) =>
+            await api.SetShuffleAsync(shuffle);
+
+        public async Task<ErrorResponse> SetRepeatMode(RepeatState state) =>
+            await api.SetRepeatModeAsync(state);
+
+        public async Task<ErrorResponse> SetVolume(int volumePercent) =>
+            await api.SetVolumeAsync(volumePercent);
 
         #region Comfort
 

@@ -39,7 +39,7 @@
     {
         await InvokeAsync(() =>
         {
-            var image = playback?.Item?.Album?.Images?.FirstOrDefault();
+            var image = playback?.Item?.Album?.Images?.OrderBy((img) => -img.Height).FirstOrDefault();
             coverImage = image?.Url;
 
             StateHasChanged();

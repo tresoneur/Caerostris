@@ -43,7 +43,7 @@ namespace Caerostris.Services.Spotify.Player
         /// This method may be called several times. This resets the inner state of the instance and all JS entities associated with it.
         /// </summary>
         /// <param name="authTokenCallback">Function to call to acquire a valid OAuth token for streaming</param>
-        /// <param name=""></param>
+        /// <param name="">TODO</param>
         /// <returns></returns>
         public async Task Initialize(
             Func<Task<string?>> authTokenCallback, 
@@ -95,6 +95,9 @@ namespace Caerostris.Services.Spotify.Player
 
         public async Task Seek(int positionMs) =>
             await JSRuntime.InvokeVoidAsync($"{JSWrapper}.Seek", positionMs);
+
+        public async Task SetVolume(int volumePercent) =>
+            await JSRuntime.InvokeVoidAsync($"{JSWrapper}.SetVolume", volumePercent / 100d);
 
         public void Dispose()
         {

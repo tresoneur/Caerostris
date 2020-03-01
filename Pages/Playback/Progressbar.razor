@@ -1,0 +1,45 @@
+﻿@using System.Globalization;
+
+
+@inject IJSRuntime JSRuntime
+
+
+<div id=@ID
+     class="w-100 progressbar-background"
+     @onclick=@OnProgressbarClick>
+
+    <div class="progressbar-progress"
+         style="width: @(Percent.ToString("F2", CultureInfo.InvariantCulture))%;">
+    </div>
+
+</div>
+
+
+@code
+{
+    [Parameter]
+    public Func<double, Task>? OnClick { get; set; }
+
+    [Parameter]
+    public string? ID { get; set; }
+
+    [Parameter]
+    public double Percent { get; set; }
+
+    private const string JSHelper = "SpotifyService";
+
+
+    private async void OnProgressbarClick(MouseEventArgs e)
+    {
+        /// I refrain from commenting on the current state of JSInterop, but I had to write JS functions to get some attributes of a DOM object
+        double progressbarWidth = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetWidth", $"#{ID}");
+        double progressbarPosition = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetClientPositionX", $"#{ID}");
+
+        double position = e.ClientX - progressbarPosition;
+        double progress = position / progressbarWidth;
+
+        if(!(OnClick is null))
+            await OnClick(progress);
+    }
+
+}

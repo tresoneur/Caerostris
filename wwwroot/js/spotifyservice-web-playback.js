@@ -52,6 +52,7 @@ class WebPlaybackSDKWrapper {
         this.Next = () => this.Player.nextTrack();
         this.Previous = () => this.Player.previousTrack();
         this.Seek = (position) => this.Player.seek(position);
+        this.SetVolume = (volume) => this.Player.setVolume(volume);
 
         // Info
         this.Player.addListener('player_state_changed', state => {
@@ -70,7 +71,7 @@ class WebPlaybackSDKWrapper {
         });
 
         this.Player.addListener('not_ready', () => {
-            // TODO: event handler 
+            this.OnError({ message: "Local device has gone offline. Re-run WebPlaybackSDKManager initialization." })
             console.log(this.LoggingPrefix + 'Device ID has gone offline.');
         });
 
@@ -78,5 +79,5 @@ class WebPlaybackSDKWrapper {
     }
 }
 
-window.SpotifyService = { WebPlaybackSDKWrapper: new WebPlaybackSDKWrapper() };
+window.SpotifyService.WebPlaybackSDKWrapper = new WebPlaybackSDKWrapper();
 window.onSpotifyWebPlaybackSDKReady = () => { /* Pointless requirement of the SDK */ }

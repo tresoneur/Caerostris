@@ -37,15 +37,21 @@ namespace Caerostris.Services.Spotify.Player.Models
 
         public FullTrack ApplyTo(FullTrack track)
         {
-            Album?.ApplyTo(track.Album);
-
-            track.Artists.ForEach((artist) =>
+            /// Sometimes different metadata is supplied by the two different APIs for the exact same track
+            if (!(track.Id.Equals(Id, StringComparison.InvariantCulture)))
             {
-                Artists
-                    .FirstOrDefault((webPlaybackArtist) =>
-                        artist.Name.Equals(webPlaybackArtist.Name, StringComparison.InvariantCulture))
-                    ?.ApplyTo(artist);
-            });
+                Album?.ApplyTo(track.Album);
+
+                track.Artists = Artists
+                    .Select((artist) => 
+                        new SimpleArtist() 
+                        { 
+                            Id = artist.Uri.Split(':').LastOrDefault(), 
+                            Name = artist.Name, 
+                            Uri = artist.Uri 
+                        })
+                    .ToList();
+            }
 
             track.DurationMs = DurationMs;
             track.Id = Id;

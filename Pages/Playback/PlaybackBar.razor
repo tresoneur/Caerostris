@@ -1,53 +1,72 @@
-﻿@using System.Globalization;
-@using System.Text
+﻿@using Caerostris.Services.Spotify.Web;
+@using SpotifyAPI.Web.Enums;
 
 
 @inject SpotifyService Spotify
 
 
 <div class="mt-auto playbackbar">
-    <div class="progress w-100" style="height: 4px;">
-        <div class="progress-bar" style="width: @(progressPercent.ToString("F2", CultureInfo.InvariantCulture))%;"></div>
-    </div>
+
+    <Progressbar 
+        OnClick=@OnProgressbarClick 
+        ID=@progressbarID 
+        Percent=@progressPercent />
+
     <div class="d-flex flex-row justify-content-between align-items-center px-3">
 
         <div class="d-flex flex-column justify-content-start track-metadata">
-            <div><h4 class="track-title">@GetTrackTitle()</h4></div>
-            <div><p class="track-artist">@GetArtist()</p></div>
+            <div><h4 class="track-title">@((MarkupString)playbackContext.GetTrackTitle(link: true))</h4></div>
+            <div><p class="track-artist">@((MarkupString)playbackContext.GetArtists(links: true))</p></div>
         </div>
 
         <div class="d-flex flex-row align-items-center">
 
-            <button @onclick="SkipToPreviousButtonClick" type="button" class="btn btn-outline-light border-0 px-2 m-2">
-                <i class="material-icons md-24">skip_previous</i>
+            <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
+
+            <button @onclick="OnPlayPauseButtonClick" type="button" class="btn btn-outline-light px-2 m-2">
+                <i class="material-icons md-36">@(playbackContext.IsPlayingOrNull() ? "pause" : "play_arrow")</i>
             </button>
 
-            <button @onclick="PlayPauseButtonClick" type="button" class="btn btn-outline-light px-2 m-2">
-                @if (IsPlaying())
-                {
-                    <i class="material-icons md-36">pause</i>
-                }
-                else
-                {
-                    <i class="material-icons md-36">play_arrow</i>
-                }
-            </button>
-
-            <button @onclick="SkipToNextButtonClick" type="button" class="btn btn-outline-light border-0 px-2 m-2">
-                <i class="material-icons md-24">skip_next</i>
-            </button>
+            <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
 
         </div>
 
-        <div class="playback-extra-controls">
+        <div class="d-flex flex-row justify-content-end align-items-center playback-extra-controls">
+            
+            <SecondaryIndicatorIconButton 
+                OnClick=@OnShuffleButtonClick 
+                Icon="shuffle" 
+                On=playbackContext.GetShuffleState() />
+
+            <SecondaryIndicatorIconButton 
+                OnClick=@OnRepeatButtonClick 
+                Icon=@(playbackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat") 
+                On=@(!(playbackContext.GetRepeatState() == RepeatState.Off)) />
+
+            <SecondaryIndicatorIconButton 
+                OnClick=@OnMuteButtonClick 
+                Icon=@(playbackContext.GetVolumePercent() == 0 ? "volume_off" : "volume_up")
+                On=@(playbackContext.GetVolumePercent() == 0) />
+
+            <div class="w-25 pl-3">
+                <Progressbar 
+                    OnClick=@OnVolumebarClick 
+                    ID=@volumebarID
+                    Percent=@playbackContext.GetVolumePercent() />
+            </div>
 
         </div>
+
     </div>
+
 </div>
 
 
 @code
 {
+    private const string progressbarID = "playbackbar-progressbar";
+    private const string volumebarID = "playbackbar-volumebar";
+
     private PlaybackContext? playbackContext { get; set; }
     private double progressPercent = 0;
 
@@ -74,7 +93,7 @@
     {
         await InvokeAsync(() =>
         {
-            if (playbackContext is null || playbackContext.Item is null)
+            if(!playbackContext.HasValidItem())
                 progressPercent = 0;
             else
                 progressPercent = ((double)progressMs / (double)playbackContext.Item.DurationMs) * 100d;
@@ -83,53 +102,55 @@
         });
     }
 
-    private async void PlayPauseButtonClick()
+    private async void OnPlayPauseButtonClick()
     {
-        if (!(playbackContext is null))
-            if (IsPlaying())
+        if(playbackContext.HasValidItem())
+            if(playbackContext.IsPlaying)
                 await Spotify.Pause();
             else
                 await Spotify.Play();
     }
 
-    private async void SkipToNextButtonClick() =>
-        await Spotify.Next();
-
-    private async void SkipToPreviousButtonClick() =>
-        await Spotify.Previous();
-
-    // TODO: Migrate to SpotifyService as extensions
-    private string GetTrackTitle()
+    private async Task OnSkipToNextButtonClick()
     {
-        if (playbackContext is null)
-            return LoadingMessage();
-        else if (playbackContext.Item is null)
-            return UnavailableMessage("track");
-        else
-            return playbackContext.Item.Name;
+        if(playbackContext.HasValidItem())
+            await Spotify.Next();
     }
 
-    private string GetArtist()
+    private async Task OnSkipToPreviousButtonClick()
     {
-        if (playbackContext is null)
-            return LoadingMessage();
-        else if (playbackContext.Item is null || playbackContext.Item.Artists is null)
-            return string.Empty;
-        else
-            return FormatArtists(playbackContext.Item.Artists);
+        if(playbackContext.HasValidItem())
+            await Spotify.Previous();
     }
 
-    private string UnavailableMessage(string kind) => $"Current {kind} unavailable";
-
-    private string LoadingMessage() => "Loading...";
-
-    private string FormatArtists(List<SimpleArtist> artists)
+    private async Task OnProgressbarClick(double progress)
     {
-        const string delimiter = ", ";
-        var builder = new StringBuilder();
-        artists.ForEach(artist => { builder.Append($"{artist.Name}{delimiter}"); });
-        return builder.ToString().Substring(0, builder.Length - delimiter.Length);
+        if(playbackContext.HasValidItem())
+            await Spotify.Seek(Convert.ToInt32(playbackContext.Item.DurationMs * progress));
     }
 
-    private bool IsPlaying() => playbackContext?.IsPlaying ?? false;
+    private async Task OnMuteButtonClick()
+    {
+        if (!(playbackContext?.Device is null))
+        {
+            if (playbackContext.Device.VolumePercent > 0)
+                await Spotify.SetVolume(0);
+            else
+                await Spotify.SetVolume(50);
+        }
+    }
+
+    private async Task OnVolumebarClick(double progress) =>
+        await Spotify.SetVolume(Convert.ToInt32(progress * 100));
+
+    private async Task OnShuffleButtonClick() =>
+        await Spotify.SetShuffle(!playbackContext.GetShuffleState());
+
+    private async Task OnRepeatButtonClick() =>
+        await Spotify.SetRepeat(
+            (playbackContext.GetRepeatState() == RepeatState.Off)
+                ? RepeatState.Context
+                : (playbackContext.GetRepeatState() == RepeatState.Context)
+                    ? RepeatState.Track
+                    : RepeatState.Off);
 }

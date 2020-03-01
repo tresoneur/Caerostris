@@ -1,4 +1,5 @@
-﻿using SpotifyAPI.Web.Models;
+﻿using SpotifyAPI.Web.Enums;
+using SpotifyAPI.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Caerostris.Services.Spotify
                 callback: async _ => { FirePlaybackContextChanged(await GetPlayback()); },
                 state: null,
                 dueTime: 0,
-                period: 2000
+                period: 1000
             );
 
             playbackUpdateTimer = new System.Threading.Timer(
@@ -61,21 +62,32 @@ namespace Caerostris.Services.Spotify
             await dispatcher.TransferPlayback(deviceID, play: lastKnownPlayback?.IsPlaying ?? false);
 
         public async Task Play() =>
-            await DoPlaybackOperation(LocalPlay, dispatcher.ResumePlayback);
+            await DoPlaybackOperation(player.Play, dispatcher.ResumePlayback);
 
         public async Task Pause() =>
-            await DoPlaybackOperation(LocalPause, dispatcher.PausePlayback);
+            await DoPlaybackOperation(player.Pause, dispatcher.PausePlayback);
 
         public async Task Next() =>
-            await DoPlaybackOperation(LocalNext, dispatcher.SkipPlaybackToNext);
+            await DoPlaybackOperation(player.Next, dispatcher.SkipPlaybackToNext);
 
         public async Task Previous() => 
-            await DoPlaybackOperation(LocalPrevious, dispatcher.SkipPlaybackToPrevious);
+            await DoPlaybackOperation(player.Previous, dispatcher.SkipPlaybackToPrevious);
 
         public async Task Seek(int positionMs) =>
             await DoPlaybackOperation(
-                async () => await LocalSeek(positionMs),
+                async () => await player.Seek(positionMs),
                 async () => await dispatcher.SeekPlayback(positionMs));
+
+        public async Task SetShuffle(bool shuffle) =>
+            await DoRemotePlaybackOperation(async () => await dispatcher.SetShuffle(shuffle));
+
+        public async Task SetRepeat(RepeatState state) =>
+            await DoRemotePlaybackOperation(async () => await dispatcher.SetRepeatMode(state));
+
+        public async Task SetVolume(int volumePercent) =>
+            await DoPlaybackOperation(
+                async () => await player.SetVolume(volumePercent), 
+                async () => await dispatcher.SetVolume(volumePercent));
 
         private async Task DoPlaybackOperation(Func<Task> local, Func<Task> remote)
         {

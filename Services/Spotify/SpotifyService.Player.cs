@@ -25,25 +25,7 @@ namespace Caerostris.Services.Spotify
                 OnPlaybackContextChanged,
                 OnLocalPlayerReady);
 
-            PlaybackContextChanged += (PlaybackContext playback) =>
-            {
-                if (!(playback?.Device?.Id is null))
-                {
-                    bool playbackContextIndicatesLocalPlayback = 
-                        playback.Device.Id.Equals(localDeviceID, StringComparison.InvariantCulture);
-
-                    if (isPlaybackLocal && !playbackContextIndicatesLocalPlayback)
-                    {
-                        isPlaybackLocal = false;
-                        Log("Playback transferred to remote device.");
-                    }
-                    else if(!isPlaybackLocal && playbackContextIndicatesLocalPlayback)
-                    {
-                        isPlaybackLocal = true;
-                        Log("Playback transferred back to local device.");
-                    }
-                }
-            };
+            PlaybackContextChanged += OnDevicePotentiallyChanged;
         }
 
         private void OnPlaybackContextChanged(WebPlaybackState? state)
@@ -60,21 +42,27 @@ namespace Caerostris.Services.Spotify
             localDeviceID = deviceID;
             await TransferPlayback(deviceID);
             isPlaybackLocal = true;
+            Log("Playback automatically transferred to local device.");
         }
 
-        private async Task LocalPlay() => 
-            await player.Play();
+        private void OnDevicePotentiallyChanged(PlaybackContext playback)
+        {
+            if (!(playback?.Device?.Id is null))
+            {
+                bool playbackContextIndicatesLocalPlayback =
+                    playback.Device.Id.Equals(localDeviceID, StringComparison.InvariantCulture);
 
-        private async Task LocalPause() =>
-            await player.Pause();
-       
-        private async Task LocalNext() =>
-            await player.Next();
-        
-        private async Task LocalPrevious() =>
-            await player.Previous();
-
-        private async Task LocalSeek(int positionMs) =>
-            await player.Seek(positionMs);
+                if (isPlaybackLocal && !playbackContextIndicatesLocalPlayback)
+                {
+                    isPlaybackLocal = false;
+                    Log("Playback transferred to remote device.");
+                }
+                else if (!isPlaybackLocal && playbackContextIndicatesLocalPlayback)
+                {
+                    isPlaybackLocal = true;
+                    Log("Playback transferred back to local device.");
+                }
+            }
+        }
     }
 }

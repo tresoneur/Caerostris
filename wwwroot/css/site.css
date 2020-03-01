@@ -17,6 +17,11 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 app {
     position: relative;
     display: flex;
@@ -210,7 +215,7 @@ app {
         font-size: 24px;
         line-height: 0;
         position: relative;
-        top: 8px;
+        top: 6.5px;
     }
 
     .material-icons.md-36 {
@@ -238,6 +243,8 @@ app {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            text-decoration: none;
+            color: white;
         }
 
     .playbackbar .track-title {
@@ -250,8 +257,16 @@ app {
         padding-left: 1px;
     }
 
-    .playbackbar .progress-bar {
+    .playbackbar .progressbar-background {
+        height: 5px;
+        background-color: white;
+        border-radius: 2px;
+    }
+
+    .playbackbar .progressbar-progress {
+        height: 100%;
         background-color: #1996C4;
+        border-radius: 2px;
     }
 
 .playback-main {

@@ -37,8 +37,8 @@ namespace Caerostris.Services.Spotify.Player.Models
                 (RepeatMode == 0
                     ? RepeatState.Off
                     : (RepeatMode == 1
-                        ? RepeatState.Track
-                        : RepeatState.Context));
+                        ? RepeatState.Context
+                        : RepeatState.Track));
 
             context.ShuffleState = ShuffleState;
             if(!(Context is null))
