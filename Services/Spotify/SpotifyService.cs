@@ -16,14 +16,14 @@ namespace Caerostris.Services.Spotify
     public sealed partial class SpotifyService : IDisposable
     {
         private SpotifyWebAPI api;
-        private SpotifyWebAPIManager dispatcher;
+        private WebAPIManager dispatcher;
 
         #pragma warning disable CS8618 // Partial constructors aren't a thing, so the initalizations of these attributes happen in the Initialize...() methods.
         public SpotifyService(ImplicitGrantAuthManager injectedAuthManager, WebPlaybackSDKManager injectedPlayer)
         #pragma warning restore CS8618
         {
             api = new SpotifyWebAPI();
-            dispatcher = new SpotifyWebAPIManager(api);
+            dispatcher = new WebAPIManager(api);
 
             InitializeAuth(injectedAuthManager);
             InitializePlayer(injectedPlayer);

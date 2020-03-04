@@ -119,8 +119,13 @@
 
     private async Task OnSkipToPreviousButtonClick()
     {
-        if(playbackContext.HasValidItem())
-            await Spotify.Previous();
+        if (playbackContext.HasValidItem())
+        {
+            if (playbackContext.ProgressMs < 5 * 1000)
+                await Spotify.Previous();
+            else
+                await Spotify.Seek(0);
+        }
     }
 
     private async Task OnProgressbarClick(double progress)

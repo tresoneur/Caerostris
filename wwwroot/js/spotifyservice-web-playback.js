@@ -37,7 +37,7 @@ class WebPlaybackSDKWrapper {
                             callback(token);
                     });
             },
-            volume: 0.75
+            volume: 1.0
         });
 
         // Errors

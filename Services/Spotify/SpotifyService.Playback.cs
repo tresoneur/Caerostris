@@ -10,17 +10,24 @@ namespace Caerostris.Services.Spotify
 {
     public sealed partial class SpotifyService
     {
+        /// <summary>
+        /// The authoritative PlaybackContext.
+        /// </summary>
         private PlaybackContext? lastKnownPlayback;
         private DateTime? lastKnownPlaybackTimestamp;
 
-        private Timer playbackContextPollingTimer;
+        /// <summary>
+        /// Sometimes the information the Web API supplies lags behind what we already know about the playback, e.g. the user already paused it locally.
+        /// In cases like the above, PlaybackContext updates from the WebAPI are suppressed for a short time.
+        /// </summary>
+        private DateTime webAPISuppressionTimestamp = DateTime.UnixEpoch;
+        private const int webAPISuppressionLengthMs = 2 * 1000;
         
         /// <summary>
         /// Fires when a new PlaybackContext is received from the Spotify API. A <seealso cref="PlaybackDisplayUpdate"/> event is also fired afterwards.
         /// </summary>
         public event Action<PlaybackContext>? PlaybackContextChanged;
-
-        private Timer playbackUpdateTimer;
+        private Timer playbackContextPollingTimer;
 
         /// <summary>
         /// Fires when the display of the PlaybackContext needs to be updated with the supplied arguments.
@@ -28,6 +35,7 @@ namespace Caerostris.Services.Spotify
         /// Suggested use: periodically refresh the UI.
         /// </summary>
         public event Action<int>? PlaybackDisplayUpdate;
+        private Timer playbackUpdateTimer;
 
         private void InitializePlayback()
         {
@@ -47,13 +55,15 @@ namespace Caerostris.Services.Spotify
         }
 
         /// <summary>
-        /// Retrieves the current state of playback. 
-        /// This method will never return a cached value, so each call results in its own corresponding fetch request, even if the playback is local.
+        /// The best guess we have at the current state of playback.
         /// Use with care: for regular updates, subscribe to <seealso cref="PlaybackContextChanged"/> instead.
         /// </summary>
-        /// <returns>The newly acquired PlaybackContext</returns>
-        public async Task<PlaybackContext> GetPlayback() =>
-            await dispatcher.GetPlayback();
+        public async Task<PlaybackContext?> GetPlayback()
+        {
+            return (webAPISuppressionTimestamp.AddMilliseconds(webAPISuppressionLengthMs) < DateTime.UtcNow)
+                ? await dispatcher.GetPlayback() /// Replaces the authoritative PlaybackContext in its entirety.
+                : lastKnownPlayback; /// Patches are applied to the last known PlaybackContext by local Web Playback SDK events.
+        }
 
         public async Task<AvailabeDevices> GetDevices() =>
             await dispatcher.GetDevices();
@@ -78,16 +88,31 @@ namespace Caerostris.Services.Spotify
                 async () => await player.Seek(positionMs),
                 async () => await dispatcher.SeekPlayback(positionMs));
 
-        public async Task SetShuffle(bool shuffle) =>
+        public async Task SetShuffle(bool shuffle)
+        {
+            if (!(lastKnownPlayback is null))
+                lastKnownPlayback.ShuffleState = shuffle;
+
             await DoRemotePlaybackOperation(async () => await dispatcher.SetShuffle(shuffle));
+        }
 
-        public async Task SetRepeat(RepeatState state) =>
+        public async Task SetRepeat(RepeatState state)
+        {
+            if (!(lastKnownPlayback is null))
+                lastKnownPlayback.RepeatState = state;
+
             await DoRemotePlaybackOperation(async () => await dispatcher.SetRepeatMode(state));
+        }
 
-        public async Task SetVolume(int volumePercent) =>
+        public async Task SetVolume(int volumePercent)
+        {
+            if(!(lastKnownPlayback?.Device is null))
+                lastKnownPlayback.Device.VolumePercent = volumePercent;
+
             await DoPlaybackOperation(
-                async () => await player.SetVolume(volumePercent), 
+                async () => await player.SetVolume(volumePercent),
                 async () => await dispatcher.SetVolume(volumePercent));
+        }
 
         private async Task DoPlaybackOperation(Func<Task> local, Func<Task> remote)
         {
@@ -100,13 +125,13 @@ namespace Caerostris.Services.Spotify
         private async Task DoLocalPlaybackOperation(Func<Task> action)
         {
             await action();
-            // The Spotify Web Playback SDK will issue a state update event. The PlaybackContextChanged event is fired from our callback function.
+            SuppressWebAPI(); /// The Spotify Web Playback SDK will issue a state update event. The PlaybackContextChanged event is fired from our callback function.
         }
 
         private async Task DoRemotePlaybackOperation(Func<Task> action)
         {
             await action();
-            await Task.Delay(100); /// The Spotify Web API sends incorrect results when queried too soon after a playback operation.
+            await Task.Delay(200); /// The Spotify Web API sends incorrect results when queried too soon after a playback operation.
             FirePlaybackContextChanged(await dispatcher.GetPlayback());
         }
 
@@ -115,7 +140,7 @@ namespace Caerostris.Services.Spotify
             if (lastKnownPlayback is null || lastKnownPlayback.Item is null || lastKnownPlaybackTimestamp is null)
                 return 0;
 
-            var extraProgressIfPlaying = DateTime.UtcNow - lastKnownPlaybackTimestamp;
+            var extraProgressIfPlaying = DateTime.UtcNow - lastKnownPlaybackTimestamp; // TODO: not precise, 1/2 rtt unaccounted for
             long totalProgressIfPlaying = Convert.ToInt64(extraProgressIfPlaying.Value.TotalMilliseconds) + lastKnownPlayback.ProgressMs;
             try 
             {
@@ -131,12 +156,20 @@ namespace Caerostris.Services.Spotify
             }
         }
 
-        private void FirePlaybackContextChanged(PlaybackContext playback)
+        private void FirePlaybackContextChanged(PlaybackContext? playback)
         {
+            if (playback is null)
+                return;
+
             lastKnownPlayback = playback;
             lastKnownPlaybackTimestamp = DateTime.UtcNow;
             PlaybackContextChanged?.Invoke(playback);
             PlaybackDisplayUpdate?.Invoke(GetProgressMs());
+        }
+
+        private void SuppressWebAPI()
+        {
+            webAPISuppressionTimestamp = DateTime.UtcNow;
         }
     }
 }

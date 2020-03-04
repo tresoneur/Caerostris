@@ -40,9 +40,9 @@ namespace Caerostris.Services.Spotify.Player.Models
                         ? RepeatState.Context
                         : RepeatState.Track));
 
-            context.ShuffleState = ShuffleState;
-            if(!(Context is null))
+            if (!(Context is null))
                 context.Context = Context;
+            context.ShuffleState = ShuffleState;
             context.Timestamp = Timestamp;
             context.ProgressMs = ProgressMs;
             context.IsPlaying = !Paused;

@@ -16,14 +16,14 @@ namespace Caerostris.Services.Spotify
 
         private ImplicitGrantAuthManager authManager;
 
-        private System.Threading.Timer authPollingTimer;
-        private bool authGrantedWhenLastChecked = false;
-
         /// <summary>
         /// Fires when the auth state changes: either the current token expires or a new token is acquired.
         /// Also fires when a valid token is found in cache on startup. The SpotifyService instance won't be able to fetch any user-specific data before this happens, so it is best if any component in need of e.g. the username subscribes to this event.
         /// </summary>
         public event Action<bool>? AuthStateChanged;
+        private System.Threading.Timer authPollingTimer;
+        private bool authGrantedWhenLastChecked = false;
+
 
         private void InitializeAuth(ImplicitGrantAuthManager injectedAuthManager)
         {
