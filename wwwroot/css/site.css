@@ -55,13 +55,18 @@ app {
     text-overflow: ellipsis;
 }
 
-    .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
-    }
 
-    .sidebar .navbar-brand {
-        font-size: 1.1rem;
-    }
+.spotify-logo {
+    height: 35px;
+    width: auto;
+}
+
+.caerostris-logo {
+    font-size: 30px;
+    line-height: 1;
+    text-decoration: none;
+    color: white;
+}
 
     .sidebar .oi {
         width: 2rem;
@@ -225,6 +230,11 @@ app {
         top: 12px;
     }
 
+    .material-icons.md-24-inline {
+        font-size: 24px;
+        line-height: 0;
+    }
+
 .playbackbar {
     height: 60px;
     color: white;
@@ -269,18 +279,15 @@ app {
         border-radius: 2px;
     }
 
-.playback-main {
-    /* */
+
+.playback-cover-image-container {
+    text-align: center;
 }
 
-    .playback-main .playback-cover-image-container {
-        text-align: center;
-    }
-
-    .playback-main .playback-cover-image {
-        margin: 0 auto;
-        filter: drop-shadow(0px 0px 30px black)
-    }
+.playback-cover-image {
+    margin: 0 auto;
+    filter: drop-shadow(0px 0px 30px black)
+}
 
 .blazored-modal-container {
     color: black;

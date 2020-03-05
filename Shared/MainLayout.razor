@@ -1,5 +1,6 @@
 ﻿@using Blazored.Modal
 @using Caerostris.Pages.Auth
+@using Caerostris.Pages.Playback
 
 @inherits LayoutComponentBase
 
@@ -14,8 +15,9 @@
     </div>
     -->
 
-    <div class="content h-100">
+    <div class="d-flex flex-column content h-100">
         @Body
+        <PlaybackBar />
     </div>
 </div>
 

@@ -3,18 +3,14 @@
 @inject SpotifyService Spotify
 
 
-
-<div class="d-flex flex-column h-100 playback-main">
-    <div>
-        <p class="p-3">Playback state for: @(username ?? "Loading...")</p>
-    </div>
-    <div class="playback-cover-image-container">
-        @if (!(coverImage is null))
-        {
-            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
-        }
-    </div>
-    <PlaybackBar />
+<div>
+    <p class="p-3">Playback state for: @(username ?? "Loading...")</p>
+</div>
+<div class="playback-cover-image-container">
+    @if (!(coverImage is null))
+    {
+        <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
+    }
 </div>
 
 

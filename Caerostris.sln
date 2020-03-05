@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyService", "..\SpotifyService\SpotifyService.csproj", "{DFA87361-4084-4EBB-9F87-816AAAD7C9A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD99009B-193A-4F09-B01F-8A3B719C510B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA87361-4084-4EBB-9F87-816AAAD7C9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA87361-4084-4EBB-9F87-816AAAD7C9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA87361-4084-4EBB-9F87-816AAAD7C9A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA87361-4084-4EBB-9F87-816AAAD7C9A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

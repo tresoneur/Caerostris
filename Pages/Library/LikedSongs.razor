@@ -1,0 +1,55 @@
+﻿@page "/library"
+
+@using Caerostris.Services.Spotify
+@using Caerostris.Services.Spotify.Web
+@using Caerostris.Services.Spotify.Web.ViewModels
+@using DevExpress.Blazor
+@using SpotifyAPI.Web.Models
+
+@inject SpotifyService Spotify
+
+@if (Tracks is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxDataGrid 
+        CssClass="mw-1100"
+        VerticalScrollBarMode="@ScrollBarMode.Auto"
+        VerticalScrollableHeight="800"
+        ShowPager="false"
+        PageSize=@Tracks.Count()
+        Data=@Tracks>
+
+        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Name) Caption="Title" Width="150px" />
+
+        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Album) Caption="Album" Width="100px" />
+
+        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Artists) Caption="Artist" Width="150px" />
+
+        <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption="Added" Width="100px">
+            <DisplayTemplate>
+                @((context as FlatSavedTrack).SavedTrack.HumanReadableAddedAt())
+            </DisplayTemplate>
+        </DxDataGridColumn>
+
+        <DxDataGridColumn Field=@nameof(FlatSavedTrack.DurationMS) Caption="Length" Width="50px" >
+            <DisplayTemplate>
+                @((context as FlatSavedTrack).SavedTrack.Track.HumanReadableDuration())
+            </DisplayTemplate>
+        </DxDataGridColumn>
+
+    </DxDataGrid>
+}
+
+@code
+{
+    IQueryable<FlatSavedTrack>? Tracks { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Tracks = (await Spotify.GetFlatSavedTracks()).AsQueryable();
+    }
+
+}
