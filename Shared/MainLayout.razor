@@ -4,27 +4,28 @@
 
 @inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
 
-<div class="main">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
     <!--
     <div class="top-row px-4">
         <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
     </div>
     -->
 
-    <div class="d-flex flex-column content h-100">
-        @Body
-        <PlaybackBar />
+        <div class="d-flex flex-column content h-100">
+            @Body
+            <PlaybackBar />
+        </div>
     </div>
-</div>
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+    <div class="sidebar">
+        <ContextMenu />
+    </div>
 
-<AuthDaemon />
+    <AuthDaemon />
 
-<BlazoredModal />
+    <BlazoredModal />

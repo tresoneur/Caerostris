@@ -4,7 +4,8 @@
 @inject IJSRuntime JSRuntime
 
 
-<div id=@ID
+<div 
+     id=@ID
      class="w-100 progressbar-background"
      @onclick=@OnProgressbarClick>
 
@@ -21,13 +22,15 @@
     public Func<double, Task>? OnClick { get; set; }
 
     [Parameter]
-    public string? ID { get; set; }
-
-    [Parameter]
     public double Percent { get; set; }
 
     private const string JSHelper = "SpotifyService";
+    private string? ID;
 
+    protected override void OnInitialized()
+    {
+        ID = "progressbar-" + new Random().Next().ToString("x"); // TIL: IDs cannot start with a number
+    }
 
     private async void OnProgressbarClick(MouseEventArgs e)
     {

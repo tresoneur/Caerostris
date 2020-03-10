@@ -8,8 +8,7 @@
 <div class="mt-auto playbackbar">
 
     <Progressbar 
-        OnClick=@OnProgressbarClick 
-        ID=@progressbarID 
+        OnClick=@OnProgressbarClick
         Percent=@progressPercent />
 
     <div class="d-flex flex-row justify-content-between align-items-center px-3">
@@ -50,8 +49,7 @@
 
             <div class="w-25 pl-3">
                 <Progressbar 
-                    OnClick=@OnVolumebarClick 
-                    ID=@volumebarID
+                    OnClick=@OnVolumebarClick
                     Percent=@playbackContext.GetVolumePercent() />
             </div>
 
@@ -64,9 +62,6 @@
 
 @code
 {
-    private const string progressbarID = "playbackbar-progressbar";
-    private const string volumebarID = "playbackbar-volumebar";
-
     private PlaybackContext? playbackContext { get; set; }
     private double progressPercent = 0;
 

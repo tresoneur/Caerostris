@@ -13,8 +13,10 @@
 </head>
 
 <body>
-    <app>
-        <h3>Loading...</h3>
+    <app class="position-relative d-flex flex-row w-100 h-100">
+        <div class="d-flex flex-row justify-content-center align-items-center w-100 h-100">
+            <h2 class="loading-title">Loading...</h2>
+        </div>
     </app>
 
     <div id="blazor-error-ui">
@@ -24,6 +26,7 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/SpotifyService/blazor.extensions.storage.js"></script>
+    <script src="_content/SpotifyService.IndexedDB/indexedDb.Blazor.js"></script>
     <script src="_content/SpotifyService/spotifyservice.js"></script>
     <script src="_content/SpotifyService/spotifyservice-web-playback.js"></script>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>

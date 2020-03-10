@@ -1,55 +1,154 @@
 ﻿@page "/library"
 
+
+@using Caerostris.Shared
 @using Caerostris.Services.Spotify
 @using Caerostris.Services.Spotify.Web
 @using Caerostris.Services.Spotify.Web.ViewModels
 @using DevExpress.Blazor
-@using SpotifyAPI.Web.Models
+
 
 @inject SpotifyService Spotify
+@inject IJSRuntime JSRuntime
 
-@if (Tracks is null)
+
+@if (tracks is null)
 {
-    <p><em>Loading...</em></p>
+    <div id=@contentID class="d-flex flex-column justify-content-center align-items-center h-100">
+        <h4>@LoadingMessage</h4>
+        <div class="w-25 pt-2">
+            <Progressbar Percent=@((double)loadingDownloaded / (double)loadingTotal * 100d) />
+        </div>
+    </div>
 }
 else
 {
-    <DxDataGrid 
-        CssClass="mw-1100"
-        VerticalScrollBarMode="@ScrollBarMode.Auto"
-        VerticalScrollableHeight="800"
-        ShowPager="false"
-        PageSize=@Tracks.Count()
-        Data=@Tracks>
+    <div id=@contentID class="d-flex flex-column justify-content-between align-items-stretch py-4 h-100">
+        <div class="px-3 library-controls">
+            Show:
+            <BoundInlineCheckbox Label="filter row" @bind-Checked=@showFilterRow />
+            <BoundInlineCheckbox Label="explicit" @bind-Checked=@showExplicitColumn />
+            <BoundInlineCheckbox Label="popularity" @bind-Checked=@showPopularityColumn />
+            <BoundInlineCheckbox Label="type" @bind-Checked=@showTypeColumn />
+        </div>
+        <div>
+            <DxDataGrid @ref=@datagrid
+                        CssClass="library-datagrid"
+                        DataRowCssClass="library-datagrid-row"
+                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
+                        VerticalScrollBarMode=@ScrollBarMode.Visible
+                        VerticalScrollableHeight=@datagridHeight
+                        ShowFilterRow=@showFilterRow
+                        PageSize=50
+                        SelectionMode=@DataGridSelectionMode.None
+                        HtmlRowDecoration=@OnHtmlRowDecoration
+                        LayoutChanged=@OnLayoutChanged
+                        Data=@tracks>
 
-        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Name) Caption="Title" Width="150px" />
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Name) Caption="Title" Width="150px">
+                    <DisplayTemplate>
+                        <a href="javascript:void(0);"
+                           @onclick=@(async () => await StartLibraryPlaybackAt((context as FlatSavedTrack).SavedTrack.Track.Uri))>
+                            @((context as FlatSavedTrack).SavedTrack.Track.Name)
+                        </a>
+                    </DisplayTemplate>
+                </DxDataGridColumn>
 
-        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Album) Caption="Album" Width="100px" />
+                @if (showExplicitColumn)
+                {
+                    <DxDataGridColumn Field=@nameof(FlatSavedTrack.Explicit) Caption="Explicit" Width="30px">
+                        <DisplayTemplate>
+                            @((context as FlatSavedTrack).Explicit ? "X" : string.Empty)
+                        </DisplayTemplate>
+                    </DxDataGridColumn>
+                }
 
-        <DxDataGridColumn Field=@nameof(FlatSavedTrack.Artists) Caption="Artist" Width="150px" />
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Artists) Caption="Artist" Width="150px" />
 
-        <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption="Added" Width="100px">
-            <DisplayTemplate>
-                @((context as FlatSavedTrack).SavedTrack.HumanReadableAddedAt())
-            </DisplayTemplate>
-        </DxDataGridColumn>
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Album) Caption="Album" Width="100px" />
 
-        <DxDataGridColumn Field=@nameof(FlatSavedTrack.DurationMS) Caption="Length" Width="50px" >
-            <DisplayTemplate>
-                @((context as FlatSavedTrack).SavedTrack.Track.HumanReadableDuration())
-            </DisplayTemplate>
-        </DxDataGridColumn>
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.AddedAt) Caption="Added" Width="100px">
+                    <DisplayTemplate>
+                        @((context as FlatSavedTrack).SavedTrack.HumanReadableAddedAt())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
 
-    </DxDataGrid>
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.DurationMS) Caption="Length" Width="50px">
+                    <DisplayTemplate>
+                        @((context as FlatSavedTrack).SavedTrack.Track.HumanReadableDuration())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+                @if (showPopularityColumn)
+                {
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Popularity) Caption="Popularity" Width="30px" />
+                }
+
+                @if (showTypeColumn)
+                {
+                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Type) Caption="Type" Width="30px" />
+                }
+
+            </DxDataGrid>
+        </div>
+    </div>
 }
+
 
 @code
 {
-    IQueryable<FlatSavedTrack>? Tracks { get; set; }
+    private const int loadingTotalDefault = 1;
+    private int loadingDownloaded = 0, loadingTotal = loadingTotalDefault;
+    private string LoadingMessage => ("Loading tracks" + ((loadingTotal != loadingTotalDefault) ? $": {loadingDownloaded} out of {loadingTotal}" : string.Empty));
 
+    private IQueryable<FlatSavedTrack>? tracks;
+
+    private const string contentID = "library-content-id";
+
+    private DxDataGrid<FlatSavedTrack>? datagrid;
+    private int datagridHeight = 550;
+
+    private List<string> visibleURIs = new List<string>();
+
+    private bool
+        showFilterRow = true, 
+        showExplicitColumn = false, 
+        showTypeColumn = false, 
+        showPopularityColumn = false;
+    
+    
     protected async override Task OnInitializedAsync()
     {
-        Tracks = (await Spotify.GetFlatSavedTracks()).AsQueryable();
+        Spotify.LibraryLoadingProgress +=
+            (async (c, t) => await InvokeAsync(() => { loadingDownloaded = c; loadingTotal = t; StateHasChanged(); }));
+
+        if(await Spotify.AuthGranted())
+            tracks = (await Spotify.GetFlatSavedTracks()).AsQueryable();
     }
 
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        /// If an explicit height is not passed to the DxDataGrid, it will default to a ~200px scrolling area instead of filling its container
+        datagridHeight = await JSRuntime.InvokeAsync<int>("SpotifyService.GetHeight", $"#{contentID}");
+        datagridHeight = Math.Max(datagridHeight - 250, 100);
+    }
+
+    private void OnHtmlRowDecoration(DataGridHtmlRowDecorationEventArgs<FlatSavedTrack> e)
+    {
+        if (e.VisibleIndex == 0)
+            visibleURIs.Clear(); // TODO: insert if scrolling upwards
+
+        visibleURIs.Add(e.DataItem.SavedTrack.Track.Uri);
+    }
+
+    private void OnLayoutChanged(IDataGridLayout _) =>
+        visibleURIs.Clear();
+
+    private async Task StartLibraryPlaybackAt(string URI)
+    {
+        if (!visibleURIs.Contains(URI))
+            await Spotify.PlayTrack(null, URI);
+        else
+            await Spotify.PlayTracks(visibleURIs.GetRange(visibleURIs.IndexOf(URI), visibleURIs.Count - visibleURIs.IndexOf(URI)));
+    }
 }

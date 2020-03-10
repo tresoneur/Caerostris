@@ -1,0 +1,24 @@
+﻿<div class="form-check form-check-inline">
+    <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" checked=@Checked @oninput=@OnCheckedChanged>
+        @Label
+    </label>
+</div>
+
+@code 
+{
+    [Parameter]
+    public bool Checked { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<bool> CheckedChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    private Task OnCheckedChanged(ChangeEventArgs e)
+    {
+        Checked = (bool)e.Value;
+        return CheckedChanged.InvokeAsync(Checked);
+    }
+}

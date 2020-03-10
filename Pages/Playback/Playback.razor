@@ -4,7 +4,7 @@
 
 
 <div>
-    <p class="p-3">Playback state for: @(username ?? "Loading...")</p>
+    <p class="p-3 playback-status">Playback state for: @(username ?? "Loading...")</p>
 </div>
 <div class="playback-cover-image-container">
     @if (!(coverImage is null))
@@ -47,12 +47,13 @@
         await InvokeAsync(async () =>
         {
             await FillUsername();
+            StateHasChanged();
         });
     }
 
     private async Task FillUsername()
     {
-        username = await Spotify.GetUsername();
-        StateHasChanged();
+        if (username is null)
+            username = await Spotify.GetUsername();
     }
 }
