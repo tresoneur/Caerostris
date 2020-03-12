@@ -1,8 +1,8 @@
-﻿using Blazored.Modal;
-using Caerostris.Services.Spotify;
-using Microsoft.AspNetCore.Blazor.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using Blazored.Modal;
+using Caerostris.Services.Spotify;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Caerostris
 {
@@ -11,14 +11,19 @@ namespace Caerostris
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.RootComponents.Add<App>("app");
 
             var services = builder.Services;
+            services.AddBaseAddressHttpClient();
             services.AddBlazoredModal();
             services.AddDevExpressBlazor();
             services.AddSpotify();
 
-            builder.RootComponents.Add<App>("app");
-            await builder.Build().RunAsync();
+            var host = builder.Build();
+
+            await host.Services.InitializeSpotify();
+
+            await host.RunAsync();
         }
     }
 }
