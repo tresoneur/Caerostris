@@ -1,0 +1,80 @@
+﻿<HeightMeasurementProvider @ref=contentHeight Fluid>
+
+    <div class="d-flex flex-column justify-content-start h-100 p-4">
+
+        <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
+
+            <ContextPageHeading Type=@CompletePlaylist.Playlist.Type.ToUpper()
+                                Title=@CompletePlaylist.Playlist.Name
+                                By=@CompletePlaylist.Playlist.Owner.DisplayName
+                                ImageURI=@CompletePlaylist.Playlist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+
+                <p>
+                    @(CompletePlaylist.Playlist.Public ? "Public" : "Private")
+                    • @CompletePlaylist.Playlist.Followers.Total follower@((CompletePlaylist.Playlist.Followers.Total == 1) ? string.Empty : "s")
+                    • @CompletePlaylist.Tracks.Count() songs, @CompletePlaylist.HumanReadableTotalLength()
+                </p>
+
+                <p class="pt-2">@((MarkupString)CompletePlaylist.Playlist.Description)</p>
+
+            </ContextPageHeading>
+
+        </HeightMeasurementProvider>
+
+        @if (measurement.Taken)
+        {
+            <DxDataGrid CssClass="datagrid"
+                        DataRowCssClass="datagrid-row"
+                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
+                        VerticalScrollableHeight=@measurement.Output
+                        ShowFilterRow=false
+                        SelectionMode=@DataGridSelectionMode.None
+                        AllowColumnDragDrop=false
+                        AllowSort=true
+                        Data=@CompletePlaylist.Tracks>
+
+                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px"/>
+
+                <DxDataGridColumn Caption="Artists" Width="150px" AllowSort=DevExpress.Blazor.DefaultBoolean.False>
+                    <DisplayTemplate>
+                        @((context as PlaylistTrack).Track.Artists.GetArtists())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+                <DxDataGridColumn Field=@nameof(PlaylistTrack.AddedAt) Caption="Added at" Width="50px">
+                    <DisplayTemplate>
+                        @((context as PlaylistTrack).HumanReadableAddedAt())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption="Length" Width="50px">
+                    <DisplayTemplate>
+                        @((context as PlaylistTrack).Track.HumanReadableDuration())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+            </DxDataGrid>
+        }
+
+    </div>
+
+</HeightMeasurementProvider>
+
+
+@code
+{
+    [Parameter]
+    public CompletePlaylist CompletePlaylist { get; set; }
+
+    private HeightMeasurementProvider contentHeight, contentHeaderHeight;
+    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            measurement.StateHasChanged = StateHasChanged;
+            measurement.Calculate = (_) => Math.Max(contentHeight.Height - contentHeaderHeight.Height - 50, 100);
+        }
+    }
+}

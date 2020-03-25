@@ -1,0 +1,57 @@
+﻿@page "/context"
+
+
+@inject SpotifyService Spotify
+
+
+@if (context is null)
+{
+    <CenteredLoadingIndicator LoadingWhat="context" />
+}
+else
+{
+    @if (!(context?.Item1 is null))
+    {
+        <ArtistPage ArtistProfile=@context?.Item1 />
+    }
+    else if (!(context?.Item2 is null))
+    {
+        <AlbumPage CompleteAlbum=@context?.Item2 />
+    }
+    else if (!(context?.Item3 is null))
+    {
+        <PlaylistPage CompletePlaylist=@context?.Item3 />
+    }
+    else
+    {
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <i class="material-icons md-24-inline pr-2">info</i>
+            <h4 class="m-0 p-0">Can't display this context</h4>
+        </div>
+    }
+}
+
+@code
+{
+    private (ArtistProfile?, CompleteAlbum?, CompletePlaylist?)? context;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Spotify.ContextChanged += OnContextChanged;
+        await OnContextChanged(await Spotify.GetPlayback());
+    }
+
+    private async Task OnContextChanged(PlaybackContext? playback)
+    {
+        await InvokeAsync(async () =>
+        {
+            if (!(playback is null))
+            {
+                context = null;
+                StateHasChanged();
+                context = await Spotify.GetContext(playback?.Context);
+                StateHasChanged();
+            }
+        });
+    }
+}

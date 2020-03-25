@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+
 @inject SpotifyService Spotify
 
 
@@ -21,7 +22,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        Spotify.PlaybackContextChanged += OnPlaybackContextChanged;
+        Spotify.PlaybackChanged += OnPlaybackChanged;
 
         Spotify.AuthStateChanged += (bool acquired) => { if (acquired) OnAuthAcquired(); };
 
@@ -31,7 +32,7 @@
         }
     }
 
-    private async void OnPlaybackContextChanged(PlaybackContext playback)
+    private async Task OnPlaybackChanged(PlaybackContext playback)
     {
         await InvokeAsync(() =>
         {

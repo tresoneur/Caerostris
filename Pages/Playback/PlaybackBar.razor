@@ -67,7 +67,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        Spotify.PlaybackContextChanged += ContextChanged;
+        Spotify.PlaybackChanged += ContextChanged;
 
         Spotify.PlaybackDisplayUpdate += UpdateDisplay;
 
@@ -75,7 +75,7 @@
             playbackContext = await Spotify.GetPlayback();
     }
 
-    private async void ContextChanged(PlaybackContext context)
+    private async Task ContextChanged(PlaybackContext context)
     {
         await InvokeAsync(() =>
         {

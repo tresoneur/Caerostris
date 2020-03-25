@@ -1,16 +1,45 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+html {
+    --caerostris-primary-color: #1996C4;
+    --scrollbar-background-color: transparent;
+    --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 16px; /* Setting rem */
     color: white;
     height: 100%;
+    
+}
+
+a, a:hover {
+    color: white;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-background-color) var(--scrollbar-background-color);
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--scrollbar-background-color);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-background-color);
+    border-radius: 2px;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1996C4;
-    border-color: #1996C4;
+    background-color: var(--caerostris-primary-color);
+    border-color: var(--caerostris-primary-color);
 }
 
 .btn:focus, .btn:active {
@@ -35,23 +64,6 @@ app {
 .main {
     flex: 1;
 }
-
-    .main .top-row {
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #d6d5d5;
-        justify-content: flex-end;
-    }
-
-        .main .top-row > a, .main .top-row .btn-link {
-            white-space: nowrap;
-            margin-left: 1.5rem;
-        }
-
-.main .top-row a:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 
 .spotify-logo {
     height: 35px;
@@ -94,12 +106,12 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
+                background-color: rgba(255, 255, 255, 0.25);
                 color: white;
             }
 
             .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
+                background-color: rgba(255, 255, 255, 0.1);
                 color: white;
             }
 
@@ -120,7 +132,7 @@ app {
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: black;
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     display: none;
@@ -136,20 +148,6 @@ app {
     position: absolute;
     right: 0.75rem;
     top: 0.5rem;
-}
-
-@media (max-width: 767.98px) {
-    .main .top-row:not(.auth) {
-        display: none;
-    }
-
-    .main .top-row.auth {
-        justify-content: space-between;
-    }
-
-    .main .top-row a, .main .top-row .btn-link {
-        margin-left: 0;
-    }
 }
 
 .sidebar {
@@ -169,7 +167,6 @@ app {
 }
 
 .sidebar .collapse {
-    /* Never collapse the sidebar for wide screens */
     display: block;
 }
 
@@ -265,7 +262,7 @@ app {
 
 .progressbar-progress {
     height: 100%;
-    background-color: #1996C4;
+    background-color: var(--caerostris-primary-color);
     border-radius: 2px;
 }
 
@@ -283,7 +280,7 @@ app {
     color: black;
 }
 
-.library-datagrid *:not(.btn) {
+.datagrid *:not(.btn) {
     background-color: transparent;
     color: white;
     border: 0;
@@ -291,41 +288,103 @@ app {
 }
 
 /*
-.library-datagrid .btn {
+.datagrid .btn {
     margin: 0 !important;
 }
 */
 
-    .library-datagrid tr.library-datagrid-row {
+    .datagrid tr.datagrid-row {
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
-    .library-datagrid tr.library-datagrid-row td {
+    .datagrid tr.datagrid-row td {
         padding: 0.75rem;
     }
 
-    .library-datagrid tr.library-datagrid-row td.bg-primary {
+    .datagrid tr.datagrid-row td.bg-primary {
         background-color: transparent !important;
     }
 
-    .library-datagrid th .dxbs-fixed-header-content {
+    .datagrid th .dxbs-fixed-header-content {
         padding-left: 12px;
         text-transform: uppercase;
         opacity: 0.4;
     }
 
-    .library-datagrid th .dxbs-textbox {
+    .datagrid th .dxbs-textbox {
         height: unset;
         padding: 0 0 0 12px;
         border-radius: 0;
         line-height: 1;
     }
 
-    .library-datagrid .table-sm td, .library-datagrid .table-sm th, .library-datagrid .form-control {
+    .datagrid .table-sm td, .datagrid .table-sm th, .datagrid .form-control {
         padding: 0;
         height: unset;
     }
 
 .library-controls, .playback-status {
     opacity: 0.4;
+}
+
+.explicit-mark { /* needs to be applied in places that have more specific rules defined on them already */
+    opacity: 0.4;
+    font-size: 0.66rem !important;
+    display: block !important;
+    text-align: center !important;
+    width: 55px !important;
+    margin: 0 auto !important;
+    padding: 2px 0 !important;
+    border: 1px solid white !important;
+    border-radius: 2px !important;
+}
+
+.context-page-heading-image {
+    height: 30vh;
+    width: auto;
+    filter: drop-shadow(0px 0px 10px black);
+}
+
+.context-page-heading-type {
+    font-size: 0.75rem;
+    opacity: 0.4;
+    margin-bottom: 0;
+}
+
+.context-page-heading-title {
+    max-width: calc(100vw - 30vh - 600px);
+    font-size: 4rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.context-page-heading-by {
+    opacity: 0.4;
+}
+
+.context-page-heading-childcontent {
+    opacity: 0.4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.context-page-body-subsection-title {
+    font-weight: bold;
+}
+
+.artist-page-thumbnail {
+    width: 150px;
+    height: auto;
+    filter: drop-shadow(0px 0px 5px black);
+    border-radius: 2px;
+}
+
+.artist-page-related-artist-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.artist-page-album-title {
+    font-size: 1.2rem;
 }

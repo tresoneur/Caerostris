@@ -1,0 +1,68 @@
+﻿<HeightMeasurementProvider @ref=contentHeight Fluid>
+
+    <div class="d-flex flex-column justify-content-start h-100 p-4">
+
+        <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
+
+            <ContextPageHeading Type=@(CompleteAlbum.Album.AlbumType.ToUpper())
+                                Title=@(CompleteAlbum.Album.Name)
+                                By=@(CompleteAlbum.Album.Artists.GetArtists(true))
+                                ImageURI=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+
+                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() songs, @CompleteAlbum.HumanReadableTotalLength()</p>
+
+            </ContextPageHeading>
+
+        </HeightMeasurementProvider>
+
+        @if (measurement.Taken)
+        {
+            <DxDataGrid CssClass="datagrid"
+                        DataRowCssClass="datagrid-row"
+                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
+                        VerticalScrollableHeight=@measurement.Output
+                        ShowFilterRow=false
+                        SelectionMode=@DataGridSelectionMode.None
+                        AllowColumnDragDrop=false
+                        AllowSort=true
+                        Data=@CompleteAlbum.Tracks>
+
+                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption="Title" Width="150px" />
+
+                <DxDataGridColumn Caption="Artists" Width="150px" AllowSort=DevExpress.Blazor.DefaultBoolean.False>
+                    <DisplayTemplate>
+                        @((context as SimpleTrack).Artists.GetArtists())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+                <DxDataGridColumn Field=@nameof(SimpleTrack.DurationMs) Caption="Length" Width="50px">
+                    <DisplayTemplate>
+                        @((context as SimpleTrack).HumanReadableDuration())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+            </DxDataGrid>
+        }
+
+    </div>
+
+</HeightMeasurementProvider>
+
+
+@code
+{
+    [Parameter]
+    public CompleteAlbum CompleteAlbum { get; set; }
+
+    private HeightMeasurementProvider contentHeight, contentHeaderHeight;
+    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            measurement.StateHasChanged = StateHasChanged;
+            measurement.Calculate = (_) => Math.Max(contentHeight.Height - contentHeaderHeight.Height - 50, 100);
+        }
+    }
+}

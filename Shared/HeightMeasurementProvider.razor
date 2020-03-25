@@ -1,0 +1,53 @@
+﻿@inject IJSRuntime JSRuntime
+
+
+<div id=@ID class=@(Fluid ? "h-100" : "")>
+
+    @ChildContent
+
+</div>
+
+
+@code
+{
+    private string ID = "height-" + new Random().Next().ToString("x");
+
+    [Parameter]
+    public bool Fluid { get; set; }
+
+    [Parameter]
+    public int Height { get; set; }
+
+    [Parameter]
+    public Action<int>? OnMeasurementTaken { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            Height = await JSRuntime.InvokeAsync<int>("SpotifyService.GetHeight", $"#{ID}");
+            OnMeasurementTaken?.Invoke(Height);
+        }
+    }
+
+    public class Measurement
+    {
+        public bool Taken { get; set; } = false;
+
+        public int Output { get; set; } = 0;
+
+        public Action StateHasChanged { get; set; } = () => { };
+
+        public Func<int, int> Calculate { get; set; } = (_) => 0;
+
+        public void OnMeasurementTaken(int height)
+        {
+            Taken = true;
+            Output = Calculate(height);
+            StateHasChanged();
+        }
+    }
+}

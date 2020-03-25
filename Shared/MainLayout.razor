@@ -10,14 +10,10 @@
     </div>
 
     <div class="main">
-    <!--
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
-    -->
-
         <div class="d-flex flex-column content h-100">
-            @Body
+            <div class="p-1" style="height: calc(100vh - 70px); max-width:calc(100vw - 500px)">
+                @Body
+            </div>
             <PlaybackBar />
         </div>
     </div>

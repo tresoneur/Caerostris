@@ -1,0 +1,109 @@
+﻿<div class="d-flex flex-column justify-content-start overflow-auto h-100 p-4">
+
+    <ContextPageHeading Type="ARTIST"
+                        Title=@(ArtistProfile.Artist.Name)
+                        ImageURI=@ArtistProfile.Artist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+
+        <p>@ArtistProfile.Artist.Followers.Total followers • @ArtistProfile.Artist.GetGenres()</p>
+
+    </ContextPageHeading>
+
+
+
+        <h4 class="pl-2 pb-4 context-page-body-subsection-title">Popular tracks</h4>
+
+        <DxDataGrid CssClass="datagrid"
+                    DataRowCssClass="datagrid-row"
+                    DataNavigationMode=@DataGridNavigationMode.ShowAllDataRows
+                    ShowFilterRow=false
+                    SelectionMode=@DataGridSelectionMode.None
+                    AllowColumnDragDrop=false
+                    AllowSort=true
+                    Data=@ArtistProfile.TopTracks>
+
+            <DxDataGridColumn Field=@nameof(FullTrack.Name) Caption="Title" Width="150px" />
+
+            <DxDataGridColumn Caption="Artists" Width="150px" AllowSort=DevExpress.Blazor.DefaultBoolean.False>
+                <DisplayTemplate>
+                    @((context as FullTrack).Artists.GetArtists())
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+            <DxDataGridColumn Field=@nameof(FullTrack.Popularity) Caption="Popularity" Width="70px" />
+
+            <DxDataGridColumn Field=@nameof(FullTrack.DurationMs) Caption="Length" Width="50px">
+                <DisplayTemplate>
+                    @((context as FullTrack).HumanReadableDuration())
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+        </DxDataGrid>
+
+        <h4 class="pl-2 pb-4 pt-4 mt-4 context-page-body-subsection-title">Albums</h4>
+
+        <DxDataGrid CssClass="datagrid"
+                    DataRowCssClass="datagrid-row"
+                    DataNavigationMode=@DataGridNavigationMode.ShowAllDataRows
+                    ShowFilterRow=false
+                    SelectionMode=@DataGridSelectionMode.None
+                    AllowColumnDragDrop=false
+                    AllowSort=true
+                    Data=@ArtistProfile.Albums>
+
+            <DxDataGridColumn Field=@nameof(SimpleAlbum.Name) Caption="Title" Width="400px">
+                <DisplayTemplate>
+                    <img class="artist-page-thumbnail"
+                         src=@((context as SimpleAlbum).Images.OrderBy(i => i.Height).FirstOrDefault(i => i.Height >= 150)?.Url) />
+                    <span class="pl-4 artist-page-album-title">@((context as SimpleAlbum).Name)</span>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+            <DxDataGridColumn Field=@nameof(SimpleAlbum.AlbumType) Caption="Type" Width="70px">
+                <DisplayTemplate>
+                    @((context as SimpleAlbum).AlbumType.ToUpper())
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+            <DxDataGridColumn Field=@nameof(SimpleAlbum.ReleaseDate) Caption="Released" Width="70px" />
+
+        </DxDataGrid>
+
+        <h4 class="pl-2 pb-4 pt-4 mt-4 context-page-body-subsection-title">Fans also like</h4>
+
+        <DxDataGrid CssClass="datagrid"
+                    DataRowCssClass="datagrid-row"
+                    DataNavigationMode=@DataGridNavigationMode.ShowAllDataRows
+                    ShowFilterRow=false
+                    SelectionMode=@DataGridSelectionMode.None
+                    AllowColumnDragDrop=false
+                    AllowSort=true
+                    Data=@ArtistProfile.RelatedArtists>
+
+
+            <DxDataGridColumn Field=@nameof(FullArtist.Name) Caption="Artist" Width="400px">
+                <DisplayTemplate>
+                    <img class="artist-page-thumbnail"
+                         src=@((context as FullArtist).Images.OrderBy(i => i.Height).FirstOrDefault(i => i.Height >= 150)?.Url) />
+                    <span class="pl-4 artist-page-related-artist-name">@((context as FullArtist).Name)</span>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+            <DxDataGridColumn Field=@nameof(FullArtist.Popularity) Caption="Popularity" Width="50px" />
+
+            <DxDataGridColumn Caption="Genres" Width="70px">
+                <DisplayTemplate>
+                    @((context as FullArtist).GetGenres())
+                </DisplayTemplate>
+            </DxDataGridColumn>
+
+        </DxDataGrid>
+
+
+</div>
+
+
+@code
+{
+    [Parameter]
+    public ArtistProfile ArtistProfile { get; set; }
+}

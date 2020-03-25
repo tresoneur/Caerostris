@@ -20,14 +20,15 @@
     <Content Remove="wwwroot\service-worker.js" />
     <Content Update="wwwroot\service-worker.published.js" Link="wwwroot\service-worker.js" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpotifyService\SpotifyService.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="SpotifyAPI.Web">
       <HintPath>..\SpotifyAPI.Web.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SpotifyService\SpotifyService.csproj" />
   </ItemGroup>
 
 </Project>
