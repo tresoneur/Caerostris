@@ -1,0 +1,33 @@
+﻿@page "/playlist/{Id}"
+
+
+@inject SpotifyService Spotify
+
+
+@if (playlist is null)
+{
+    <CenteredLoadingIndicator LoadingWhat="playlist" />
+}
+else
+{
+    <PlaylistPage CompletePlaylist=@playlist />
+}
+
+
+@code
+{
+    [Parameter]
+    public string Id { get; set; }
+
+    private CompletePlaylist? playlist;
+
+    protected async override Task OnInitializedAsync() => await Update();
+
+    protected async override Task OnParametersSetAsync() => await Update();
+
+    private async Task Update()
+    {
+        playlist = null;
+        playlist = await Spotify.GetPlaylist(Id);
+    }
+}

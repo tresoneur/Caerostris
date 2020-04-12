@@ -1,4 +1,4 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿<div class="top-row p-3 navbar navbar-dark">
     <a class="d-flex flex-row justify-content-start align-items-center text-decoration-none" href="">
         <img src="/icons/Spotify_Icon_RGB_White.png" class="spotify-logo" />
         <span class="caerostris-logo pl-2">Cærostris</span>
@@ -6,20 +6,25 @@
 </div>
 
 <div>
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <i class="material-icons md-24-inline pr-2">play_arrow</i> Playback
+    <ul class="nav flex-column pl-3 pr-4">
+        <li class="nav-item">
+            <NavLink href="" Match="NavLinkMatch.All">
+                <i class="material-icons md-24-inline pl-1 pr-2">play_arrow</i> Playback
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="context">
-                <i class="material-icons md-24-inline pr-2">playlist_play</i> Context
+        <li class="nav-item">
+            <NavLink href="context">
+                <i class="material-icons md-24-inline pl-1 pr-2">playlist_play</i> Context
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="library">
-                <i class="material-icons md-24-inline pr-2">library_music</i> Library
+        <li class="nav-item">
+            <NavLink href="library">
+                <i class="material-icons md-24-inline pl-1 pr-2">library_music</i> Library
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink href="search">
+                <i class="material-icons md-24-inline pl-1 pr-2">search</i> Search
             </NavLink>
         </li>
     </ul>

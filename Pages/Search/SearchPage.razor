@@ -1,0 +1,158 @@
+﻿@page "/search"
+
+
+@using Caerostris.Services.Spotify.Web.ViewModels
+@using System.Threading
+
+
+@implements IDisposable
+
+
+@inject SpotifyService Spotify
+
+
+<div class="d-flex flex-column justify-content-start h-100 pr-4 pt-4 pl-4">
+
+    <div class="ml-3 p-1 search-query-form">
+
+        <label for="search-query"><i class="material-icons md-24">search</i></label>
+
+        <input type="text" class="search-query" placeholder="Search" id="search-query" autocomplete="off" @bind=@Query @bind:event="oninput" />
+
+        <i class="material-icons md-24 clear-button clickable" @onclick=@(() => Query = "")>close</i>
+
+    </div>
+
+    <div class="d-flex flex-column justify-content-start overflow-auto mt-4" style="min-height: 50vh;">
+
+        @if (results is null)
+        {
+            <CenteredInfo Text="Search results will appear here" />
+        }
+        else
+        {
+            @if (results.Tracks.Count() > 0)
+            {
+                <SubsectionTitle Title="Tracks" />
+
+                <CardTileLayout>
+
+                    @foreach (var track in results.Tracks)
+                    {
+                        <TrackCard Track=@track />
+                    }
+
+                </CardTileLayout>
+            }
+
+            @if (results.Artists.Count() > 0)
+            {
+                <SubsectionTitle Title="Artists" />
+
+                <CardTileLayout>
+
+                    @foreach (var artist in results.Artists)
+                    {
+                        <ArtistCard Artist=@artist />
+                    }
+
+                </CardTileLayout>
+            }
+
+            @if (results.Albums.Count() > 0)
+            {
+                <SubsectionTitle Title="Albums" />
+
+                <CardTileLayout>
+
+                    @foreach (var album in results.Albums)
+                    {
+                        <AlbumCard Album=@album />
+                    }
+
+                </CardTileLayout>
+            }
+
+            @if (results.Playlists.Count() > 0)
+            {
+                <SubsectionTitle Title="Playlists" />
+
+                <CardTileLayout>
+
+                    @foreach (var playlist in results.Playlists)
+                    {
+                        <PlaylistCard Playlist=@playlist />
+                    }
+
+                </CardTileLayout>
+            }
+
+            @if (results.Albums.Count() == 0
+           && results.Artists.Count() == 0
+           && results.Playlists.Count() == 0
+           && results.Tracks.Count() == 0)
+            {
+                <CenteredInfo Text="No results found" />
+            }
+        }
+
+    </div>
+
+</div>
+
+@code
+{
+    private SearchResults? results;
+
+    private bool hasQueryChanged = false;
+    private Timer? searchTimer;
+
+    private string query = "";
+    private string Query
+    {
+        get { return query; }
+
+        set
+        {
+            query = value;
+            hasQueryChanged = true;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        /// TODO: eliminate race condition: >200 ms jitter / ping felett rossz sorrend, cancellationtoken
+        searchTimer = new System.Threading.Timer(
+            callback: async _ =>
+            {
+                await InvokeAsync(async () =>
+                {
+                    if (hasQueryChanged)
+                    {
+                        hasQueryChanged = false;
+                        await GetResults();
+                    }
+                });
+            },
+            state: null,
+            dueTime: 100,
+            period: 200
+        );
+    }
+
+    public void Dispose()
+    {
+        searchTimer?.Dispose();
+    }
+
+    private async Task GetResults()
+    {
+        if (!string.IsNullOrWhiteSpace(query))
+            results = await Spotify.Search(query);
+        else
+            results = null;
+
+        StateHasChanged();
+    }
+
+}

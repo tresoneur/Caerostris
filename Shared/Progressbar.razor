@@ -4,7 +4,7 @@
 @inject IJSRuntime JSRuntime
 
 
-    <div id=@ID
+    <div id=@Id
          class="w-100 progressbar-background"
          @onclick=@OnProgressbarClick>
 
@@ -24,13 +24,13 @@
     public double Percent { get; set; }
 
     private const string JSHelper = "SpotifyService";
-    private string ID = "progressbar-" + new Random().Next().ToString("x");
+    private string Id = "progressbar-" + new Random().Next().ToString("x");
     
     private async void OnProgressbarClick(MouseEventArgs e)
     {
         /// I refrain from commenting on the current state of JSInterop, but I had to write JS functions to get some attributes of a DOM object
-        double progressbarWidth = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetWidth", $"#{ID}");
-        double progressbarPosition = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetClientPositionX", $"#{ID}");
+        double progressbarWidth = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetWidth", $"#{Id}");
+        double progressbarPosition = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetClientPositionX", $"#{Id}");
 
         double position = e.ClientX - progressbarPosition;
         double progress = position / progressbarWidth;

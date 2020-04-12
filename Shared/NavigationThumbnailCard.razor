@@ -1,0 +1,38 @@
+﻿<div class="navigation-thumbnail-card card" style="width: @(Width ?? "250px")">
+
+    <img src=@Thumbnail class="card-img-top" style="width: @(Width ?? "250px"); height: @(Width ?? "250px");">
+
+    <div class="card-body">
+
+        <a href=@Url>
+            <h5 class="card-title">@Title</h5>
+        </a>
+
+        @if (!(Details is null))
+        {
+            <p class="card-text">@Details</p>
+        }
+
+    </div>
+
+</div>
+
+
+@code
+{
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public string Url { get; set; }
+
+    [Parameter]
+    public string Thumbnail { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Details { get; set; }
+
+}

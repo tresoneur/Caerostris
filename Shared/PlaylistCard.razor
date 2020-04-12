@@ -1,0 +1,15 @@
+﻿@inject SpotifyService Spotify
+
+
+<NavigationThumbnailCard Url=@($"{Spotify.ExplorePlaylistUrl}{Playlist.Id}")
+                         Width="300px"
+                         Thumbnail=@Playlist.Images.AtLeastOfHeight(300)
+                         Title=@Playlist.Name
+                         Details=@($"{Playlist.Owner.DisplayName} • {Playlist.Tracks.Total} tracks") />
+
+
+@code
+{
+    [Parameter]
+    public SimplePlaylist Playlist { get; set; }
+}

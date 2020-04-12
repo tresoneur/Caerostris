@@ -1,0 +1,15 @@
+﻿@inject SpotifyService Spotify
+
+
+<NavigationThumbnailCard Url=@($"{Spotify.ExploreAlbumUrl}{Album.Id}")
+                         Width="300px"
+                         Thumbnail=@Album.Images.AtLeastOfHeight(300)
+                         Title=@Album.Name
+                         Details=@($"{Album.ReleaseDate.Split('-').FirstOrDefault()}{(Album.AlbumType.Equals("album") ? "" : ($" • {Album.AlbumType.ToUpper()}"))}") />
+
+
+@code
+{
+    [Parameter]
+    public SimpleAlbum Album { get; set; }
+}

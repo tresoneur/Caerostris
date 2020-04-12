@@ -1,4 +1,7 @@
-﻿<HeightMeasurementProvider @ref=contentHeight Fluid>
+﻿@inject SpotifyService Spotify
+
+
+<HeightMeasurementProvider @ref=contentHeight Fluid>
 
     <div class="d-flex flex-column justify-content-start h-100 p-4">
 
@@ -6,10 +9,12 @@
 
             <ContextPageHeading Type=@(CompleteAlbum.Album.AlbumType.ToUpper())
                                 Title=@(CompleteAlbum.Album.Name)
-                                By=@(CompleteAlbum.Album.Artists.GetArtists(true))
-                                ImageURI=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+                                By=@(CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
+                                ImageUri=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
                 <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() songs, @CompleteAlbum.HumanReadableTotalLength()</p>
+
+                <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: null))/>
 
             </ContextPageHeading>
 
@@ -27,11 +32,15 @@
                         AllowSort=true
                         Data=@CompleteAlbum.Tracks>
 
-                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption="Title" Width="150px" />
-
-                <DxDataGridColumn Caption="Artists" Width="150px" AllowSort=DevExpress.Blazor.DefaultBoolean.False>
+                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption="Title" Width="150px">
                     <DisplayTemplate>
-                        @((context as SimpleTrack).Artists.GetArtists())
+                        <ActionText Text=@((context as SimpleTrack).Name)
+                                    OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: (context as SimpleTrack).Uri)) />
+                        @if ((context as SimpleTrack).Artists.Count() > CompleteAlbum.Album.Artists.Count())
+                        {
+                            <span class="collab-with pl-1">— with</span>
+                            @((MarkupString)((context as SimpleTrack).Artists.Where(a => CompleteAlbum.Album.Artists.FirstOrDefault(aa => aa.Uri.Equals(a.Uri)) is null).GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
+                        }
                     </DisplayTemplate>
                 </DxDataGridColumn>
 

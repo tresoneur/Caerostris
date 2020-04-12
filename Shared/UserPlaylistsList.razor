@@ -1,0 +1,55 @@
+﻿@inject SpotifyService Spotify
+
+
+@if (!(playlists is null))
+{
+    <aside class="overflow-hidden p-4 w-100">
+
+        <h4 class="user-playlists-list-title">Playlists</h4>
+
+        <div class="h-100 user-playlists-list">
+
+            <ol class="p-0">
+
+                @foreach (var playlist in playlists)
+                {
+                    <li>@((MarkupString)playlist.GetName(link: true, localUrl: Spotify.ExplorePlaylistUrl))</li>
+                }
+
+            </ol>
+
+        </div>
+
+    </aside>
+}
+
+
+@code
+{
+    private IEnumerable<SimplePlaylist>? playlists;
+
+    // TODO: encapsulate auth rising edge behavior
+
+    protected async override Task OnInitializedAsync()
+    {
+        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
+
+        if (await Spotify.AuthGranted())
+            await FillPlaylists();
+    }
+
+    private async void OnAuthAcquired()
+    {
+        await InvokeAsync(async () =>
+        {
+            await FillPlaylists();
+            StateHasChanged();
+        });
+    }
+
+    private async Task FillPlaylists()
+    {
+        if (playlists is null)
+            playlists = await Spotify.GetUserPlaylists();
+    }
+}

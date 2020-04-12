@@ -1,0 +1,33 @@
+﻿@page "/artist/{Id}"
+
+
+@inject SpotifyService Spotify
+
+
+@if (artist is null)
+{
+    <CenteredLoadingIndicator LoadingWhat="artist" />
+}
+else
+{
+    <ArtistPage ArtistProfile=@artist />
+}
+
+
+@code
+{
+    [Parameter]
+    public string Id { get; set; }
+
+    private ArtistProfile? artist;
+
+    protected async override Task OnInitializedAsync() => await Update();
+
+    protected async override Task OnParametersSetAsync() => await Update();
+
+    private async Task Update()
+    {
+        artist = null;
+        artist = await Spotify.GetArtist(Id);
+    }
+}

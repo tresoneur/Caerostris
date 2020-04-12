@@ -1,0 +1,10 @@
+﻿<section class="d-flex flex-row justify-content-start align-items-start align-content-start flex-wrap">
+    @ChildContent
+</section>
+
+
+@code
+{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

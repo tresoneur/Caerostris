@@ -1,0 +1,57 @@
+﻿@inject SpotifyService Spotify;
+
+
+@if (!(TrackId is null))
+{
+    <i class="material-icons save-button clickable" @onclick=@OnClick>
+        @(Saved ? "favorite" : "favorite_border")
+    </i>
+}
+
+
+@code
+{
+    [Parameter]
+    public string TrackId { get; set; }
+
+    private bool? saved;
+    private bool Saved => saved ?? false;
+
+    // TODO: encapsulate auth rising edge behavior
+
+    protected async override Task OnInitializedAsync()
+    {
+        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
+
+        await FillSaved();
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await FillSaved();
+    }
+
+    private async void OnAuthAcquired()
+    {
+        await InvokeAsync(async () =>
+        {
+            await FillSaved();
+            StateHasChanged();
+        });
+    }
+
+    private async Task FillSaved()
+    {
+        if (!(TrackId is null) && await Spotify.AuthGranted())
+            saved = await Spotify.IsTrackSaved(TrackId);
+    }
+
+    private async Task OnClick()
+    {
+        if (!(TrackId is null) && !(saved is null))
+        {
+            await Spotify.ToogleTrackSaved(TrackId);
+            await FillSaved();
+        }
+    }
+}

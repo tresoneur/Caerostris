@@ -1,0 +1,33 @@
+﻿@page "/album/{Id}"
+
+
+@inject SpotifyService Spotify
+
+
+@if (album is null)
+{
+    <CenteredLoadingIndicator LoadingWhat="album" />
+}
+else
+{
+    <AlbumPage CompleteAlbum=@album />
+}
+
+
+@code
+{
+    [Parameter]
+    public string Id { get; set; }
+
+    private CompleteAlbum? album;
+
+    protected async override Task OnInitializedAsync() => await Update();
+
+    protected async override Task OnParametersSetAsync() => await Update();
+
+    private async Task Update()
+    {
+        album = null;
+        album = await Spotify.GetAlbum(Id);
+    }
+}

@@ -1,0 +1,13 @@
+﻿@inherits Button
+
+
+<a href="javascript:void(0);" @onclick=@OnClick>
+    @Text
+</a>
+
+
+@code 
+{
+    [Parameter]
+    public string Text { get; set; }
+}

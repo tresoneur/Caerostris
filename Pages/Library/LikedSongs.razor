@@ -40,43 +40,49 @@ else
                         LayoutChanged=@OnLayoutChanged
                         Data=@tracks>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Name) Caption="Title" Width="150px">
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px">
                     <DisplayTemplate>
-                        <a href="javascript:void(0);"
-                            @onclick=@(async () => await StartLibraryPlaybackAt((context as FlatSavedTrack).SavedTrack.Track.Uri))>
-                            @((context as FlatSavedTrack).SavedTrack.Track.Name)
-                        </a>
+                        <ActionText Text=@((context as SavedTrack).Track.Name)
+                                    OnClick=@(async () => await StartLibraryPlaybackAt((context as SavedTrack).Track.Uri)) />
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Explicit) Caption="Explicit" Width="30px" Visible=@showExplicitColumn>
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Explicit)}") Caption="Explicit" Width="30px" Visible=@showExplicitColumn>
                     <DisplayTemplate>
-                        @if ((context as FlatSavedTrack).Explicit)
+                        @if ((context as SavedTrack).Track.Explicit)
                         {
                             <span class="explicit-mark">EXPLICIT</span>
                         }
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Artists) Caption="Artist" Width="150px" />
-
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Album) Caption="Album" Width="100px" />
-
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.AddedAt) Caption="Added" Width="100px">
+                <DxDataGridColumn Caption="Artist" Width="150px" AllowSort=@DefaultBoolean.False>
                     <DisplayTemplate>
-                        @((context as FlatSavedTrack).SavedTrack.HumanReadableAddedAt())
+                        @((MarkupString)(context as SavedTrack).Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.DurationMS) Caption="Length" Width="50px">
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Album)}.{nameof(SimpleAlbum.Name)}") Caption="Album" Width="100px">
                     <DisplayTemplate>
-                        @((context as FlatSavedTrack).SavedTrack.Track.HumanReadableDuration())
+                        @((MarkupString)(context as SavedTrack).Track.Album.GetName(link: true, localUrl: Spotify.ExploreAlbumUrl))
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Popularity) Caption="Popularity" Width="50px" Visible=@showPopularityColumn />
+                <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption="Added" Width="100px">
+                    <DisplayTemplate>
+                        @((context as SavedTrack).HumanReadableAddedAt())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(FlatSavedTrack.Type) Caption="Type" Width="30px" Visible=@showTypeColumn />
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption="Length" Width="50px">
+                    <DisplayTemplate>
+                        @((context as SavedTrack).Track.HumanReadableDuration())
+                    </DisplayTemplate>
+                </DxDataGridColumn>
+
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Popularity)}") Caption="Popularity" Width="50px" Visible=@showPopularityColumn />
+
+                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Type)}") Caption="Type" Width="30px" Visible=@showTypeColumn /> <!-- TODO: ennek semmi értelme -->
 
             </DxDataGrid>
         </div>
@@ -88,11 +94,11 @@ else
 {
     private CenteredLoadingIndicator loadingIndicator;
 
-    private IQueryable<FlatSavedTrack>? tracks;
+    private IQueryable<SavedTrack>? tracks;
 
     private int datagridHeight = 550;
 
-    private List<string> visibleURIs = new List<string>();
+    private List<string> visibleUris = new List<string>();
 
     private bool
         showFilterRow = true,
@@ -104,7 +110,7 @@ else
     protected async override Task OnInitializedAsync()
     {
         if (await Spotify.AuthGranted())
-            tracks = (await Spotify.GetFlatSavedTracks()).AsQueryable();
+            tracks = (await Spotify.GetSavedTracks()).AsQueryable();
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -121,22 +127,22 @@ else
         datagridHeight = Math.Max(height - 250, 100);
     }
 
-    private void OnHtmlRowDecoration(DataGridHtmlRowDecorationEventArgs<FlatSavedTrack> e)
+    private void OnHtmlRowDecoration(DataGridHtmlRowDecorationEventArgs<SavedTrack> e)
     {
         if (e.VisibleIndex == 0)
-            visibleURIs.Clear(); // TODO: insert if scrolling upwards
+            visibleUris.Clear(); // TODO: insert if scrolling upwards
 
-        visibleURIs.Add(e.DataItem.SavedTrack.Track.Uri);
+        visibleUris.Add(e.DataItem.Track.Uri);
     }
 
     private void OnLayoutChanged(IDataGridLayout _) =>
-        visibleURIs.Clear();
+        visibleUris.Clear();
 
-    private async Task StartLibraryPlaybackAt(string URI)
+    private async Task StartLibraryPlaybackAt(string Uri)
     {
-        if (!visibleURIs.Contains(URI))
-            await Spotify.PlayTrack(null, URI);
+        if (!visibleUris.Contains(Uri))
+            await Spotify.PlayTrack(null, Uri);
         else
-            await Spotify.PlayTracks(visibleURIs.GetRange(visibleURIs.IndexOf(URI), visibleURIs.Count - visibleURIs.IndexOf(URI)));
+            await Spotify.PlayTracks(visibleUris.GetRange(visibleUris.IndexOf(Uri), visibleUris.Count - visibleUris.IndexOf(Uri)));
     }
 }

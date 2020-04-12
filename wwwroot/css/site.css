@@ -1,17 +1,29 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://rsms.me/inter/inter.css'); /* TODO: 1st party serve */
 
 html {
     --caerostris-primary-color: #1996C4;
     --scrollbar-background-color: transparent;
     --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
+    --scrollbar-thumb-background-color-de-emphasized: rgba(255, 255, 255, 0.1);
+    --info-color: rgba(255, 255, 255, 0.4);
+    --info-opacity: 0.4;
+}
+
+@supports (font-variation-settings: normal) {
+    html, body {
+        font-family: 'Inter var', sans-serif;
+    }
 }
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 16px; /* Setting rem */
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
     color: white;
+
     height: 100%;
-    
 }
 
 a, a:hover {
@@ -42,7 +54,7 @@ a, a:hover {
     border-color: var(--caerostris-primary-color);
 }
 
-.btn:focus, .btn:active {
+.btn:focus, .btn:active, input:focus, input:active {
     outline: none !important;
     box-shadow: none !important;
 }
@@ -51,8 +63,12 @@ app {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 110%); /* #052767 */
 }
 
+img:not([src]) {
+    visibility: hidden;
+}
+
 .loading-title {
-    /* */
+    opacity: var(--info-opacity);
 }
 
 .top-row {
@@ -72,9 +88,18 @@ app {
 
 .caerostris-logo {
     font-size: 30px;
+    font-weight: 500;
     line-height: 1;
     text-decoration: none;
     color: white;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
 }
 
     .sidebar .oi {
@@ -86,8 +111,10 @@ app {
 
     .sidebar .nav-item {
         font-size: 0.9rem;
-        padding-bottom: 0.5rem;
     }
+        .sidebar .nav-item *:hover {
+            text-decoration: none;
+        }
 
         .sidebar .nav-item:first-of-type {
             padding-top: 1rem;
@@ -98,7 +125,7 @@ app {
         }
 
         .sidebar .nav-item a {
-            color: #d7d7d7;
+            color: rgba(255, 255, 255, 0.8);
             height: 3rem;
             display: flex;
             align-items: center;
@@ -108,6 +135,7 @@ app {
             .sidebar .nav-item a.active {
                 background-color: rgba(255, 255, 255, 0.25);
                 color: white;
+                border-radius: 2px;
             }
 
             .sidebar .nav-item a:hover {
@@ -150,13 +178,6 @@ app {
     top: 0.5rem;
 }
 
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-}
-
 .main .top-row {
     position: sticky;
     top: 0;
@@ -164,10 +185,6 @@ app {
 
 .navbar-toggler {
     display: none;
-}
-
-.sidebar .collapse {
-    display: block;
 }
 
 @font-face {
@@ -223,6 +240,10 @@ app {
         line-height: 0;
     }
 
+    .material-icons.clickable:hover {
+        cursor: pointer;
+    }
+
 .playbackbar {
     height: 60px;
     color: white;
@@ -236,23 +257,23 @@ app {
         width: 400px;
     }
 
-        .playbackbar .track-metadata * {
-            width: 400px;
+        .playbackbar .track-metadata *:not(.save-button) {
+            max-width: calc(400px - 40px);
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
             color: white;
         }
 
-    .playbackbar .track-title {
-        font-size: 22px;
-    }
+        .playbackbar .track-metadata .track-title {
+            font-size: 22px;
+        }
 
-    .playbackbar .track-artist {
-        font-size: 13px;
-        color: lightgray;
-        padding-left: 1px;
-    }
+        .playbackbar .track-metadata .track-artist {
+            font-size: 13px;
+            color: lightgray;
+            padding-left: 1px;
+        }
 
 .progressbar-background {
     height: 5px;
@@ -264,6 +285,8 @@ app {
     height: 100%;
     background-color: var(--caerostris-primary-color);
     border-radius: 2px;
+
+    /* transition: 0.5s; TODO: ne akadjon storage olvasáskor */
 }
 
 
@@ -280,25 +303,27 @@ app {
     color: black;
 }
 
-.datagrid *:not(.btn) {
-    background-color: transparent;
-    color: white;
-    border: 0;
-    text-overflow: ellipsis;
-}
 
-/*
-.datagrid .btn {
-    margin: 0 !important;
-}
-*/
+    .datagrid *:not(.btn) {
+        background-color: transparent;
+        color: white;
+        border: 0;
+
+        text-overflow: ellipsis;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em;
+    }
 
     .datagrid tr.datagrid-row {
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
+        .datagrid tr.datagrid-row td:first-child {
+            font-weight: 500;
+        }
+
     .datagrid tr.datagrid-row td {
-        padding: 0.75rem;
+        padding: 0.66rem;
     }
 
     .datagrid tr.datagrid-row td.bg-primary {
@@ -306,9 +331,9 @@ app {
     }
 
     .datagrid th .dxbs-fixed-header-content {
-        padding-left: 12px;
+        padding-left: 10px;
         text-transform: uppercase;
-        opacity: 0.4;
+        opacity: var(--info-opacity);
     }
 
     .datagrid th .dxbs-textbox {
@@ -324,11 +349,11 @@ app {
     }
 
 .library-controls, .playback-status {
-    opacity: 0.4;
+    opacity: var(--info-opacity);
 }
 
-.explicit-mark { /* needs to be applied in places that have more specific rules defined on them already */
-    opacity: 0.4;
+.explicit-mark { /* needs to be applied within dxdatagrid */
+    opacity: var(--info-opacity);
     font-size: 0.66rem !important;
     display: block !important;
     text-align: center !important;
@@ -347,38 +372,49 @@ app {
 
 .context-page-heading-type {
     font-size: 0.75rem;
-    opacity: 0.4;
+    opacity: var(--info-opacity);
     margin-bottom: 0;
 }
 
 .context-page-heading-title {
     max-width: calc(100vw - 30vh - 600px);
     font-size: 4rem;
+    font-weight: 700;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
 .context-page-heading-by {
-    opacity: 0.4;
+    opacity: var(--info-opacity);
 }
 
 .context-page-heading-childcontent {
-    opacity: 0.4;
     word-break: break-word;
     overflow-wrap: break-word;
 }
 
-.context-page-body-subsection-title {
+    .context-page-heading-childcontent > *:not(.btn) {
+        opacity: var(--info-opacity);
+    }
+
+    .context-page-heading-childcontent > .btn {
+        margin: 0 !important; /* Overriding Bootstrap !important */
+    }
+
+.subsection-title {
     font-weight: bold;
+    padding: 1em 8px 0.5em 8px;
+    margin: 0 8px;
 }
 
-.artist-page-thumbnail {
-    width: 150px;
-    height: auto;
-    filter: drop-shadow(0px 0px 5px black);
-    border-radius: 2px;
-}
+    .subsection-title:first-of-type {
+        padding-top: 0;
+    }
+
+    .subsection-title:not(:first-of-type) {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
 .artist-page-related-artist-name {
     font-size: 1.2rem;
@@ -387,4 +423,103 @@ app {
 
 .artist-page-album-title {
     font-size: 1.2rem;
+}
+
+.navigation-thumbnail-card.card {
+    background-color: transparent;
+    box-sizing: content-box;
+    padding: 16px;
+    border: 0;
+}
+
+.navigation-thumbnail-card .card-img-top {
+    border-radius: 2px;
+    object-fit: cover;
+    filter: drop-shadow(0px 0px 5px black);
+}
+
+.navigation-thumbnail-card .card-body {
+    padding: 8px 2px;
+}
+
+.navigation-thumbnail-card .card-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+}
+
+.navigation-thumbnail-card .card-text {
+    opacity: var(--info-opacity);
+}
+
+.collab-with {
+    opacity: var(--info-opacity);
+}
+
+.user-playlists-list-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.user-playlists-list {
+    overflow-y: auto;
+    scrollbar-color: var(--scrollbar-thumb-background-color-de-emphasized) var(--scrollbar-background-color);
+}
+
+    .user-playlists-list li {
+        opacity: 0.8;
+        font-size: 0.9rem;
+        line-height: 2;
+        list-style-type: none;
+
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .user-playlists-list::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb-background-color-de-emphasized);
+    }
+
+.save-button {
+    font-size: 21px;
+    line-height: 0;
+}
+
+.search-query-form {
+    width: 400px;
+
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    color: white; 
+}
+
+    .search-query-form label {
+        margin: 0;
+    }
+
+    .search-query-form .search-query {
+        width: 334px;
+
+        border: 0;
+        background-color: transparent;
+        color: white;
+    }
+
+        .search-query-form ::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+.centered-info {
+    opacity: var(--info-opacity);
+}
+
+.clear-button {
+    opacity: var(--info-opacity);
+}
+
+.loading-message {
+    opacity: var(--info-opacity);
 }

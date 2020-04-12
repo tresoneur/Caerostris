@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 
 
-<div id=@ID class=@(Fluid ? "h-100" : "")>
+<div id=@Id class=@(Fluid ? "h-100" : "")>
 
     @ChildContent
 
@@ -10,7 +10,7 @@
 
 @code
 {
-    private string ID = "height-" + new Random().Next().ToString("x");
+    private string Id = "height-" + new Random().Next().ToString("x");
 
     [Parameter]
     public bool Fluid { get; set; }
@@ -28,7 +28,7 @@
     {
         if(firstRender)
         {
-            Height = await JSRuntime.InvokeAsync<int>("SpotifyService.GetHeight", $"#{ID}");
+            Height = await JSRuntime.InvokeAsync<int>("SpotifyService.GetHeight", $"#{Id}");
             OnMeasurementTaken?.Invoke(Height);
         }
     }

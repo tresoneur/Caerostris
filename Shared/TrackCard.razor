@@ -1,0 +1,15 @@
+﻿@inject SpotifyService Spotify
+
+
+<NavigationThumbnailCard Url=@($"{Spotify.ExploreAlbumUrl}{Track.Album.Id}")
+                         Width="300px"
+                         Thumbnail=@Track.Album.Images.AtLeastOfHeight(300)
+                         Title=@Track.Name
+                         Details=@($"{Track.Artists.GetArtists()} • {Track.Album.Name}") />
+
+
+@code
+{
+    [Parameter]
+    public FullTrack Track { get; set; }
+}

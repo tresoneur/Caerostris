@@ -14,17 +14,18 @@
     <div class="d-flex flex-row justify-content-between align-items-center px-3">
 
         <div class="d-flex flex-column justify-content-start track-metadata">
-            <div><h4 class="track-title">@((MarkupString)playbackContext.GetTrackTitle(link: true))</h4></div>
-            <div><p class="track-artist">@((MarkupString)playbackContext.GetArtists(links: true))</p></div>
+            <div class="d-flex flex-row justify-content-start align-items-center">
+                <h4 class="pr-2 track-title">@((MarkupString)playbackContext.GetTrackTitle(link: true))</h4>
+                <SaveButton TrackId=@playbackContext?.Item?.Id />
+            </div>
+            <div><p class="track-artist">@((MarkupString)playbackContext.GetArtists(links: true, localUrl: Spotify.ExploreArtistUrl))</p></div>
         </div>
 
         <div class="d-flex flex-row align-items-center">
 
             <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
 
-            <button @onclick="OnPlayPauseButtonClick" type="button" class="btn btn-outline-light px-2 m-2">
-                <i class="material-icons md-36">@(playbackContext.IsPlayingOrNull() ? "pause" : "play_arrow")</i>
-            </button>
+            <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(playbackContext.IsPlayingOrNull() ? "pause" : "play_arrow") />
 
             <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
 
@@ -97,7 +98,7 @@
         });
     }
 
-    private async void OnPlayPauseButtonClick()
+    private async Task OnPlayPauseButtonClick()
     {
         if(playbackContext.HasValidItem())
             if(playbackContext.IsPlaying)

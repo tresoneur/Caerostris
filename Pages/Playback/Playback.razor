@@ -5,12 +5,14 @@
 
 
 <div>
-    <p class="p-3 playback-status">Playback state for: @(username ?? "Loading...")</p>
+    <p class="p-3 playback-status">Playback: @(username ?? "Loading...")</p>
 </div>
 <div class="playback-cover-image-container">
     @if (!(coverImage is null))
     {
-        <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
+        <a href=@albumUrl>
+            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
+        </a>
     }
 </div>
 
@@ -19,6 +21,7 @@
 {
     private string? username;
     private string? coverImage;
+    private string? albumUrl;
 
     protected async override Task OnInitializedAsync()
     {
@@ -38,6 +41,7 @@
         {
             var image = playback?.Item?.Album?.Images?.OrderBy((img) => -img.Height).FirstOrDefault();
             coverImage = image?.Url;
+            albumUrl = $"{Spotify.ExploreAlbumUrl}{playback?.Item?.Album?.Id}";
 
             StateHasChanged();
         });
