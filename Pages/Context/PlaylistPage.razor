@@ -44,7 +44,7 @@
                 <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px">
                     <DisplayTemplate>
                         <ActionText Text=@((context as PlaylistTrack).Track.Name)
-                                    OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: (context as PlaylistTrack).Track.Uri)) />
+                                    OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: (context as PlaylistTrack).Track.OriginalUri())) />
                     </DisplayTemplate>
                 </DxDataGridColumn>
 

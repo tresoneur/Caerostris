@@ -115,6 +115,7 @@
         set
         {
             query = value;
+            Spotify.SearchQuery = value;
             hasQueryChanged = true;
         }
     }
@@ -138,6 +139,8 @@
             dueTime: 100,
             period: 200
         );
+
+        Query = Spotify.SearchQuery;
     }
 
     public void Dispose()
@@ -154,5 +157,4 @@
 
         StateHasChanged();
     }
-
 }

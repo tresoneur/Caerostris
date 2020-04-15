@@ -12,7 +12,7 @@
                                 By=@(CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
                                 ImageUri=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
-                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() songs, @CompleteAlbum.HumanReadableTotalLength()</p>
+                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @($"song{(CompleteAlbum.Tracks.Count() > 1 ? "s" : "")}"), @CompleteAlbum.HumanReadableTotalLength()</p>
 
                 <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: null))/>
 

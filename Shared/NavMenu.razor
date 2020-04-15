@@ -7,25 +7,10 @@
 
 <div>
     <ul class="nav flex-column pl-3 pr-4">
-        <li class="nav-item">
-            <NavLink href="" Match="NavLinkMatch.All">
-                <i class="material-icons md-24-inline pl-1 pr-2">play_arrow</i> Playback
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink href="context">
-                <i class="material-icons md-24-inline pl-1 pr-2">playlist_play</i> Context
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink href="library">
-                <i class="material-icons md-24-inline pl-1 pr-2">library_music</i> Library
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink href="search">
-                <i class="material-icons md-24-inline pl-1 pr-2">search</i> Search
-            </NavLink>
-        </li>
+        <NavMenuItem Href="" Match=@NavLinkMatch.All Icon="play_arrow" Text="Playback" />
+        <NavMenuItem Href="context" Icon="playlist_play" Text="Context" />
+        <NavMenuItem Href="library" Icon="library_music" Text="Library" />
+        <NavMenuItem Href="insights" Icon="insert_chart" Text="Insights" />
+        <NavMenuItem Href="search" Icon="search" Text="Search" />
     </ul>
 </div>

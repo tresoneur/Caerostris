@@ -1,11 +1,12 @@
 ﻿@inject SpotifyService Spotify
 
 
-<NavigationThumbnailCard Url=@($"{Spotify.ExploreArtistUrl}{Artist.Id}")
-                            Width="300px"
-                            Thumbnail=@Artist.Images.AtLeastOfHeight(300)
-                            Title=@Artist.Name
-                            Details=@Artist.GetGenres(limit: 2) />
+    <NavigationThumbnailCard Url=@($"{Spotify.ExploreArtistUrl}{Artist.Id}")
+                             Play=@(() => Spotify.PlayTrack(Artist.Uri, null))
+                             Width="300px"
+                             Thumbnail=@Artist.Images.AtLeastOfHeight(300)
+                             Title=@Artist.Name
+                             Details=@Artist.GetGenres(limit: 2) />
 
 
 @code

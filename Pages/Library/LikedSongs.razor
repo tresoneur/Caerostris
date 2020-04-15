@@ -25,7 +25,6 @@ else
             <BoundInlineCheckbox Label="filter row" @bind-Checked=@showFilterRow />
             <BoundInlineCheckbox Label="explicit" @bind-Checked=@showExplicitColumn />
             <BoundInlineCheckbox Label="popularity" @bind-Checked=@showPopularityColumn />
-            <BoundInlineCheckbox Label="type" @bind-Checked=@showTypeColumn />
         </div>
         <div>
             <DxDataGrid CssClass="datagrid"
@@ -82,8 +81,6 @@ else
 
                 <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Popularity)}") Caption="Popularity" Width="50px" Visible=@showPopularityColumn />
 
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Type)}") Caption="Type" Width="30px" Visible=@showTypeColumn /> <!-- TODO: ennek semmi értelme -->
-
             </DxDataGrid>
         </div>
     </div>
@@ -103,7 +100,6 @@ else
     private bool
         showFilterRow = true,
         showExplicitColumn = true,
-        showTypeColumn = false,
         showPopularityColumn = false;
 
 

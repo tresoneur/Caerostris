@@ -3,6 +3,7 @@
 
 html {
     --caerostris-primary-color: #1996C4;
+    --caerostris-secondary-background-color: rgba(255, 255, 255, 0.2);
     --scrollbar-background-color: transparent;
     --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
     --scrollbar-thumb-background-color-de-emphasized: rgba(255, 255, 255, 0.1);
@@ -49,10 +50,15 @@ a, a:hover {
 }
 
 .btn-primary {
-    color: #fff;
+    color: white;
     background-color: var(--caerostris-primary-color);
     border-color: var(--caerostris-primary-color);
 }
+
+    .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+        background-color: #0062cc;
+        border-color: #005cbf;
+    }
 
 .btn:focus, .btn:active, input:focus, input:active {
     outline: none !important;
@@ -88,7 +94,7 @@ img:not([src]) {
 
 .caerostris-logo {
     font-size: 30px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1;
     text-decoration: none;
     color: white;
@@ -111,6 +117,7 @@ img:not([src]) {
 
     .sidebar .nav-item {
         font-size: 0.9rem;
+        padding-top: 4px;
     }
         .sidebar .nav-item *:hover {
             text-decoration: none;
@@ -126,7 +133,7 @@ img:not([src]) {
 
         .sidebar .nav-item a {
             color: rgba(255, 255, 255, 0.8);
-            height: 3rem;
+            height: 2.5rem;
             display: flex;
             align-items: center;
             line-height: 3rem;
@@ -171,12 +178,13 @@ img:not([src]) {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+        visibility: hidden;
+    }
 
 .main .top-row {
     position: sticky;
@@ -299,16 +307,26 @@ img:not([src]) {
     filter: drop-shadow(0px 0px 30px black)
 }
 
-.blazored-modal-container {
+.blazored-modal {
     color: black;
+    border-radius: 2px;
+    border: 0;
 }
+
+    .blazored-modal .blazored-modal-header {
+        padding-bottom: 1rem;
+    }
+
+    .blazored-modal hr {
+        color: var(--info-color);
+    }
+
 
 
     .datagrid *:not(.btn) {
         background-color: transparent;
         color: white;
         border: 0;
-
         text-overflow: ellipsis;
         font-variant-numeric: tabular-nums;
         letter-spacing: -0.01em;
@@ -351,6 +369,10 @@ img:not([src]) {
 .library-controls, .playback-status {
     opacity: var(--info-opacity);
 }
+
+    .library-controls .form-check-inline:first-of-type {
+        padding-left: 0.75rem;
+    }
 
 .explicit-mark { /* needs to be applied within dxdatagrid */
     opacity: var(--info-opacity);
@@ -430,27 +452,49 @@ img:not([src]) {
     box-sizing: content-box;
     padding: 16px;
     border: 0;
+    position: relative;
 }
 
-.navigation-thumbnail-card .card-img-top {
-    border-radius: 2px;
-    object-fit: cover;
-    filter: drop-shadow(0px 0px 5px black);
-}
+    .navigation-thumbnail-card .card-img-top {
+        border-radius: 2px;
+        object-fit: cover;
+        filter: drop-shadow(0px 0px 5px black);
+    }
 
-.navigation-thumbnail-card .card-body {
-    padding: 8px 2px;
-}
+    .navigation-thumbnail-card .card-body {
+        padding: 8px 2px;
+    }
 
-.navigation-thumbnail-card .card-title {
-    font-weight: bold;
-    margin-bottom: 4px;
-    letter-spacing: 0.2px;
-}
+    .navigation-thumbnail-card .card-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        letter-spacing: 0.2px;
+    }
 
-.navigation-thumbnail-card .card-text {
-    opacity: var(--info-opacity);
-}
+    .navigation-thumbnail-card .card-text {
+        opacity: var(--info-opacity);
+    }
+
+    .navigation-thumbnail-card .centered-button-container {
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        opacity: 0;
+        transition: 0.25s;
+    }
+
+        .navigation-thumbnail-card .centered-button-container .btn {
+            visibility: hidden;
+        }
+
+        .navigation-thumbnail-card .centered-button-container:hover {
+            opacity: 1;
+        }
+
+            .navigation-thumbnail-card .centered-button-container:hover .btn {
+                visibility: visible;
+            }
+
+
 
 .collab-with {
     opacity: var(--info-opacity);
@@ -491,7 +535,7 @@ img:not([src]) {
 .search-query-form {
     width: 400px;
 
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--caerostris-secondary-background-color);
     border-radius: 2px;
     color: white; 
 }
@@ -522,4 +566,9 @@ img:not([src]) {
 
 .loading-message {
     opacity: var(--info-opacity);
+    font-variant-numeric: tabular-nums;
+}
+
+.dx-blazor-widget {
+    color: black;
 }
