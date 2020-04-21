@@ -7,6 +7,8 @@ html {
     --scrollbar-background-color: transparent;
     --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
     --scrollbar-thumb-background-color-de-emphasized: rgba(255, 255, 255, 0.1);
+    --subsection-divider-border: 1px solid rgba(255, 255, 255, 0.2);
+    --subsection-padding: 1em 8px 0.5em 8px;
     --info-color: rgba(255, 255, 255, 0.4);
     --info-opacity: 0.4;
 }
@@ -265,7 +267,7 @@ img:not([src]) {
         width: 400px;
     }
 
-        .playbackbar .track-metadata *:not(.save-button) {
+        .playbackbar .track-metadata *:not(.inline-icon-button) {
             max-width: calc(400px - 40px);
             overflow: hidden;
             white-space: nowrap;
@@ -289,11 +291,14 @@ img:not([src]) {
     border-radius: 2px;
 }
 
+    .progressbar-background.clickable:hover {
+        cursor: pointer;
+    }
+
 .progressbar-progress {
     height: 100%;
     background-color: var(--caerostris-primary-color);
     border-radius: 2px;
-
     /* transition: 0.5s; TODO: ne akadjon storage olvasáskor */
 }
 
@@ -425,8 +430,9 @@ img:not([src]) {
     }
 
 .subsection-title {
+    display: inline;
     font-weight: bold;
-    padding: 1em 8px 0.5em 8px;
+    padding: var(--subsection-padding);
     margin: 0 8px;
 }
 
@@ -435,7 +441,7 @@ img:not([src]) {
     }
 
     .subsection-title:not(:first-of-type) {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-top: var(--subsection-divider-border);
     }
 
 .artist-page-related-artist-name {
@@ -527,9 +533,11 @@ img:not([src]) {
         background-color: var(--scrollbar-thumb-background-color-de-emphasized);
     }
 
-.save-button {
+.inline-icon-button {
     font-size: 21px;
     line-height: 0;
+    position: relative;
+    top: 2px;
 }
 
 .search-query-form {
@@ -570,5 +578,30 @@ img:not([src]) {
 }
 
 .dx-blazor-widget {
+    color: white;
+}
+
+    .dx-blazor-widget.card {
+        background-color: transparent;
+    }
+
+.dx-chart-tooltips {
     color: black;
+}
+
+    .dx-chart-tooltips a, .dx-chart-tooltips a:hover {
+        color: black;
+    }
+
+.audio-features-graph g.dxc-val-grid {
+    visibility: hidden;
+}
+
+g.dxc-val-grid > path {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+.dx-chart-legend-container {
+    max-height: 300px;
+    overflow: auto;
 }

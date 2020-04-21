@@ -1,0 +1,122 @@
+﻿@using Caerostris.Services.Spotify.Web
+@using System.Globalization
+
+
+@inherits TrackSelectionGraph
+
+
+    <DxChart Data=@data CssClass="audio-features-graph">
+
+        <DxChartTitle Text="Audio features of your saved tracks over time (avg per month)" />
+
+        <DxChartValueAxis Name=@bpm Pane=@pane>
+            <DxChartAxisTitle Text="Beats per minute" />
+        </DxChartValueAxis>
+
+        <DxChartValueAxis Name=@norm Position=@HorizontalEdge.Right Pane=@pane>
+            <DxChartAxisTitle Text="Normalized score" />
+        </DxChartValueAxis>
+
+        <DxChartLegend AllowToggleSeries=@true />
+
+        <DxChartPane Name=@pane />
+
+        <DxChartLineSeries Name="Tempo"
+                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           AggregationMethod=@Enumerable.Average
+                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Tempo)
+                           Axis=@bpm>
+            <DxChartSeriesPoint Visible=@false />
+        </DxChartLineSeries>
+
+        <DxChartLineSeries Name="Acousticness"
+                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           AggregationMethod=@Enumerable.Average
+                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Acousticness)
+                           Axis=@norm>
+            <DxChartSeriesPoint Visible=@false />
+        </DxChartLineSeries>
+
+        <DxChartLineSeries Name="Valence"
+                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           AggregationMethod=@Enumerable.Average
+                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Valence)
+                           Axis=@norm>
+            <DxChartSeriesPoint Visible=@false />
+        </DxChartLineSeries>
+
+        <DxChartLineSeries Name="Danceability"
+                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           AggregationMethod=@Enumerable.Average
+                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Danceability)
+                           Axis=@norm>
+            <DxChartSeriesPoint Visible=@false />
+        </DxChartLineSeries>
+
+        <DxChartTooltip>
+
+            <div class="p-2 d-flex flex-column align-items-center">
+
+                <p>
+                    <b>@($"{context.Point.SeriesName} around {GetFormattedFloat(ParseAsFloat(context.Point.Value))}")</b>
+                </p>
+
+                <ActionText Text="Show tracks around this value"
+                            OnClick=@(() => OnValueSelected(context.Point.SeriesName.ToString(), ParseAsFloat(context.Point.Value))) />
+
+            </div>
+
+        </DxChartTooltip>
+
+    </DxChart>
+
+
+@code
+{
+    [Parameter]
+    public IEnumerable<AudioFeatures> AudioFeatures { get; set; }
+
+
+    private IEnumerable<(SavedTrack, AudioFeatures)> data;
+
+    private const string pane = "pane", bpm = "bpm", norm = "norm";
+
+
+    protected override void OnInitialized()
+    {
+        data = Tracks
+            .Join(AudioFeatures, s => s.Track.Id, a => a.Id, (s, a) => (s, a))
+            .OrderBy(s => s.Item1.AddedAt);
+    }
+
+    private string GetMonth((SavedTrack, AudioFeatures) dataPoint) =>
+        dataPoint.Item1.AddedAt.ToString("yyyy-MM", CultureInfo.InvariantCulture);
+
+    private string GetFormattedFloat(float f) =>
+        f.ToString("0.##");
+
+    private float ParseAsFloat(object o) =>
+        float.Parse(o.ToString());
+
+    private async Task OnValueSelected(string property, float value)
+    {
+        Func<(SavedTrack, AudioFeatures), float> prop = (s) => property switch
+        {
+            "Tempo"         => s.Item2.Tempo,
+            "Acousticness"  => s.Item2.Acousticness,
+            "Valence"       => s.Item2.Valence,
+            "Danceability"  => s.Item2.Danceability,
+            _               => throw new ArgumentOutOfRangeException()
+        };
+
+        SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>(
+            data
+                .Select(s => new { Item = s, Distance = Math.Abs(prop(s) - value) })
+                .OrderBy(a => a.Distance)
+                .Take(25)
+                .Select(a => a.Item.Item1),
+            $"Songs with {property.ToLowerInvariant()} around {GetFormattedFloat(value)}");
+
+        await OnSelectedTracksAndDescriptionChanged();
+    }
+}

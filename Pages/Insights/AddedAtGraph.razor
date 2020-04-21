@@ -1,0 +1,56 @@
+﻿@using Caerostris.Services.Spotify.Web
+
+
+@inherits TrackSelectionGraph
+
+
+<DxChart Data="@Tracks">
+
+    <DxChartTitle Text="Saved tracks history" />
+
+    <DxChartArgumentAxis Type="ChartAxisType.Discrete">
+
+        <DxChartAxisTitle Text="Month of year" HorizontalAlignment="HorizontalAlignment.Center" />
+
+    </DxChartArgumentAxis>
+
+    <DxChartCommonSeries NameField=@((SavedTrack s) => s.AddedAt.Year)
+                         ArgumentField=@((SavedTrack s) => s.AddedAt.Month)
+                         AggregationMethod=@Enumerable.Sum
+                         ValueField=@(_ => 1)
+                         SeriesType=@ChartSeriesType.Bar />
+
+    <DxChartTooltip>
+
+        <div class="p-2 d-flex flex-column align-items-center">
+
+            <p>
+                <b>@($"{WebAPIModelExtensions.HumanReadableMonth(int.Parse(context.Point.Argument.ToString()))} {context.Point.SeriesName}")</b>
+            </p>
+
+            <p> 
+                <b> @context.Point.Value </b> saved tracks
+            </p>
+
+            <ActionText Text="Show tracks"
+                        OnClick=@(() => OnMonthSelected(context.Point.SeriesName.ToString(), context.Point.Argument.ToString())) />
+
+        </div>
+
+    </DxChartTooltip>
+
+</DxChart>
+
+
+@code
+{
+    private async Task OnMonthSelected(string yearLabel, string monthLabel)
+    {
+        int year = int.Parse(yearLabel), month = int.Parse(monthLabel);
+        SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>(
+            Tracks.Where(t => t.AddedAt.Year == year && t.AddedAt.Month == month),
+            $"Songs you saved in {WebAPIModelExtensions.HumanReadableMonth(month)} {year}");
+
+        await OnSelectedTracksAndDescriptionChanged();
+    }
+}

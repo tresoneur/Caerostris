@@ -33,6 +33,7 @@
     protected async override Task OnInitializedAsync()
     {
         Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
+        Spotify.UserPlaylistsChanged += () => InvokeAsync(async () => await FillPlaylists(forceReload: true));
 
         if (await Spotify.AuthGranted())
             await FillPlaylists();
@@ -40,16 +41,15 @@
 
     private async void OnAuthAcquired()
     {
-        await InvokeAsync(async () =>
-        {
-            await FillPlaylists();
-            StateHasChanged();
-        });
+        await InvokeAsync(async () => await FillPlaylists());
     }
 
-    private async Task FillPlaylists()
+    private async Task FillPlaylists(bool forceReload = false)
     {
-        if (playlists is null)
+        if (forceReload || playlists is null)
+        {
             playlists = await Spotify.GetUserPlaylists();
+            StateHasChanged();
+        }
     }
 }

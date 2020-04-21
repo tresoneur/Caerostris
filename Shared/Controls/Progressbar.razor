@@ -5,7 +5,7 @@
 
 
     <div id=@Id
-         class="w-100 progressbar-background"
+         class="w-100 progressbar-background @(OnClick is null ? "" : "clickable")"
          @onclick=@OnProgressbarClick>
 
         <div class="progressbar-progress"

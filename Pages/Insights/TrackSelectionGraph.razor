@@ -1,0 +1,21 @@
+﻿@code 
+{
+    [Parameter]
+    public IEnumerable<SavedTrack> Tracks { get; set; }
+
+    /// <remarks>
+    /// As of yet, child-to-parent binding isn't exactly a solved problem in Blazor.
+    /// </remarks>
+
+    [Parameter]
+    public Tuple<IEnumerable<SavedTrack>, string>? SelectedTracksAndDescription { get; set; }
+
+    [Parameter]
+    public EventCallback<Tuple<IEnumerable<SavedTrack>, string>?> SelectedTracksAndDescriptionChanged { get; set; }
+
+
+    protected Task OnSelectedTracksAndDescriptionChanged()
+    {
+        return SelectedTracksAndDescriptionChanged.InvokeAsync(SelectedTracksAndDescription);
+    }
+}

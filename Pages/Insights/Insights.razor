@@ -1,0 +1,136 @@
+﻿@page "/insights"
+@page "/insights/{chosengraph}"
+
+
+@implements IDisposable
+
+
+@inject SpotifyService Spotify
+
+
+@if (features is null)
+{
+    <CenteredLoadingIndicator @ref=@loadingIndicator LoadingWhat="analytics" ShowProgress />
+}
+else
+{
+    <HeightMeasurementProvider @ref=contentHeight Fluid>
+
+        <div class="p-4 insights-content">
+
+            <HeightMeasurementProvider @ref=chartHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
+
+                @if (string.IsNullOrEmpty(ChosenGraph) || ChosenGraph.Equals(AddedAtRoute))
+                {
+                    <AddedAtGraph Tracks=@tracks
+                                  @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+                }
+                else if (ChosenGraph.Equals(AudioFeaturesRoute))
+                {
+                    <AudioFeaturesGraph Tracks=@tracks
+                                        AudioFeatures=@features
+                                        @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+                }
+                else if (ChosenGraph.Equals(TrackLengthRoute))
+                {
+                    <TrackLengthGraph Tracks=@tracks
+                                      @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+                }
+
+            </HeightMeasurementProvider>
+
+            @if (!(selectedTracksAndDescription is null))
+            {
+                <SubsectionTitle Title=@selectedTracksAndDescription.Item2 />
+
+                <InlineActionIcon Icon="save" OnClick=SaveAsPlaylist />
+
+                <div class="px-2 pt-2">
+                    <SavedTrackDataGrid Height=@measurement.Output
+                                        Tracks=@selectedTracksAndDescription.Item1 />
+                </div>
+            }
+
+        </div>
+
+    </HeightMeasurementProvider>
+}
+
+@code
+{
+    [CascadingParameter]
+    public ContextMenu? ContextMenu { get; set; }
+
+    [Parameter]
+    public string? ChosenGraph { get; set; }
+
+    private const string AddedAtRoute = "added-at",
+        AudioFeaturesRoute = "audio-features",
+        TrackLengthRoute = "track-length";
+
+    private IQueryable<SavedTrack>? tracks;
+    private IQueryable<AudioFeatures>? features;
+
+    Tuple<IEnumerable<SavedTrack>, string>? selectedTracksAndDescription;
+
+    private CenteredLoadingIndicator loadingIndicator;
+    private HeightMeasurementProvider contentHeight, chartHeight;
+    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (await Spotify.AuthGranted())
+        {
+            tracks = (await Spotify.GetSavedTracks()).AsQueryable();
+            features = (await Spotify.GetAudioFeaturesForSavedTracks()).AsQueryable();
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Spotify.LibraryLoadingProgress += loadingIndicator.Update;
+            Spotify.AnalyticsLoadingProgress += loadingIndicator.Update;
+
+            measurement.StateHasChanged = StateHasChanged;
+            measurement.Calculate = (_) => Math.Max(contentHeight.Height - chartHeight.Height - 100, 100);
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        const string Href = nameof(NavMenuItem.Href),
+            Match = nameof(NavMenuItem.Match),
+            Icon = nameof(NavMenuItem.Icon),
+            Text = nameof(NavMenuItem.Text);
+
+        ContextMenu?.Set("insights", new List<Dictionary<String, object>>()
+        {
+            new Dictionary<String, object>()
+            {
+                { Href, string.Empty }, { Match, NavLinkMatch.All }, { Icon, "date_range" }, { Text, "Saved tracks history" }
+            },
+            new Dictionary<String, object>()
+            {
+                { Href, AudioFeaturesRoute }, { Icon, "graphic_eq" }, { Text, "Audio features" }
+            },
+            new Dictionary<String, object>()
+            {
+                { Href, TrackLengthRoute }, { Icon, "query_builder" }, { Text, "Track length" }
+            }
+        });
+    }
+
+    private async Task SaveAsPlaylist()
+    {
+        if(!(selectedTracksAndDescription is null))
+            await Spotify.CreatePlaylist(
+                selectedTracksAndDescription.Item2,
+                "Created with Caerostris Insights",
+                selectedTracksAndDescription.Item1);
+    }
+
+    public void Dispose() =>
+        ContextMenu?.Clear();
+}

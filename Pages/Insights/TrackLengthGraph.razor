@@ -1,0 +1,62 @@
+﻿@inherits TrackSelectionGraph
+
+
+    <DxChart Data=@Tracks.OrderBy(s => s.Track.DurationMs)>
+
+        <DxChartTitle Text="Track length distribution" />
+
+        <DxChartLegend Orientation=@Orientation.Vertical
+                       HorizontalAlignment=@HorizontalAlignment.Right
+                       VerticalAlignment=@VerticalEdge.Top
+                       Position=@RelativePosition.Inside
+                       AllowToggleSeries=@true />
+
+        <DxChartPieSeries ArgumentField=@((SavedTrack s) => GetMinInterval(s))
+                          AggregationMethod=@Enumerable.Sum
+                          ValueField=@(_ => 1) />
+
+        <DxChartTooltip>
+
+            <div class="p-2 d-flex flex-column align-items-center">
+                <p><b>@context.Point.Argument</b></p>
+
+                <p><b>@context.Point.Value</b> saved tracks</p>
+
+                <ActionText Text="Show tracks"
+                            OnClick=@(() => OnIntervalSelected(context.Point.Argument.ToString())) />
+            </div>
+
+        </DxChartTooltip>
+
+    </DxChart>
+
+
+@code
+{
+    private int DurationToFloorMinutes(SavedTrack s) =>
+        TimeSpan.FromMilliseconds(s.Track.DurationMs).Minutes;
+
+    private string GetMinInterval(SavedTrack s)
+    {
+        var min = DurationToFloorMinutes(s);
+        return $"{min}-{min + 1} min";
+    }
+
+    private bool IsInMinInterval(SavedTrack s, int min, int max)
+    {
+        var minutes = DurationToFloorMinutes(s);
+        return (min <= minutes && minutes < max);
+    }
+
+    private async Task OnIntervalSelected(string label)
+    {
+        var segments = label.Split(new string[] { "-", " min" }, StringSplitOptions.RemoveEmptyEntries);
+        int min = int.Parse(segments[0]), max = int.Parse(segments[1]);
+
+        SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>(
+            Tracks.Where(s => IsInMinInterval(s, min, max)),
+            $"Songs with a duration of {label}");
+
+        await OnSelectedTracksAndDescriptionChanged();
+    }
+}

@@ -3,9 +3,7 @@
 
 @if (!(TrackId is null))
 {
-    <i class="material-icons save-button clickable" @onclick=@OnClick>
-        @(Saved ? "favorite" : "favorite_border")
-    </i>
+    <InlineActionIcon Icon=@(Saved ? "favorite" : "favorite_border") OnClick=@OnClick/>
 }
 
 

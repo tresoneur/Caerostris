@@ -1,12 +1,7 @@
 ﻿@page "/library"
 
 
-@using Caerostris.Services.Spotify.Web.ViewModels
-@using DevExpress.Blazor
-
-
 @inject SpotifyService Spotify
-
 
 
 @if (tracks is null)
@@ -27,61 +22,12 @@ else
             <BoundInlineCheckbox Label="popularity" @bind-Checked=@showPopularityColumn />
         </div>
         <div>
-            <DxDataGrid CssClass="datagrid"
-                        DataRowCssClass="datagrid-row"
-                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
-                        VerticalScrollBarMode=@ScrollBarMode.Visible
-                        VerticalScrollableHeight=@datagridHeight
-                        ShowFilterRow=@showFilterRow
-                        PageSize=50
-                        SelectionMode=@DataGridSelectionMode.None
-                        HtmlRowDecoration=@OnHtmlRowDecoration
-                        LayoutChanged=@OnLayoutChanged
-                        Data=@tracks>
-
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px">
-                    <DisplayTemplate>
-                        <ActionText Text=@((context as SavedTrack).Track.Name)
-                                    OnClick=@(async () => await StartLibraryPlaybackAt((context as SavedTrack).Track.Uri)) />
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Explicit)}") Caption="Explicit" Width="30px" Visible=@showExplicitColumn>
-                    <DisplayTemplate>
-                        @if ((context as SavedTrack).Track.Explicit)
-                        {
-                            <span class="explicit-mark">EXPLICIT</span>
-                        }
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Caption="Artist" Width="150px" AllowSort=@DefaultBoolean.False>
-                    <DisplayTemplate>
-                        @((MarkupString)(context as SavedTrack).Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Album)}.{nameof(SimpleAlbum.Name)}") Caption="Album" Width="100px">
-                    <DisplayTemplate>
-                        @((MarkupString)(context as SavedTrack).Track.Album.GetName(link: true, localUrl: Spotify.ExploreAlbumUrl))
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption="Added" Width="100px">
-                    <DisplayTemplate>
-                        @((context as SavedTrack).HumanReadableAddedAt())
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption="Length" Width="50px">
-                    <DisplayTemplate>
-                        @((context as SavedTrack).Track.HumanReadableDuration())
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Popularity)}") Caption="Popularity" Width="50px" Visible=@showPopularityColumn />
-
-            </DxDataGrid>
+            <SavedTrackDataGrid Height=@datagridHeight 
+                                Tracks=@tracks
+                                ShowFilterRow=@showFilterRow
+                                ShowExplicitColumn=@showExplicitColumn
+                                ShowPopularityColumn=@showPopularityColumn
+                                ShowAddedAtColumn />
         </div>
     </div>
 }
@@ -94,8 +40,6 @@ else
     private IQueryable<SavedTrack>? tracks;
 
     private int datagridHeight = 550;
-
-    private List<string> visibleUris = new List<string>();
 
     private bool
         showFilterRow = true,
@@ -121,24 +65,5 @@ else
     {
         /// If an explicit height is not passed to the DxDataGrid, it will default to a ~200px scrolling area instead of filling its container
         datagridHeight = Math.Max(height - 250, 100);
-    }
-
-    private void OnHtmlRowDecoration(DataGridHtmlRowDecorationEventArgs<SavedTrack> e)
-    {
-        if (e.VisibleIndex == 0)
-            visibleUris.Clear(); // TODO: insert if scrolling upwards
-
-        visibleUris.Add(e.DataItem.Track.Uri);
-    }
-
-    private void OnLayoutChanged(IDataGridLayout _) =>
-        visibleUris.Clear();
-
-    private async Task StartLibraryPlaybackAt(string Uri)
-    {
-        if (!visibleUris.Contains(Uri))
-            await Spotify.PlayTrack(null, Uri);
-        else
-            await Spotify.PlayTracks(visibleUris.GetRange(visibleUris.IndexOf(Uri), visibleUris.Count - visibleUris.IndexOf(Uri)));
     }
 }

@@ -1,0 +1,39 @@
+﻿<div class="nav flex-column pl-3 pr-4">
+    @if (!(itemAttributes is null))
+    {
+        @foreach (var item in itemAttributes)
+        {
+            <NavMenuItem @attributes=@item />
+        }
+    }
+</div>
+
+@code
+{
+    private string? baseRoute { get; set; }
+
+    private IEnumerable<Dictionary<string, object>>? itemAttributes { get; set; }
+
+
+    public void Set(string baseRoute, IEnumerable<Dictionary<string, object>> navMenuItemAttributes)
+    {
+        this.baseRoute = baseRoute;
+        itemAttributes = navMenuItemAttributes;
+
+        foreach(var d in itemAttributes)
+        {
+            const string Href = nameof(NavMenuItem.Href);
+            d.TryGetValue(Href, out var val);
+            d[Href] = $"{baseRoute}/{val}";
+        }
+
+        StateHasChanged();
+    }
+
+    public void Clear()
+    {
+        baseRoute = null;
+        itemAttributes = null;
+        StateHasChanged();
+    }
+}
