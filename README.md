@@ -12,7 +12,7 @@ To create a proof-of-concept Blazor WebAssembly PWA Spotify client with .NET lan
 
 While Blazor WebAssembly is not ready for production use yet, it is a very promising technology that the author believes will be a major player in web application development within a few years.
 
-Other than the preview status of the framework, the lack of .NET wrappers (or a preferably a single standard one) around browser APIs remains the main force standing in the way of general adoption. To get an idea about the main features still missing from Blazor WebAssembly, visit [this page](https://github.com/dotnet/aspnetcore/issues/21514).
+Other than the preview status of the framework, the lack of .NET wrappers (or preferably a single standard one) around browser APIs remains the main force standing in the way of general adoption. To get an idea about the main features still missing from Blazor WebAssembly, visit [this page](https://github.com/dotnet/aspnetcore/issues/21514).
 
 ## Demo
 
