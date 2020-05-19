@@ -1,0 +1,50 @@
+﻿.playback-cover-image-container {
+    text-align: center;
+}
+
+.playback-cover-image {
+    margin: 0 auto;
+    filter: drop-shadow(0px 0px 30px black);
+    border-radius: 2px;
+}
+
+.playback-status {
+    opacity: var(--info-opacity);
+}
+
+.playbackbar {
+    height: 60px;
+    color: white;
+}
+
+    .playbackbar * {
+        margin: 0;
+    }
+
+    .playbackbar .track-metadata, .playbackbar .playback-extra-controls {
+        width: 400px;
+    }
+
+        .playbackbar .track-metadata *:not(.inline-icon-button) {
+            max-width: calc(400px - 40px);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: white;
+        }
+
+        .playbackbar .track-metadata .track-title {
+            font-size: 22px;
+        }
+
+        .playbackbar .track-metadata .track-artist {
+            font-size: 13px;
+            color: lightgray;
+            padding-left: 1px;
+        }
+
+.duration-display {
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    top: 1px;
+}

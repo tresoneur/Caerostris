@@ -1,6 +1,7 @@
 ﻿@using DevExpress.Blazor
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
@@ -10,60 +11,62 @@
             VerticalScrollBarMode=@ScrollBarMode.Visible
             VerticalScrollableHeight=@Height
             ShowFilterRow=@ShowFilterRow
-            PageSize=50
+            PageSize=30
             SelectionMode=@DataGridSelectionMode.None
             HtmlRowDecoration=@OnHtmlRowDecoration
             LayoutChanged=@OnLayoutChanged
             Data=@Tracks>
 
-    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px">
+    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Name)}") Caption=@L["Title"] Width="150px">
         <DisplayTemplate>
-            <ActionText Text=@((context as SavedTrack).Track.Name)
-                        OnClick=@(async () => await StartLibraryPlaybackAt((context as SavedTrack).Track.Uri)) />
+            <HighlightIfCurrentlyPlaying Uri=@((context as SavedTrack)!.Track.Uri)>
+                <ActionText Text=@((context as SavedTrack)!.Track.Name)
+                            OnClick=@(async () => await StartLibraryPlaybackAt((context as SavedTrack)!.Track.Uri)) />
+            </HighlightIfCurrentlyPlaying>
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Explicit)}") Caption="Explicit" Width="30px" Visible=@ShowExplicitColumn>
+    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Explicit)}") Caption=@L["Explicit"] Width="50px" Visible=@ShowExplicitColumn>
         <DisplayTemplate>
-            @if ((context as SavedTrack).Track.Explicit)
+            @if ((context as SavedTrack)!.Track.Explicit)
             {
                 <span class="explicit-mark">EXPLICIT</span>
             }
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Caption="Artist" Width="150px" AllowSort=@DefaultBoolean.False>
+    <DxDataGridColumn Caption=@L["Artist"] Width="150px" AllowSort=@DefaultBoolean.False>
         <DisplayTemplate>
-            @((MarkupString)(context as SavedTrack).Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
+            @((MarkupString)(context as SavedTrack)!.Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Album)}.{nameof(SimpleAlbum.Name)}") Caption="Album" Width="100px">
+    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Album)}.{nameof(SimpleAlbum.Name)}") Caption=@L["Album"] Width="100px">
         <DisplayTemplate>
-            @((MarkupString)(context as SavedTrack).Track.Album.GetName(link: true, localUrl: Spotify.ExploreAlbumUrl))
+            @((MarkupString)(context as SavedTrack)!.Track.Album.GetName(link: true, localUrl: Spotify.ExploreAlbumUrl))
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption="Added" Width="100px" Visible=@ShowAddedAtColumn >
+    <DxDataGridColumn Field=@nameof(SavedTrack.AddedAt) Caption=@L["AddedAt"] Width="100px" Visible=@ShowAddedAtColumn>
         <DisplayTemplate>
-            @((context as SavedTrack).HumanReadableAddedAt())
+            @((context as SavedTrack)!.HumanReadableAddedAt())
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption="Length" Width="50px">
+    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption=@L["Length"] Width="50px">
         <DisplayTemplate>
-            @((context as SavedTrack).Track.HumanReadableDuration())
+            @((context as SavedTrack)!.Track.HumanReadableDuration())
         </DisplayTemplate>
     </DxDataGridColumn>
 
-    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Popularity)}") Caption="Popularity" Width="50px" Visible=@ShowPopularityColumn />
+    <DxDataGridColumn Field=@($"{nameof(SavedTrack.Track)}.{nameof(FullTrack.Popularity)}") Caption=@L["Popularity"] Width="50px" Visible=@ShowPopularityColumn />
 
 </DxDataGrid>
 
-@code 
+@code
 {
     [Parameter]
-    public IEnumerable<SavedTrack> Tracks { get; set; }
+    public IEnumerable<SavedTrack> Tracks { get; set; } = null!;
 
     [Parameter]
     public int Height { get; set; } = 550;
@@ -87,7 +90,7 @@
     private void OnHtmlRowDecoration(DataGridHtmlRowDecorationEventArgs<SavedTrack> e)
     {
         if (e.VisibleIndex == 0)
-            visibleUris.Clear(); // TODO: insert if scrolling upwards
+            visibleUris.Clear();
 
         visibleUris.Add(e.DataItem.Track.Uri);
     }

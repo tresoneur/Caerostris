@@ -1,0 +1,41 @@
+﻿.btn {
+    border-radius: 2px;
+}
+
+.btn-primary {
+    color: white;
+    background-color: var(--caerostris-primary-color);
+    border-color: var(--caerostris-primary-color);
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+    background-color: #0062cc;
+    border-color: #005cbf;
+}
+
+.btn:focus, .btn:active, input:focus, input:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.inline-icon-button {
+    font-size: 21px;
+    line-height: 0;
+    position: relative;
+    top: 2px;
+}
+
+
+.action-text {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.action-text:hover {
+    text-decoration: underline;
+}
+
+
+.material-icons.clickable:hover {
+    cursor: pointer;
+}

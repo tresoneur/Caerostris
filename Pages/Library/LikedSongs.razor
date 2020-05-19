@@ -1,6 +1,7 @@
 ﻿@page "/library"
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
@@ -8,7 +9,7 @@
 {
     <HeightMeasurementProvider OnMeasurementTaken=OnHeightMeasured Fluid>
 
-        <CenteredLoadingIndicator @ref=loadingIndicator LoadingWhat="tracks" ShowProgress/>
+        <CenteredLoadingIndicator @ref=loadingIndicator LoadingWhat=@L["LoadingTracks"] ShowProgress />
 
     </HeightMeasurementProvider>
 }
@@ -17,12 +18,12 @@ else
     <div class="d-flex flex-column justify-content-between align-items-stretch py-4 h-100">
         <div class="px-3 library-controls">
             Show:
-            <BoundInlineCheckbox Label="filter row" @bind-Checked=@showFilterRow />
-            <BoundInlineCheckbox Label="explicit" @bind-Checked=@showExplicitColumn />
-            <BoundInlineCheckbox Label="popularity" @bind-Checked=@showPopularityColumn />
+            <BoundInlineCheckbox Label=@L["ShowFilterRow"] @bind-Checked=@showFilterRow />
+            <BoundInlineCheckbox Label=@L["ShowExplicitColumn"] @bind-Checked=@showExplicitColumn />
+            <BoundInlineCheckbox Label=@L["ShowPopularityColumn"] @bind-Checked=@showPopularityColumn />
         </div>
         <div>
-            <SavedTrackDataGrid Height=@datagridHeight 
+            <SavedTrackDataGrid Height=@datagridHeight
                                 Tracks=@tracks
                                 ShowFilterRow=@showFilterRow
                                 ShowExplicitColumn=@showExplicitColumn
@@ -35,7 +36,7 @@ else
 
 @code
 {
-    private CenteredLoadingIndicator loadingIndicator;
+    private CenteredLoadingIndicator loadingIndicator = null!;
 
     private IQueryable<SavedTrack>? tracks;
 
@@ -47,9 +48,9 @@ else
         showPopularityColumn = false;
 
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (await Spotify.AuthGranted())
+        if (await Spotify.IsAuthGranted())
             tracks = (await Spotify.GetSavedTracks()).AsQueryable();
     }
 

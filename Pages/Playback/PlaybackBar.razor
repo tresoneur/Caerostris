@@ -1,5 +1,4 @@
-﻿@using Caerostris.Services.Spotify.Web;
-@using SpotifyAPI.Web.Enums;
+﻿@using SpotifyAPI.Web.Enums;
 
 
 @inject SpotifyService Spotify
@@ -15,43 +14,41 @@
 
         <div class="d-flex flex-column justify-content-start track-metadata">
             <div class="d-flex flex-row justify-content-start align-items-center">
-                <h4 class="pr-2 track-title">@((MarkupString)playbackContext.GetTrackTitle(link: true))</h4>
-                <SaveButton TrackId=@playbackContext?.Item?.Id />
+                <h4 class="pr-2 track-title">@((MarkupString)PlaybackContext.GetTrackTitle(link: true))</h4>
+                <SaveButton TrackId=@PlaybackContext?.Item?.Id />
             </div>
-            <div><p class="track-artist">@((MarkupString)playbackContext.GetArtists(links: true, localUrl: Spotify.ExploreArtistUrl))</p></div>
+            <div><p class="track-artist">@((MarkupString)PlaybackContext.GetArtists(links: true, localUrl: Spotify.ExploreArtistUrl))</p></div>
         </div>
 
         <div class="d-flex flex-row align-items-center">
 
             <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
 
-            <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(playbackContext.IsPlayingOrNull() ? "pause" : "play_arrow") />
+            <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(PlaybackContext.IsPlayingOrNull() ? "pause" : "play_arrow") />
 
             <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
 
         </div>
 
         <div class="d-flex flex-row justify-content-end align-items-center playback-extra-controls">
-            
-            <SecondaryIndicatorIconButton 
-                OnClick=@OnShuffleButtonClick 
-                Icon="shuffle" 
-                On=playbackContext.GetShuffleState() />
 
-            <SecondaryIndicatorIconButton 
-                OnClick=@OnRepeatButtonClick 
-                Icon=@(playbackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat") 
-                On=@(!(playbackContext.GetRepeatState() == RepeatState.Off)) />
+            <SecondaryIndicatorIconButton OnClick=@OnShuffleButtonClick
+                                          Icon="shuffle"
+                                          On=PlaybackContext.GetShuffleState() />
 
-            <SecondaryIndicatorIconButton 
-                OnClick=@OnMuteButtonClick 
-                Icon=@(playbackContext.GetVolumePercent() == 0 ? "volume_off" : "volume_up")
-                On=@(playbackContext.GetVolumePercent() == 0) />
+            <SecondaryIndicatorIconButton OnClick=@OnRepeatButtonClick
+                                          Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat")
+                                          On="@(PlaybackContext.GetRepeatState() != RepeatState.Off)" />
+
+            <DurationDisplay ProgressMs=@progressMs DurationMs=@PlaybackContext?.Item?.DurationMs />
+
+            <SecondaryIndicatorIconButton OnClick=@OnMuteButtonClick
+                                          Icon=@(PlaybackContext.GetVolumePercent() == 0 ? "volume_off" : "volume_up")
+                                          On=@(PlaybackContext.GetVolumePercent() == 0) />
 
             <div class="w-25 pl-3">
-                <Progressbar 
-                    OnClick=@OnVolumebarClick
-                    Percent=@playbackContext.GetVolumePercent() />
+                <Progressbar OnClick=@OnVolumebarClick
+                             Percent=@PlaybackContext.GetVolumePercent() />
             </div>
 
         </div>
@@ -63,36 +60,28 @@
 
 @code
 {
-    private PlaybackContext? playbackContext { get; set; }
+    [CascadingParameter]
+    public PlaybackContext? PlaybackContext { get; set; }
+
+    private int? progressMs;
     private double progressPercent = 0;
 
-    protected async override Task OnInitializedAsync()
-    {
-        Spotify.PlaybackChanged += ContextChanged;
 
+    protected override void OnInitialized()
+    {
         Spotify.PlaybackDisplayUpdate += UpdateDisplay;
-
-        if(await Spotify.AuthGranted())
-            playbackContext = await Spotify.GetPlayback();
-    }
-
-    private async Task ContextChanged(PlaybackContext context)
-    {
-        await InvokeAsync(() =>
-        {
-            playbackContext = context;
-            StateHasChanged();
-        });
     }
 
     private async void UpdateDisplay(int progressMs)
     {
         await InvokeAsync(() =>
         {
-            if(!playbackContext.HasValidItem())
+            this.progressMs = progressMs;
+
+            if (!PlaybackContext.HasValidItem())
                 progressPercent = 0;
             else
-                progressPercent = ((double)progressMs / (double)playbackContext.Item.DurationMs) * 100d;
+                progressPercent = ((double)progressMs / (double)PlaybackContext.Item.DurationMs) * 100d;
 
             StateHasChanged();
         });
@@ -100,8 +89,8 @@
 
     private async Task OnPlayPauseButtonClick()
     {
-        if(playbackContext.HasValidItem())
-            if(playbackContext.IsPlaying)
+        if (PlaybackContext.HasValidItem())
+            if (PlaybackContext.IsPlaying)
                 await Spotify.Pause();
             else
                 await Spotify.Play();
@@ -109,15 +98,15 @@
 
     private async Task OnSkipToNextButtonClick()
     {
-        if(playbackContext.HasValidItem())
+        if (PlaybackContext.HasValidItem())
             await Spotify.Next();
     }
 
     private async Task OnSkipToPreviousButtonClick()
     {
-        if (playbackContext.HasValidItem())
+        if (PlaybackContext.HasValidItem())
         {
-            if (playbackContext.ProgressMs < 5 * 1000)
+            if (PlaybackContext.ProgressMs < 5 * 1000)
                 await Spotify.Previous();
             else
                 await Spotify.Seek(0);
@@ -126,15 +115,15 @@
 
     private async Task OnProgressbarClick(double progress)
     {
-        if(playbackContext.HasValidItem())
-            await Spotify.Seek(Convert.ToInt32(playbackContext.Item.DurationMs * progress));
+        if (PlaybackContext.HasValidItem())
+            await Spotify.Seek(Convert.ToInt32(PlaybackContext.Item.DurationMs * progress));
     }
 
     private async Task OnMuteButtonClick()
     {
-        if (!(playbackContext?.Device is null))
+        if (!(PlaybackContext?.Device is null))
         {
-            if (playbackContext.Device.VolumePercent > 0)
+            if (PlaybackContext.Device.VolumePercent > 0)
                 await Spotify.SetVolume(0);
             else
                 await Spotify.SetVolume(50);
@@ -145,13 +134,13 @@
         await Spotify.SetVolume(Convert.ToInt32(progress * 100));
 
     private async Task OnShuffleButtonClick() =>
-        await Spotify.SetShuffle(!playbackContext.GetShuffleState());
+        await Spotify.SetShuffle(!PlaybackContext.GetShuffleState());
 
     private async Task OnRepeatButtonClick() =>
         await Spotify.SetRepeat(
-            (playbackContext.GetRepeatState() == RepeatState.Off)
+            (PlaybackContext.GetRepeatState() == RepeatState.Off)
                 ? RepeatState.Context
-                : (playbackContext.GetRepeatState() == RepeatState.Context)
+                : (PlaybackContext.GetRepeatState() == RepeatState.Context)
                     ? RepeatState.Track
                     : RepeatState.Off);
 }

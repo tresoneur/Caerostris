@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 
 
-<div id=@Id class=@(Fluid ? "h-100" : "")>
+<div id=@id class=@(Fluid ? "h-100" : "")>
 
     @ChildContent
 
@@ -10,7 +10,7 @@
 
 @code
 {
-    private string Id = "height-" + new Random().Next().ToString("x");
+    private readonly string id = "height-" + new Random().Next().ToString("x");
 
     [Parameter]
     public bool Fluid { get; set; }
@@ -22,13 +22,13 @@
     public Action<int>? OnMeasurementTaken { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment ChildContent { get; set; } = null!;
 
-    protected async override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender)
         {
-            Height = await JSRuntime.InvokeAsync<int>("SpotifyService.GetHeight", $"#{Id}");
+            Height = await JSRuntime.InvokeAsync<int>("CaerostrisUtils.GetHeight", $"#{id}");
             OnMeasurementTaken?.Invoke(Height);
         }
     }

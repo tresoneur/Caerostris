@@ -1,0 +1,46 @@
+﻿.navigation-thumbnail-card.card {
+    background-color: transparent;
+    box-sizing: content-box;
+    padding: 16px;
+    border: 0;
+    position: relative;
+}
+
+    .navigation-thumbnail-card .card-img-top {
+        border-radius: 2px;
+        object-fit: cover;
+        filter: drop-shadow(0px 0px 5px black);
+    }
+
+    .navigation-thumbnail-card .card-body {
+        padding: 8px 2px;
+    }
+
+    .navigation-thumbnail-card .card-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        letter-spacing: 0.2px;
+    }
+
+    .navigation-thumbnail-card .card-text {
+        opacity: var(--info-opacity);
+    }
+
+    .navigation-thumbnail-card .centered-button-container {
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        opacity: 0;
+        transition: 0.25s;
+    }
+
+        .navigation-thumbnail-card .centered-button-container .btn {
+            visibility: hidden;
+        }
+
+        .navigation-thumbnail-card .centered-button-container:hover {
+            opacity: 1;
+        }
+
+            .navigation-thumbnail-card .centered-button-container:hover .btn {
+                visibility: visible;
+            }

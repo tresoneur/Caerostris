@@ -1,0 +1,41 @@
+﻿.context-page-heading-image {
+    height: 30vh;
+    width: auto;
+    filter: drop-shadow(0px 0px 10px black);
+}
+
+.context-page-heading-type {
+    font-size: 0.75rem;
+    opacity: var(--info-opacity);
+    margin-bottom: 0;
+}
+
+.context-page-heading-title {
+    max-width: calc(100vw - 30vh - 600px);
+    font-size: 4rem;
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.context-page-heading-by {
+    opacity: var(--info-opacity);
+}
+
+.context-page-heading-childcontent {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+    .context-page-heading-childcontent > *:not(.btn) {
+        opacity: var(--info-opacity);
+    }
+
+    .context-page-heading-childcontent > .btn {
+        margin: 0 !important; /* Overriding Bootstrap !important */
+    }
+
+.collab-with {
+    opacity: var(--info-opacity);
+}

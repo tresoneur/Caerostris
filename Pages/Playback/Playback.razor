@@ -1,17 +1,18 @@
 ﻿@page "/"
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
 <div>
-    <p class="p-3 playback-status">Playback: @(username ?? "Loading...")</p>
+    <p class="p-3 playback-status">@L["Playback", (username ?? L["LoadingEllipsis"])]</p>
 </div>
 <div class="playback-cover-image-container">
     @if (!(coverImage is null))
     {
         <a href=@albumUrl>
-            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;"/>
+            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;" />
         </a>
     }
 </div>
@@ -23,13 +24,13 @@
     private string? coverImage;
     private string? albumUrl;
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Spotify.PlaybackChanged += OnPlaybackChanged;
 
-        Spotify.AuthStateChanged += (bool acquired) => { if (acquired) OnAuthAcquired(); };
+        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
 
-        if (await Spotify.AuthGranted())
+        if (await Spotify.IsAuthGranted())
         {
             await FillUsername();
         }
@@ -58,7 +59,6 @@
 
     private async Task FillUsername()
     {
-        if (username is null)
-            username = await Spotify.GetUsername();
+        username ??= await Spotify.GetUsername();
     }
 }

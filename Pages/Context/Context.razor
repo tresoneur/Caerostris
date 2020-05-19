@@ -1,12 +1,13 @@
 ﻿@page "/context"
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
 @if (context is null)
 {
-    <CenteredLoadingIndicator LoadingWhat="context" />
+    <CenteredLoadingIndicator LoadingWhat=@L["LoadingContext"] />
 }
 else
 {
@@ -24,7 +25,7 @@ else
     }
     else
     {
-        <CenteredInfo Text="Can't display this context" />
+        <CenteredInfo Text=@L["CantDisplayContext"] />
     }
 }
 
@@ -32,7 +33,7 @@ else
 {
     private (ArtistProfile?, CompleteAlbum?, CompletePlaylist?)? context;
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Spotify.ContextChanged += OnContextChanged;
         await OnContextChanged(await Spotify.GetPlayback());
@@ -46,7 +47,7 @@ else
             {
                 context = null;
                 StateHasChanged();
-                context = await Spotify.GetContext(playback?.Context);
+                context = await Spotify.GetContext(playback.Context);
                 StateHasChanged();
             }
         });

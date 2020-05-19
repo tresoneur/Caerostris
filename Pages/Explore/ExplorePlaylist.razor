@@ -1,12 +1,13 @@
 ﻿@page "/playlist/{Id}"
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
 @if (playlist is null)
 {
-    <CenteredLoadingIndicator LoadingWhat="playlist" />
+    <CenteredLoadingIndicator LoadingWhat=@L["LoadingPlaylist"] />
 }
 else
 {
@@ -17,13 +18,13 @@ else
 @code
 {
     [Parameter]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     private CompletePlaylist? playlist;
 
-    protected async override Task OnInitializedAsync() => await Update();
+    protected override async Task OnInitializedAsync() => await Update();
 
-    protected async override Task OnParametersSetAsync() => await Update();
+    protected override async Task OnParametersSetAsync() => await Update();
 
     private async Task Update()
     {

@@ -1,4 +1,6 @@
-﻿<div class="d-flex flex-row pb-4 mb-4 justify-content-start align-items-center">
+﻿@inject IStringLocalizer<Text> L
+
+<div class="d-flex flex-row pb-4 mb-4 justify-content-start align-items-center">
 
     <img src=@ImageUri class="mr-4 context-page-heading-image" />
 
@@ -10,7 +12,7 @@
 
         @if (!(By is null))
         {
-            <div><span class="context-page-heading-by">By</span> @((MarkupString)By)</div>
+            <div><span class="context-page-heading-by">@L["By"]</span> @((MarkupString)By)</div>
         }
 
         <div class="context-page-heading-childcontent">
@@ -24,17 +26,17 @@
 @code
 {
     [Parameter]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [Parameter]
-    public string ImageUri { get; set; }
+    public string ImageUri { get; set; } = null!;
 
     [Parameter]
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
 
     [Parameter]
     public string? By { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment ChildContent { get; set; } = null!;
 }

@@ -9,7 +9,7 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
     <link href="_content/DevExpress.Blazor/dx-blazor.css" rel="stylesheet" />
-    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/site.g.min.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
 </head>
 
@@ -21,14 +21,15 @@
     </app>
 
     <div id="blazor-error-ui">
-        An unhandled error has occurred.
+        An error has occurred. Please reload the app.
         <a href="" class="reload" style="text-decoration: underline;">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/SpotifyService/blazor.extensions.storage.js"></script>
     <script src="_content/SpotifyService.IndexedDB/indexedDb.Blazor.js"></script>
-    <script src="_content/SpotifyService/spotifyservice.js"></script>
+    <script src="js/util.js"></script>
     <script src="_content/SpotifyService/spotifyservice-web-playback.js"></script>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>

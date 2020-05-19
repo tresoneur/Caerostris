@@ -1,0 +1,28 @@
+﻿@if (IsPlaying)
+{
+    <span class="currently-playing">
+
+        @ChildContent
+
+    </span>
+}
+else
+{
+    @ChildContent
+}
+
+
+@code
+{
+    [Parameter]
+    public string Uri { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    [CascadingParameter]
+    public PlaybackContext? PlaybackContext { get; set; }
+
+
+    private bool IsPlaying => PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(Uri);
+}

@@ -1,0 +1,14 @@
+﻿.subsection-title {
+    display: inline;
+    font-weight: bold;
+    padding: var(--subsection-padding);
+    margin: 0 8px;
+}
+
+    .subsection-title:first-of-type {
+        padding-top: 0;
+    }
+
+    .subsection-title:not(:first-of-type) {
+        border-top: var(--subsection-divider-border);
+    }

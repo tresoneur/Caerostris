@@ -10,21 +10,19 @@
 @code
 {
     [Parameter]
-    public string TrackId { get; set; }
+    public string TrackId { get; set; } = null!;
 
     private bool? saved;
     private bool Saved => saved ?? false;
 
-    // TODO: encapsulate auth rising edge behavior
-
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
 
         await FillSaved();
     }
 
-    protected async override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
         await FillSaved();
     }
@@ -40,7 +38,7 @@
 
     private async Task FillSaved()
     {
-        if (!(TrackId is null) && await Spotify.AuthGranted())
+        if (!(TrackId is null) && await Spotify.IsAuthGranted())
             saved = await Spotify.IsTrackSaved(TrackId);
     }
 

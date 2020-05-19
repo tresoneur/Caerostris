@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddedAt" xml:space="preserve">
+    <value>Hozzáadva</value>
+  </data>
+  <data name="AddedAtGraphShortName" xml:space="preserve">
+    <value>Havi bontás</value>
+  </data>
+  <data name="AddedAtGraphTitle" xml:space="preserve">
+    <value>Mentett számok havi bontásban</value>
+  </data>
+  <data name="Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Albums" xml:space="preserve">
+    <value>Albumok</value>
+  </data>
+  <data name="Around" xml:space="preserve">
+    <value>{0} kb. {1}</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>ELŐADÓ</value>
+  </data>
+  <data name="Artists" xml:space="preserve">
+    <value>Előadók</value>
+  </data>
+  <data name="AudioFeaturesGraphShortName" xml:space="preserve">
+    <value>Zenei jellemzők</value>
+  </data>
+  <data name="AudioFeaturesGraphTitle" xml:space="preserve">
+    <value>Az általad mentett számok zenei jellemzőinek alakulása az idő elteltével (havi átlag)</value>
+  </data>
+  <data name="AuthModalAccept" xml:space="preserve">
+    <value>Fiók csatlakoztatása</value>
+  </data>
+  <data name="AuthModalNote" xml:space="preserve">
+    <value>Megjegyzés: az alkalmazás használatához Spotify Premium fiókot kell csatlakoztatnod.</value>
+  </data>
+  <data name="AuthModalTitle" xml:space="preserve">
+    <value>Spotify-fiók csatlakoztatása szükséges</value>
+  </data>
+  <data name="BeatsPerMinute" xml:space="preserve">
+    <value>Percenkénti leütésszám</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>Készítette</value>
+  </data>
+  <data name="CantDisplayContext" xml:space="preserve">
+    <value>Ez a lejátszási környezet nem megjeleníthető</value>
+  </data>
+  <data name="ContextMenuItem" xml:space="preserve">
+    <value>Lejátszási környezet</value>
+  </data>
+  <data name="CreatedWithCaerostrisInsights" xml:space="preserve">
+    <value>Készült a Cærostris Insights használatával</value>
+  </data>
+  <data name="Explicit" xml:space="preserve">
+    <value>Explicit</value>
+  </data>
+  <data name="FansAlsoLike" xml:space="preserve">
+    <value>Hasonló előadók</value>
+  </data>
+  <data name="Feat" xml:space="preserve">
+    <value>— feat.</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>követő</value>
+  </data>
+  <data name="Followers" xml:space="preserve">
+    <value>követő</value>
+  </data>
+  <data name="InsightsMenuItem" xml:space="preserve">
+    <value>Metrikák</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Hossz</value>
+  </data>
+  <data name="LibraryMenuItem" xml:space="preserve">
+    <value>Mentett számok</value>
+  </data>
+  <data name="LoadingAlbum" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="LoadingAnalytics" xml:space="preserve">
+    <value>Metrikák</value>
+  </data>
+  <data name="LoadingArtist" xml:space="preserve">
+    <value>Előadó</value>
+  </data>
+  <data name="LoadingContext" xml:space="preserve">
+    <value>Lejátszási környezet</value>
+  </data>
+  <data name="LoadingEllipsis" xml:space="preserve">
+    <value>Betöltés...</value>
+  </data>
+  <data name="LoadingPlaylist" xml:space="preserve">
+    <value>Lejátszási lista</value>
+  </data>
+  <data name="LoadingTracks" xml:space="preserve">
+    <value>Számok</value>
+  </data>
+  <data name="LoadingWhat" xml:space="preserve">
+    <value>{0} betöltése</value>
+  </data>
+  <data name="MonthOfYear" xml:space="preserve">
+    <value>Hónap</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Nincs találat</value>
+  </data>
+  <data name="NormalizedScore" xml:space="preserve">
+    <value>Normalizált pontszám</value>
+  </data>
+  <data name="NumSavedTracks" xml:space="preserve">
+    <value> mentett szám</value>
+  </data>
+  <data name="OutOf" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Playback" xml:space="preserve">
+    <value>Lejátszás: {0}</value>
+  </data>
+  <data name="PlaybackMenuItem" xml:space="preserve">
+    <value>Éppen játszott</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Lejátszási listák</value>
+  </data>
+  <data name="Popularity" xml:space="preserve">
+    <value>Népszerűség</value>
+  </data>
+  <data name="PopularTracks" xml:space="preserve">
+    <value>Népszerű számok</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Privát</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Publikus</value>
+  </data>
+  <data name="SearchInputPlaceholder" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="SearchMenuItem" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="SearchResultsWillAppearHere" xml:space="preserve">
+    <value>A keresési eredmények itt fognak megjelenni</value>
+  </data>
+  <data name="ShouldBeRedirectedSoon" xml:space="preserve">
+    <value>Hamarosan át leszel irányítva...</value>
+  </data>
+  <data name="ShowExplicitColumn" xml:space="preserve">
+    <value>explicit</value>
+  </data>
+  <data name="ShowFilterRow" xml:space="preserve">
+    <value>szűrő</value>
+  </data>
+  <data name="ShowPopularityColumn" xml:space="preserve">
+    <value>népszerűség</value>
+  </data>
+  <data name="ShowTracks" xml:space="preserve">
+    <value>Mutasd a számokat</value>
+  </data>
+  <data name="ShowTracksAroundThisValue" xml:space="preserve">
+    <value>Mutass számokat ezen érték körül</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>szám</value>
+  </data>
+  <data name="Songs" xml:space="preserve">
+    <value>szám</value>
+  </data>
+  <data name="SongsWithADurationOf" xml:space="preserve">
+    <value>{0} hosszú számok</value>
+  </data>
+  <data name="SongsWithPropertyAround" xml:space="preserve">
+    <value>Számok {1} körüli {0} értékkel</value>
+  </data>
+  <data name="SongsYouSavedIn" xml:space="preserve">
+    <value>Számok, melyeket ekkor mentettél el: {1} {0}</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Cím</value>
+  </data>
+  <data name="TrackLengthGraphShortName" xml:space="preserve">
+    <value>Mentett számaid hossza</value>
+  </data>
+  <data name="TrackLengthGraphTitle" xml:space="preserve">
+    <value>Mentett számaid hosszának eloszlása</value>
+  </data>
+  <data name="Tracks" xml:space="preserve">
+    <value>Számok</value>
+  </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>LEJÁTSZÁSI LISTA</value>
+  </data>
+</root>

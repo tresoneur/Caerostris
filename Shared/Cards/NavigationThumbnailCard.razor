@@ -12,7 +12,7 @@
         </div>
     }
 
-    <div class="card-body">
+    <div class="card-body pt-3">
 
         <a href=@Url>
             <h5 class="card-title">@Title</h5>
@@ -31,22 +31,23 @@
 @code
 {
     [Parameter]
-    public string Width { get; set; }
+    public string Width { get; set; } = null!;
 
     [Parameter]
-    public string Url { get; set; }
+
+    public string Url { get; set; } = null!;
 
     [Parameter]
-    public Func<Task>? Play { get; set; }
+    public Func<Task>? Play { get; set; } = null!;
 
     [Parameter]
-    public string Thumbnail { get; set; }
+    public string Thumbnail { get; set; } = null!;
 
     [Parameter]
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
 
     [Parameter]
-    public string Details { get; set; }
+    public string Details { get; set; } = null!;
 
     private const string defaultWidth = "250px";
 

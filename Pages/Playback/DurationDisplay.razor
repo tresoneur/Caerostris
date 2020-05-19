@@ -1,0 +1,30 @@
+﻿<div class="duration-display px-3">
+    @if (!(durationMs is null) && !(progressMs is null))
+    {
+        @($"{FormatTimeSpan(progressMs.Value)} / {FormatTimeSpan(durationMs.Value)}")
+    }
+</div>
+
+@code 
+{
+    [Parameter]
+    public int? ProgressMs { get; set; }
+
+    [Parameter]
+    public int? DurationMs { get; set; }
+
+    private TimeSpan? progressMs;
+    private TimeSpan? durationMs;
+
+    protected override void OnParametersSet()
+    {
+        if (!(DurationMs is null) && !(ProgressMs is null))
+        {
+            progressMs = TimeSpan.FromMilliseconds(ProgressMs.Value);
+            durationMs = TimeSpan.FromMilliseconds(DurationMs.Value);
+        }
+    }
+
+    private string FormatTimeSpan(TimeSpan timeSpan) =>
+        $"{Math.Floor(timeSpan.TotalMinutes)}:{timeSpan.Seconds.ToString("00")}";
+}

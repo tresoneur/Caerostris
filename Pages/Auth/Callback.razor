@@ -1,17 +1,18 @@
 ﻿@page "/callback"
 
-@using Caerostris.Services.Spotify
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
+@inject NavigationManager NavManager
 
 
-You should be getting redirected soon...
+@L["ShouldBeRedirectedSoon"]
 
 
-@code 
+@code
 {
     protected override async Task OnInitializedAsync()
     {
-        await Spotify.ContinueAuthWithImplicitGrantOnCallback();
+        await Spotify.ContinueAuthOnCallback(NavManager.ToAbsoluteUri("callback").ToString());
     }
 }

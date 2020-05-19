@@ -1,34 +1,37 @@
 ﻿@inherits TrackSelectionGraph
 
 
-    <DxChart Data=@Tracks.OrderBy(s => s.Track.DurationMs)>
+@inject IStringLocalizer<Text> L
 
-        <DxChartTitle Text="Track length distribution" />
 
-        <DxChartLegend Orientation=@Orientation.Vertical
-                       HorizontalAlignment=@HorizontalAlignment.Right
-                       VerticalAlignment=@VerticalEdge.Top
-                       Position=@RelativePosition.Inside
-                       AllowToggleSeries=@true />
+<DxChart Data=@Tracks.OrderBy(s => s.Track.DurationMs)>
 
-        <DxChartPieSeries ArgumentField=@((SavedTrack s) => GetMinInterval(s))
-                          AggregationMethod=@Enumerable.Sum
-                          ValueField=@(_ => 1) />
+    <DxChartTitle Text=@L["TrackLengthGraphTitle"] />
 
-        <DxChartTooltip>
+    <DxChartLegend Orientation=@Orientation.Vertical
+                   HorizontalAlignment=@HorizontalAlignment.Right
+                   VerticalAlignment=@VerticalEdge.Top
+                   Position=@RelativePosition.Inside
+                   AllowToggleSeries=@true />
 
-            <div class="p-2 d-flex flex-column align-items-center">
-                <p><b>@context.Point.Argument</b></p>
+    <DxChartPieSeries ArgumentField=@((SavedTrack s) => GetMinInterval(s))
+                      AggregationMethod=@Enumerable.Sum
+                      ValueField=@(_ => 1) />
 
-                <p><b>@context.Point.Value</b> saved tracks</p>
+    <DxChartTooltip>
 
-                <ActionText Text="Show tracks"
-                            OnClick=@(() => OnIntervalSelected(context.Point.Argument.ToString())) />
-            </div>
+        <div class="p-2 d-flex flex-column align-items-center">
+            <p><b>@context.Point.Argument</b></p>
 
-        </DxChartTooltip>
+            <p><b>@context.Point.Value</b> @L["NumSavedTracks"]</p>
 
-    </DxChart>
+            <ActionText Text=@L["ShowTracks"]
+                        OnClick=@(() => OnIntervalSelected(context.Point.Argument.ToString())) />
+        </div>
+
+    </DxChartTooltip>
+
+</DxChart>
 
 
 @code
@@ -50,12 +53,14 @@
 
     private async Task OnIntervalSelected(string label)
     {
-        var segments = label.Split(new string[] { "-", " min" }, StringSplitOptions.RemoveEmptyEntries);
+        var segments = label.Split(new [] { "-", " min" }, StringSplitOptions.RemoveEmptyEntries);
         int min = int.Parse(segments[0]), max = int.Parse(segments[1]);
 
-        SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>(
+        SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>
+        (
             Tracks.Where(s => IsInMinInterval(s, min, max)),
-            $"Songs with a duration of {label}");
+            L["SongsWithADurationOf", label]
+        );
 
         await OnSelectedTracksAndDescriptionChanged();
     }

@@ -1,0 +1,62 @@
+﻿.spotify-logo {
+    height: 35px;
+    width: auto;
+}
+
+.caerostris-logo {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+}
+
+    .sidebar .oi {
+        width: 2rem;
+        font-size: 1.1rem;
+        vertical-align: text-top;
+        top: -2px;
+    }
+
+    .sidebar .nav-item {
+        font-size: 0.9rem;
+        padding-top: 4px;
+    }
+        .sidebar .nav-item *:hover {
+            text-decoration: none;
+        }
+
+        .sidebar .nav-item:first-of-type {
+            padding-top: 1rem;
+        }
+
+        .sidebar .nav-item:last-of-type {
+            padding-bottom: 1rem;
+        }
+
+        .sidebar .nav-item a {
+            color: rgba(255, 255, 255, 0.8);
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            line-height: 3rem;
+        }
+
+            .sidebar .nav-item a.active {
+                background-color: rgba(255, 255, 255, 0.25);
+                color: white;
+                border-radius: 2px;
+            }
+
+            .sidebar .nav-item a:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+            }

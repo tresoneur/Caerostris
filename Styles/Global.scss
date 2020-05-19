@@ -1,0 +1,59 @@
+﻿@import url('/css/open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://rsms.me/inter/inter.css');
+
+html {
+    --caerostris-primary-color: #1996C4;
+    --caerostris-secondary-background-color: rgba(255, 255, 255, 0.2);
+    --scrollbar-background-color: transparent;
+    --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
+    --scrollbar-thumb-background-color-de-emphasized: rgba(255, 255, 255, 0.1);
+    --subsection-divider-border: 1px solid rgba(255, 255, 255, 0.2);
+    --subsection-padding: 1em 8px 0.5em 8px;
+    --info-color: rgba(255, 255, 255, 0.4);
+    --info-opacity: 0.4;
+}
+
+@supports (font-variation-settings: normal) {
+    html, body {
+        font-family: 'Inter var', sans-serif;
+    }
+}
+
+
+html, body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: white;
+    height: 100%;
+}
+
+
+a, a:hover {
+    color: white;
+}
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-background-color) var(--scrollbar-background-color);
+}
+
+    *::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: var(--scrollbar-background-color);
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb-background-color);
+        border-radius: 2px;
+    }
+
+
+img:not([src]) {
+    visibility: hidden;
+}

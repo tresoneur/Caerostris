@@ -1,11 +1,12 @@
-﻿@inject SpotifyService Spotify
+﻿@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
 
 
 @if (!(playlists is null))
 {
     <aside class="overflow-hidden p-4 w-100">
 
-        <h4 class="user-playlists-list-title">Playlists</h4>
+        <h4 class="user-playlists-list-title">@L["Playlists"]</h4>
 
         <div class="h-100 user-playlists-list">
 
@@ -28,14 +29,12 @@
 {
     private IEnumerable<SimplePlaylist>? playlists;
 
-    // TODO: encapsulate auth rising edge behavior
-
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
         Spotify.UserPlaylistsChanged += () => InvokeAsync(async () => await FillPlaylists(forceReload: true));
 
-        if (await Spotify.AuthGranted())
+        if (await Spotify.IsAuthGranted())
             await FillPlaylists();
     }
 

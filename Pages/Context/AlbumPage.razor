@@ -1,4 +1,5 @@
-﻿@inject SpotifyService Spotify
+﻿@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
 
 
 <HeightMeasurementProvider @ref=contentHeight Fluid>
@@ -12,9 +13,9 @@
                                 By=@(CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
                                 ImageUri=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
-                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @($"song{(CompleteAlbum.Tracks.Count() > 1 ? "s" : "")}"), @CompleteAlbum.HumanReadableTotalLength()</p>
+                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>
 
-                <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: null))/>
+                <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: null)) />
 
             </ContextPageHeading>
 
@@ -32,21 +33,23 @@
                         AllowSort=true
                         Data=@CompleteAlbum.Tracks>
 
-                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption="Title" Width="150px">
+                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption=@L["Title"] Width="150px">
                     <DisplayTemplate>
-                        <ActionText Text=@((context as SimpleTrack).Name)
-                                    OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: (context as SimpleTrack).Uri)) />
-                        @if ((context as SimpleTrack).Artists.Count() > CompleteAlbum.Album.Artists.Count())
-                        {
-                            <span class="collab-with pl-1">— with</span>
-                            @((MarkupString)((context as SimpleTrack).Artists.Where(a => CompleteAlbum.Album.Artists.FirstOrDefault(aa => aa.Uri.Equals(a.Uri)) is null).GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
-                        }
+                        <HighlightIfCurrentlyPlaying Uri=@((context as SimpleTrack)!.Uri)>
+                            <ActionText Text=@((context as SimpleTrack)!.Name)
+                                        OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: (context as SimpleTrack)!.Uri)) />
+                            @if ((context as SimpleTrack)!.Artists.Count > CompleteAlbum.Album.Artists.Count)
+                            {
+                                <span class="collab-with pl-1">@L["Feat"]</span>
+                                @((MarkupString)((context as SimpleTrack)!.Artists.Where(a => CompleteAlbum.Album.Artists.FirstOrDefault(aa => aa.Uri.Equals(a.Uri)) is null).GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
+                            }
+                        </HighlightIfCurrentlyPlaying>
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(SimpleTrack.DurationMs) Caption="Length" Width="50px">
+                <DxDataGridColumn Field=@nameof(SimpleTrack.DurationMs) Caption=@L["Length"] Width="50px">
                     <DisplayTemplate>
-                        @((context as SimpleTrack).HumanReadableDuration())
+                        @((context as SimpleTrack)!.HumanReadableDuration())
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
@@ -61,10 +64,10 @@
 @code
 {
     [Parameter]
-    public CompleteAlbum CompleteAlbum { get; set; }
+    public CompleteAlbum CompleteAlbum { get; set; } = null!;
 
-    private HeightMeasurementProvider contentHeight, contentHeaderHeight;
-    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+    private HeightMeasurementProvider contentHeight = null!, contentHeaderHeight = null!;
+    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
 
     protected override void OnAfterRender(bool firstRender)
     {

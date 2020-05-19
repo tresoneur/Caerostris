@@ -5,12 +5,13 @@
 @implements IDisposable
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
 @if (features is null)
 {
-    <CenteredLoadingIndicator @ref=@loadingIndicator LoadingWhat="analytics" ShowProgress />
+    <CenteredLoadingIndicator @ref=@loadingIndicator LoadingWhat=@L["LoadingAnalytics"] ShowProgress />
 }
 else
 {
@@ -41,9 +42,13 @@ else
 
             @if (!(selectedTracksAndDescription is null))
             {
-                <SubsectionTitle Title=@selectedTracksAndDescription.Item2 />
+                <div class="insights-playlist-header">
+                    
+                    <SubsectionTitle Title=@selectedTracksAndDescription.Item2 />
 
-                <InlineActionIcon Icon="save" OnClick=SaveAsPlaylist />
+                    <InlineActionIcon Icon="save" OnClick=SaveAsPlaylist />
+
+                </div>
 
                 <div class="px-2 pt-2">
                     <SavedTrackDataGrid Height=@measurement.Output
@@ -73,13 +78,13 @@ else
 
     Tuple<IEnumerable<SavedTrack>, string>? selectedTracksAndDescription;
 
-    private CenteredLoadingIndicator loadingIndicator;
-    private HeightMeasurementProvider contentHeight, chartHeight;
-    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+    private CenteredLoadingIndicator loadingIndicator = null!;
+    private HeightMeasurementProvider contentHeight = null!, chartHeight = null!;
+    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (await Spotify.AuthGranted())
+        if (await Spotify.IsAuthGranted())
         {
             tracks = (await Spotify.GetSavedTracks()).AsQueryable();
             features = (await Spotify.GetAudioFeaturesForSavedTracks()).AsQueryable();
@@ -105,29 +110,29 @@ else
             Icon = nameof(NavMenuItem.Icon),
             Text = nameof(NavMenuItem.Text);
 
-        ContextMenu?.Set("insights", new List<Dictionary<String, object>>()
+        ContextMenu?.Set("insights", new List<Dictionary<String, object>>() // TODO: onparametesset gets called even if the component will never get rendered (e.g. because the user clicked away)
         {
             new Dictionary<String, object>()
             {
-                { Href, string.Empty }, { Match, NavLinkMatch.All }, { Icon, "date_range" }, { Text, "Saved tracks history" }
+                { Href, string.Empty }, { Match, NavLinkMatch.All }, { Icon, "date_range" }, { Text, L["AddedAtGraphShortName"].Value }
             },
             new Dictionary<String, object>()
             {
-                { Href, AudioFeaturesRoute }, { Icon, "graphic_eq" }, { Text, "Audio features" }
+                { Href, AudioFeaturesRoute }, { Icon, "graphic_eq" }, { Text, L["AudioFeaturesGraphShortName"].Value }
             },
             new Dictionary<String, object>()
             {
-                { Href, TrackLengthRoute }, { Icon, "query_builder" }, { Text, "Track length" }
+                { Href, TrackLengthRoute }, { Icon, "query_builder" }, { Text, L["TrackLengthGraphShortName"].Value }
             }
         });
     }
 
     private async Task SaveAsPlaylist()
     {
-        if(!(selectedTracksAndDescription is null))
+        if (!(selectedTracksAndDescription is null))
             await Spotify.CreatePlaylist(
                 selectedTracksAndDescription.Item2,
-                "Created with Caerostris Insights",
+                L["CreatedWithCaerostrisInsights"],
                 selectedTracksAndDescription.Item1);
     }
 

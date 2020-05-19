@@ -1,7 +1,4 @@
-﻿@using System.Globalization;
-
-
-@inject IJSRuntime JSRuntime
+﻿@inject IJSRuntime JSRuntime
 
 
     <div id=@Id
@@ -23,8 +20,8 @@
     [Parameter]
     public double Percent { get; set; }
 
-    private const string JSHelper = "SpotifyService";
-    private string Id = "progressbar-" + new Random().Next().ToString("x");
+    private const string JSHelper = "CaerostrisUtils";
+    private readonly string Id = "progressbar-" + new Random().Next().ToString("x");
     
     private async void OnProgressbarClick(MouseEventArgs e)
     {

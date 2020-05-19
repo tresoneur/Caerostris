@@ -1,21 +1,20 @@
-﻿@using Caerostris.Services.Spotify
-
+﻿@inject IStringLocalizer<Text> L  
 @inject SpotifyService Spotify
 @inject NavigationManager NavManager
 
 <hr>
 
-<p>Note: this app requires you to connect a Spotify Premium account.</p>
+<p>@L["AuthModalNote"]</p>
 
 <hr>
 
-<button @onclick="OnConnectAccountButtonClick" type="button" class="btn btn-primary float-right">Connect account</button>
+<button @onclick="OnConnectAccountButtonClick" type="button" class="btn btn-primary float-right">@L["AuthModalAccept"]</button>
 
 
 @code
 {
     private async Task OnConnectAccountButtonClick()
     {
-        await Spotify.StartAuthWithImplicitGrant(NavManager.ToAbsoluteUri("/callback").ToString());
+        await Spotify.StartAuth(NavManager.ToAbsoluteUri("callback").ToString());
     }
 }

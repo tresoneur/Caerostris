@@ -1,4 +1,7 @@
-﻿<div class="top-row p-3 navbar navbar-dark">
+﻿@inject IStringLocalizer<Text> L
+
+
+<div class="top-row p-3 navbar navbar-dark">
     <a class="d-flex flex-row justify-content-start align-items-center text-decoration-none" href="">
         <img src="/icons/Spotify_Icon_RGB_White.png" class="spotify-logo" />
         <span class="caerostris-logo pl-2">Cærostris</span>
@@ -7,10 +10,10 @@
 
 <div>
     <ul class="nav flex-column pl-3 pr-4">
-        <NavMenuItem Href="" Match=@NavLinkMatch.All Icon="play_arrow" Text="Playback" />
-        <NavMenuItem Href="context" Icon="playlist_play" Text="Context" />
-        <NavMenuItem Href="library" Icon="library_music" Text="Library" />
-        <NavMenuItem Href="insights" Icon="insert_chart" Text="Insights" />
-        <NavMenuItem Href="search" Icon="search" Text="Search" />
+        <NavMenuItem Href="" Match=@NavLinkMatch.All Icon="play_arrow" Text=@L["PlaybackMenuItem"] />
+        <NavMenuItem Href="context" Icon="playlist_play" Text=@L["ContextMenuItem"] />
+        <NavMenuItem Href="library" Icon="library_music" Text=@L["LibraryMenuItem"] />
+        <NavMenuItem Href="insights" Icon="insert_chart" Text=@L["InsightsMenuItem"] />
+        <NavMenuItem Href="search" Icon="search" Text=@L["SearchMenuItem"] />
     </ul>
 </div>

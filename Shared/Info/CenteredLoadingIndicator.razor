@@ -1,4 +1,7 @@
-﻿<div class="d-flex flex-column justify-content-center align-items-center h-100 loading-message">
+﻿@inject IStringLocalizer<Text> L
+
+
+<div class="d-flex flex-column justify-content-center align-items-center h-100 loading-message">
 
     <h4>@LoadingMessage</h4>
 
@@ -16,14 +19,14 @@
 {
     private int loadingDownloaded = 0, loadingTotal = 0;
     private bool Uncertain => !(ShowProgress && (loadingTotal > 0));
-    private string LoadingMessage => 
-        $"Loading {LoadingWhat}" + (Uncertain ? "..." : $": {loadingDownloaded} out of {loadingTotal}");
+    private string LoadingMessage =>
+        L["LoadingWhat", LoadingWhat] + (Uncertain ? "..." : $": {L["OutOf", loadingDownloaded, loadingTotal]}");
 
     [Parameter]
-    public string LoadingWhat { get; set; }
+    public string LoadingWhat { get; set; } = null!;
 
     [Parameter]
-    public bool ShowProgress { get; set; }
+    public bool ShowProgress { get; set; } = false;
 
     public async void Update(int downloaded, int total) =>
         await InvokeAsync(() =>

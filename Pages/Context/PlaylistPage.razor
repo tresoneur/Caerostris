@@ -1,4 +1,5 @@
-﻿@inject SpotifyService Spotify
+﻿@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
 
 
 <HeightMeasurementProvider @ref=contentHeight Fluid>
@@ -7,15 +8,15 @@
 
         <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
 
-            <ContextPageHeading Type=@CompletePlaylist.Playlist.Type.ToUpper()
+            <ContextPageHeading Type=@L["Playlist"]
                                 Title=@CompletePlaylist.Playlist.Name
                                 By=@CompletePlaylist.Playlist.Owner.DisplayName
                                 ImageUri=@CompletePlaylist.Playlist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
                 <p>
-                    @(CompletePlaylist.Playlist.Public ? "Public" : "Private")
-                    • @CompletePlaylist.Playlist.Followers.Total.ThousandsSeparator() follower@((CompletePlaylist.Playlist.Followers.Total == 1) ? string.Empty : "s")
-                    • @CompletePlaylist.Tracks.Count() songs, @CompletePlaylist.HumanReadableTotalLength()
+                    @(CompletePlaylist.Playlist.Public ? L["Public"] : L["Private"])
+                    • @CompletePlaylist.Playlist.Followers.Total.ThousandsSeparator() @((CompletePlaylist.Playlist.Followers.Total == 1) ? L["Follower"] : L["Followers"])
+                    • @CompletePlaylist.Tracks.Count() @((CompletePlaylist.Tracks.Count() == 1) ? L["Song"] : L["Songs"]), @CompletePlaylist.HumanReadableTotalLength()
                 </p>
 
                 @if (!string.IsNullOrEmpty(CompletePlaylist.Playlist.Description))
@@ -41,28 +42,30 @@
                         AllowSort=true
                         Data=@CompletePlaylist.Tracks>
 
-                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.Name)}") Caption="Title" Width="150px">
+                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.Name)}") Caption=@L["Title"] Width="150px">
                     <DisplayTemplate>
-                        <ActionText Text=@((context as PlaylistTrack).Track.Name)
-                                    OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: (context as PlaylistTrack).Track.OriginalUri())) />
+                        <HighlightIfCurrentlyPlaying Uri=@((context as PlaylistTrack)!.Track.Uri)>
+                            <ActionText Text=@((context as PlaylistTrack)!.Track.Name)
+                                        OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: (context as PlaylistTrack)!.Track.OriginalUri())) />
+                        </HighlightIfCurrentlyPlaying>
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Caption="Artists" Width="150px" AllowSort=DevExpress.Blazor.DefaultBoolean.False>
+                <DxDataGridColumn Caption=@L["Artists"] Width="150px" AllowSort=DefaultBoolean.False>
                     <DisplayTemplate>
-                        @((MarkupString)((context as PlaylistTrack).Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
+                        @((MarkupString)((context as PlaylistTrack)!.Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@nameof(PlaylistTrack.AddedAt) Caption="Added" Width="50px">
+                <DxDataGridColumn Field=@nameof(PlaylistTrack.AddedAt) Caption=@L["AddedAt"] Width="50px">
                     <DisplayTemplate>
-                        @((context as PlaylistTrack).HumanReadableAddedAt())
+                        @((context as PlaylistTrack)!.HumanReadableAddedAt())
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
-                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption="Length" Width="50px">
+                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption=@L["Length"] Width="50px">
                     <DisplayTemplate>
-                        @((context as PlaylistTrack).Track.HumanReadableDuration())
+                        @((context as PlaylistTrack)!.Track.HumanReadableDuration())
                     </DisplayTemplate>
                 </DxDataGridColumn>
 
@@ -77,10 +80,10 @@
 @code
 {
     [Parameter]
-    public CompletePlaylist CompletePlaylist { get; set; }
+    public CompletePlaylist CompletePlaylist { get; set; } = null!;
 
-    private HeightMeasurementProvider contentHeight, contentHeaderHeight;
-    private HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+    private HeightMeasurementProvider contentHeight = null!, contentHeaderHeight = null!;
+    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
 
     protected override void OnAfterRender(bool firstRender)
     {

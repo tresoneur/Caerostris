@@ -8,6 +8,7 @@
 @implements IDisposable
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
@@ -17,7 +18,7 @@
 
         <label for="search-query"><i class="material-icons md-24">search</i></label>
 
-        <input type="text" class="search-query" placeholder="Search" id="search-query" autocomplete="off" @bind=@Query @bind:event="oninput" />
+        <input type="text" class="search-query" placeholder=@L["SearchInputPlaceholder"] id="search-query" autocomplete="off" @bind=@Query @bind:event="oninput" />
 
         <i class="material-icons md-24 clear-button clickable" @onclick=@(() => Query = "")>close</i>
 
@@ -27,13 +28,13 @@
 
         @if (results is null)
         {
-            <CenteredInfo Text="Search results will appear here" />
+            <CenteredInfo Text=@L["SearchResultsWillAppearHere"] />
         }
         else
         {
-            @if (results.Tracks.Count() > 0)
+            @if (results.Tracks.Any())
             {
-                <SubsectionTitle Title="Tracks" />
+                <SubsectionTitle Title=@L["Tracks"] />
 
                 <CardTileLayout>
 
@@ -45,9 +46,9 @@
                 </CardTileLayout>
             }
 
-            @if (results.Artists.Count() > 0)
+            @if (results.Artists.Any())
             {
-                <SubsectionTitle Title="Artists" />
+                <SubsectionTitle Title=@L["Artists"] />
 
                 <CardTileLayout>
 
@@ -59,9 +60,9 @@
                 </CardTileLayout>
             }
 
-            @if (results.Albums.Count() > 0)
+            @if (results.Albums.Any())
             {
-                <SubsectionTitle Title="Albums" />
+                <SubsectionTitle Title=@L["Albums"] />
 
                 <CardTileLayout>
 
@@ -73,9 +74,9 @@
                 </CardTileLayout>
             }
 
-            @if (results.Playlists.Count() > 0)
+            @if (results.Playlists.Any())
             {
-                <SubsectionTitle Title="Playlists" />
+                <SubsectionTitle Title=@L["Playlists"] />
 
                 <CardTileLayout>
 
@@ -87,12 +88,12 @@
                 </CardTileLayout>
             }
 
-            @if (results.Albums.Count() == 0
-           && results.Artists.Count() == 0
-           && results.Playlists.Count() == 0
-           && results.Tracks.Count() == 0)
+            @if (!results.Albums.Any()
+                 && !results.Artists.Any()
+                 && !results.Playlists.Any()
+                 && !results.Tracks.Any())
             {
-                <CenteredInfo Text="No results found" />
+                <CenteredInfo Text=@L["NoResults"] />
             }
         }
 
@@ -106,11 +107,12 @@
 
     private bool hasQueryChanged = false;
     private Timer? searchTimer;
+    private CancellationTokenSource? previousSearchTokenSource;
 
     private string query = "";
     private string Query
     {
-        get { return query; }
+        get => query;
 
         set
         {
@@ -122,8 +124,7 @@
 
     protected override void OnInitialized()
     {
-        /// TODO: eliminate race condition: >200 ms jitter / ping felett rossz sorrend, cancellationtoken
-        searchTimer = new System.Threading.Timer(
+        searchTimer = new Timer(
             callback: async _ =>
             {
                 await InvokeAsync(async () =>
@@ -131,7 +132,11 @@
                     if (hasQueryChanged)
                     {
                         hasQueryChanged = false;
-                        await GetResults();
+
+                        previousSearchTokenSource?.Cancel();
+                        previousSearchTokenSource = new CancellationTokenSource();
+
+                        await GetResults(previousSearchTokenSource.Token);
                     }
                 });
             },
@@ -148,13 +153,22 @@
         searchTimer?.Dispose();
     }
 
-    private async Task GetResults()
+    private async Task GetResults(CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(query))
-            results = await Spotify.Search(query);
+        {
+            var searchResults = await Spotify.Search(query);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                results = searchResults;
+                StateHasChanged();
+            }
+        }
         else
+        {
             results = null;
+            StateHasChanged();
+        }
 
-        StateHasChanged();
     }
 }

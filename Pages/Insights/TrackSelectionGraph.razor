@@ -1,21 +1,25 @@
-﻿@code 
+﻿@inject IJSRuntime JS 
+
+@code 
 {
     [Parameter]
-    public IEnumerable<SavedTrack> Tracks { get; set; }
-
-    /// <remarks>
-    /// As of yet, child-to-parent binding isn't exactly a solved problem in Blazor.
-    /// </remarks>
+    public IEnumerable<SavedTrack> Tracks { get; set; } = null!;
 
     [Parameter]
-    public Tuple<IEnumerable<SavedTrack>, string>? SelectedTracksAndDescription { get; set; }
+    public Tuple<IEnumerable<SavedTrack>, string>? SelectedTracksAndDescription { get; set; } = null!;
 
     [Parameter]
     public EventCallback<Tuple<IEnumerable<SavedTrack>, string>?> SelectedTracksAndDescriptionChanged { get; set; }
 
 
+    private const string CaerostrisUtils = "CaerostrisUtils";
+    private const string RemoveCssClassFunction = "RemoveCssClass";
+    private const string TooltipSelector = ".dx-chart-tooltips>div";
+    private const string TooltipShowClass = "show";
+
     protected Task OnSelectedTracksAndDescriptionChanged()
     {
+        _ = JS.InvokeVoidAsync($"{CaerostrisUtils}.{RemoveCssClassFunction}", TooltipSelector, TooltipShowClass);
         return SelectedTracksAndDescriptionChanged.InvokeAsync(SelectedTracksAndDescription);
     }
 }

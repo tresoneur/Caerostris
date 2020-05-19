@@ -1,0 +1,15 @@
+﻿.progressbar-background {
+    height: 5px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+    .progressbar-background.clickable:hover {
+        cursor: pointer;
+    }
+
+.progressbar-progress {
+    height: 100%;
+    background-color: var(--caerostris-primary-color);
+    border-radius: 2px;
+}

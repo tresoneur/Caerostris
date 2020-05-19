@@ -1,0 +1,37 @@
+﻿@inject SpotifyService Spotify
+
+
+<CascadingValue Value=@PlaybackContext>
+
+    @ChildContent
+
+</CascadingValue>
+
+
+@code 
+{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+
+    private PlaybackContext? PlaybackContext { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Spotify.PlaybackChanged += ContextChanged;
+
+        if (await Spotify.IsAuthGranted())
+            PlaybackContext = await Spotify.GetPlayback();
+    }
+
+
+    private async Task ContextChanged(PlaybackContext context)
+    {
+        await InvokeAsync(() =>
+        {
+            PlaybackContext = context;
+            StateHasChanged();
+        });
+    }
+}
