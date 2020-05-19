@@ -44,7 +44,7 @@ Your application should use Blazor WebAssembly version 3.2.0 or higher.
 
 ## Design considerations
 
-* _Cærostris_ uses SCSS. Each razor folder contains a `Styles` folder with at least one `.scss` file, which are included in `/Styles/Site.scss` along with other `.scss` files in the `/Styles` folder that do not belong to one particular component.
+* _Cærostris_ uses SCSS. Each razor folder contains a `Styles` folder with at least one `.scss` file, which are included in `/Styles/Site.scss` along with other `.scss` files in the `/Styles` folder that do not belong to any one particular component.
 
 * _Cærostris_ is a [Progressive Web App](https://devblogs.microsoft.com/aspnet/blazor-webassembly-3-2-0-preview-2-release-now-available/).
 
@@ -120,4 +120,4 @@ Your application should use Blazor WebAssembly version 3.2.0 or higher.
 
 * 📁 Utility
 
-    * HeightMeasurementProvider: everywhere where a DxDataGrid is used
+    * HeightMeasurementProvider: everywhere a DxDataGrid is used
