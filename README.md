@@ -30,15 +30,22 @@ The latest version of _Cærostris_ can be accessed [here](https://caerostris.azu
 
 * __Search__: lets the user search tracks, artists, albums and playlists.
 
-## Requirements
-
-Your application should use Blazor WebAssembly version 3.2.0 or higher.
-
 ## How to build
 
-* Get and build [_SpotifyService_](https://github.com/tresoneur/SpotifyService) as described in its readme.
+* Get [_SpotifyService_](https://github.com/tresoneur/SpotifyService). You can either place _SpotifyService_ where `Caerostris.sln` and `Caerostris.csproj` expect it to be or you can edit the path in the following locations:
 
-* Get a DevExpress Blazor (free (as in beer)) licence and configure the project dependencies accordingly.
+    ```
+    Project("{...}") = "SpotifyService", "..\SpotifyService\SpotifyService.csproj", "{...}"
+    EndProject
+    ```
+
+    ```xml
+    <ItemGroup>
+        <ProjectReference Include="..\SpotifyService\SpotifyService.csproj" />
+    </ItemGroup>
+    ```
+
+* Get a DevExpress Blazor (free (as in beer)) license and configure the project dependencies accordingly.
 
 * Run `dotnet build`.
 
