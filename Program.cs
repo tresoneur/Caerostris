@@ -38,7 +38,7 @@ namespace Caerostris
 
             services.AddBlazoredModal();
             services.AddDevExpressBlazor();
-            services.AddSpotify("https://caerostris2.azurewebsites.net/auth");
+            services.AddSpotify("https://caerostrisauthserver.azurewebsites.net/auth");
 
             var host = builder.Build();
 
