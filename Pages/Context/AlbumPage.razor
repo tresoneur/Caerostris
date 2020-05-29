@@ -8,9 +8,9 @@
 
         <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
 
-            <ContextPageHeading Type=@(CompleteAlbum.Album.AlbumType.ToUpper())
-                                Title=@(CompleteAlbum.Album.Name)
-                                By=@(CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl))
+            <ContextPageHeading Type=@CompleteAlbum.Album.AlbumType.ToUpper()
+                                Title=@CompleteAlbum.Album.GetName(link: true)
+                                By=@CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)
                                 ImageUri=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
                 <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>

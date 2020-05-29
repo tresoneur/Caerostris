@@ -5,10 +5,10 @@
 <div class="d-flex flex-column justify-content-start overflow-auto h-100 p-4">
 
     <ContextPageHeading Type=@L["Artist"]
-                        Title=@(ArtistProfile.Artist.Name)
+                        Title=@ArtistProfile.Artist.GetName(link: true)
                         ImageUri=@ArtistProfile.Artist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
-        <p>@ArtistProfile.Artist.Followers.Total.ThousandsSeparator() @L["Followers"] @WithSeparatorPrefixIfNotEmpty(ArtistProfile.Artist.GetGenres())</p>
+        <p>@ArtistProfile.Artist.Followers.Total.WithThousandsSeparator() @L["Followers"] @WithSeparatorPrefixIfNotEmpty(ArtistProfile.Artist.GetGenres())</p>
 
         <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: ArtistProfile.Artist.Uri, trackUri: null)) />
 

@@ -9,13 +9,13 @@
         <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
 
             <ContextPageHeading Type=@L["Playlist"]
-                                Title=@CompletePlaylist.Playlist.Name
+                                Title=@CompletePlaylist.Playlist.GetName(link: true)
                                 By=@CompletePlaylist.Playlist.Owner.DisplayName
                                 ImageUri=@CompletePlaylist.Playlist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
                 <p>
                     @(CompletePlaylist.Playlist.Public ? L["Public"] : L["Private"])
-                    • @CompletePlaylist.Playlist.Followers.Total.ThousandsSeparator() @((CompletePlaylist.Playlist.Followers.Total == 1) ? L["Follower"] : L["Followers"])
+                    • @CompletePlaylist.Playlist.Followers.Total.WithThousandsSeparator() @((CompletePlaylist.Playlist.Followers.Total == 1) ? L["Follower"] : L["Followers"])
                     • @CompletePlaylist.Tracks.Count() @((CompletePlaylist.Tracks.Count() == 1) ? L["Song"] : L["Songs"]), @CompletePlaylist.HumanReadableTotalLength()
                 </p>
 
