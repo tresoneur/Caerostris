@@ -107,7 +107,7 @@ The latest version of _Cærostris_ can be accessed [here](https://caerostris.azu
 
 * 📁 Info
 
-    * CenteredInfo: Search
+    * CenteredInfo: Search, Context
 
     * CenteredLoadingIndicator: Context, Explore, Library, Insights
 
