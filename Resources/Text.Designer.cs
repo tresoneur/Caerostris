@@ -160,7 +160,7 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: this app requires you to connect a Spotify Premium account..
+        ///   Looks up a localized string similar to Note: to use this app, you&apos;ll need to connect a Spotify Premium account..
         /// </summary>
         public static string AuthModalNote {
             get {
@@ -169,7 +169,7 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spotify authentication needed.
+        ///   Looks up a localized string similar to Spotify authorization needed.
         /// </summary>
         public static string AuthModalTitle {
             get {

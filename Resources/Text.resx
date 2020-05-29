@@ -151,10 +151,10 @@
     <value>Connect account</value>
   </data>
   <data name="AuthModalNote" xml:space="preserve">
-    <value>Note: this app requires you to connect a Spotify Premium account.</value>
+    <value>Note: to use this app, you'll need to connect a Spotify Premium account.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
-    <value>Spotify authentication needed</value>
+    <value>Spotify authorization needed</value>
   </data>
   <data name="BeatsPerMinute" xml:space="preserve">
     <value>Beats per minute</value>
