@@ -1,5 +1,9 @@
 # Cærostris
 
+## Demo
+
+The latest version of _Cærostris_ can be accessed [__here__](https://caerostris.azurewebsites.net/). _Cærostris_ should be viewed on screens at least 1500 pixels wide.
+
 ## Status of this project
 
 This project is currently under development.
@@ -13,10 +17,6 @@ To create a proof-of-concept Blazor WebAssembly PWA Spotify client with .NET lan
 While Blazor WebAssembly is not ready for production use yet, it is a very promising technology that the author believes will be a major player in web application development within a few years.
 
 Other than the preview status of the framework, the lack of .NET wrappers (or preferably a single standard one) around browser APIs remains the main force standing in the way of general adoption. To get an idea about the main features still missing from Blazor WebAssembly, visit [this page](https://github.com/dotnet/aspnetcore/issues/21514).
-
-## Demo
-
-The latest version of _Cærostris_ can be accessed [here](https://caerostris.azurewebsites.net/).
 
 ## Pages
 
