@@ -1,28 +1,60 @@
-﻿<div class="duration-display px-3">
-    @if (!(durationMs is null) && !(progressMs is null))
-    {
-        @($"{FormatTimeSpan(progressMs.Value)} / {FormatTimeSpan(durationMs.Value)}")
-    }
-</div>
+﻿@inject SpotifyService Spotify  
+
+
+    <div class="d-flex flex-row justify-content-center align-items-center w-100 duration-display">
+
+        <span class="px-3">@FormatTimeSpan(progressMs)</span>
+
+        <Progressbar OnClick=@OnClick
+                     Percent=@progressPercent />
+
+        <span class="px-3">@FormatTimeSpan(durationMs)</span>
+
+    </div>
+
 
 @code 
 {
     [Parameter]
-    public int? ProgressMs { get; set; }
+    public Func<double, Task>? OnClick { get; set; }
 
-    [Parameter]
-    public int? DurationMs { get; set; }
+    [CascadingParameter]
+    public PlaybackContext? PlaybackContext { get; set; }
 
-    private TimeSpan? progressMs;
-    private TimeSpan? durationMs;
+    private TimeSpan progressMs;
+    private TimeSpan durationMs;
+    private double progressPercent;
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        if (!(DurationMs is null) && !(ProgressMs is null))
+        Spotify.PlaybackDisplayUpdate += UpdateDisplay;
+        ResetProgress();
+    }
+
+    private async void UpdateDisplay(int newProgressMs)
+    {
+        await InvokeAsync(() =>
         {
-            progressMs = TimeSpan.FromMilliseconds(ProgressMs.Value);
-            durationMs = TimeSpan.FromMilliseconds(DurationMs.Value);
-        }
+            if (PlaybackContext.HasValidItem())
+            {
+                progressMs = TimeSpan.FromMilliseconds(newProgressMs);
+                durationMs = TimeSpan.FromMilliseconds(PlaybackContext.Item.DurationMs);
+                progressPercent = ((double)newProgressMs / (double)PlaybackContext.Item.DurationMs) * 100d;
+            }
+            else
+            {
+                ResetProgress();
+            }
+
+            StateHasChanged();
+        });
+    }
+
+    private void ResetProgress()
+    {
+        progressMs = TimeSpan.FromMilliseconds(0);
+        durationMs = TimeSpan.FromMilliseconds(0);
+        progressPercent = 0;
     }
 
     private string FormatTimeSpan(TimeSpan timeSpan) =>

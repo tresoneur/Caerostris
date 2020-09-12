@@ -12,11 +12,10 @@
 }
 
 .sidebar {
-    width: 250px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
+    width: var(--sidebar-width);
     overflow: hidden;
+    flex-shrink: 0;
+    background-color: #121212;
 }
 
     .sidebar .oi {

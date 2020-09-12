@@ -7,38 +7,42 @@
 @inherits LayoutComponentBase
 
 
-<CascadingValue Value=@menu>
+    <CascadingValue Value=@menu>
 
-    <div class="d-flex flex-column sidebar">
-        <NavMenu />
-        <UserPlaylistsList />
-    </div>
+        <PlaybackContextProvider>
 
-    <div class="main">
-        <div class="d-flex flex-column content h-100">
+            <div class="d-flex flex-column w-100 h-100">
 
-            <PlaybackContextProvider>
+                <div class="d-flex flex-row flex-fill overflow-auto">
 
-                <div class="p-1" style="height: calc(100vh - 70px); max-width:calc(100vw - 500px)">
-                    @Body
+                    <div class="d-flex flex-column sidebar">
+                        <NavMenu />
+                        <UserPlaylistsList />
+                    </div>
+
+                    <div class="pt-3 px-3 h-100 flex-fill">
+
+                        @Body
+
+                    </div>
+
+                    <div class="sidebar">
+                        <ContextMenu @ref=@menu />
+                    </div>
+
                 </div>
 
                 <PlaybackBar />
 
-            </PlaybackContextProvider>
+            </div>
 
-        </div>
-    </div>
+        </PlaybackContextProvider>
 
-    <div class="sidebar">
-        <ContextMenu @ref=@menu />
-    </div>
+        <AuthDaemon />
 
-    <AuthDaemon />
+        <BlazoredModal />
 
-    <BlazoredModal />
-
-</CascadingValue>
+    </CascadingValue>
 
 @code
 {

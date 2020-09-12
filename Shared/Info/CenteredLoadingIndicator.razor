@@ -1,26 +1,33 @@
 ﻿@inject IStringLocalizer<Text> L
 
 
-<div class="d-flex flex-column justify-content-center align-items-center h-100 loading-message">
+<div class="d-flex flex-@(Uncertain ? "row" : "column") justify-content-center align-items-center h-100 loading-message">
+
+    @if (Uncertain)
+    { 
+        <div class="spinner-border mr-4 mb-2"></div> 
+    }
 
     <h4>@LoadingMessage</h4>
 
     @if (!Uncertain)
     {
         <div class="w-25 pt-2">
-            <Progressbar Percent=@((loadingTotal > 0) ? ((double)loadingDownloaded / (double)loadingTotal * 100d) : 0) />
+            <Progressbar Percent=@((loadingTotal > 0) ? ((double)loadingProgress / (double)loadingTotal * 100d) : 0) />
         </div>
     }
 
 </div>
 
 
-@code 
+@code
 {
-    private int loadingDownloaded = 0, loadingTotal = 0;
+    private int loadingProgress = 0, loadingTotal = 0;
+
     private bool Uncertain => !(ShowProgress && (loadingTotal > 0));
+
     private string LoadingMessage =>
-        L["LoadingWhat", LoadingWhat] + (Uncertain ? "..." : $": {L["OutOf", loadingDownloaded, loadingTotal]}");
+        L["LoadingWhat", LoadingWhat] + (Uncertain ? "..." : $": {L["OutOf", loadingProgress, loadingTotal]}");
 
     [Parameter]
     public string LoadingWhat { get; set; } = null!;
@@ -31,7 +38,7 @@
     public async void Update(int downloaded, int total) =>
         await InvokeAsync(() =>
         {
-            loadingDownloaded = downloaded;
+            loadingProgress = downloaded;
             loadingTotal = total;
             StateHasChanged();
         });
