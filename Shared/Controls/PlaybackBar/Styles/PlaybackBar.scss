@@ -1,0 +1,56 @@
+﻿.playbackbar {
+    --playbackbar-height: 90px;
+    height: var(--playbackbar-height);
+    color: white;
+    background-color: #282828;
+}
+
+.playbackbar * {
+    margin: 0;
+}
+
+.playbackbar .track-metadata, .playbackbar .playback-extra-controls {
+    --playbackbar-sides-width: 500px;
+
+    width: var(--playbackbar-sides-width);
+}
+
+.playbackbar .track-metadata *:not(.inline-icon-button) {
+    max-width: calc(var(--playbackbar-sides-width) - 40px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+}
+
+.playbackbar .track-metadata .track-album-thumbnail {
+    --track-album-thumbnail-size: calc(var(--playbackbar-height) - 2rem);
+    width: var(--track-album-thumbnail-size);
+    height: var(--track-album-thumbnail-size);
+    border-radius: var(--caerostris-border-radius);
+    object-fit: cover;
+}
+
+.playbackbar .track-metadata .track-title {
+    font-size: 22px;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.playbackbar .track-metadata .track-artist {
+    font-size: 13px;
+    color: lightgray;
+    padding-left: 1px;
+}
+
+.duration-display {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    top: -2px;
+}
+
+.duration-display span {
+    position: relative;
+    top: -1px;
+}

@@ -1,0 +1,32 @@
+﻿.progressbar-click-area {
+    --progressbar-visible-height: 5px;
+    height: calc(3 * var(--progressbar-visible-height));
+}
+
+.progressbar-background {
+    height: var(--progressbar-visible-height);
+    background-color: white;
+    border-radius: 2px;
+}
+
+.progressbar-progress {
+    height: 100%;
+    background-color: var(--caerostris-primary-color);
+    border-radius: 2px;
+}
+
+.progressbar-handle-anchor {
+    width: 0;
+    height: 0;
+    position: relative;
+}
+
+.progressbar-handle {
+    --progressbar-handle-radius: 7px;
+    width: calc(2 * var(--progressbar-handle-radius));
+    height: calc(2 * var(--progressbar-handle-radius));
+    border-radius: var(--progressbar-handle-radius);
+    background-color: white;
+    right: calc(-1 * var(--progressbar-handle-radius));
+    top: calc(-1 * var(--progressbar-visible-height));
+}

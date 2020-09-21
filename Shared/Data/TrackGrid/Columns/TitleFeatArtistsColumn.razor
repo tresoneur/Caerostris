@@ -1,0 +1,50 @@
+﻿@using Caerostris.Shared.Controls.Links
+
+
+@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+
+
+@code
+{
+    [Parameter]
+    public List<string> ImplicitArtistUris { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        FieldTemplate = track =>
+            @<span>
+
+                <text>@track.Title</text>
+
+                @if (track.Artists.Count > ImplicitArtistUris.Count)
+                {
+                    <span class="collab-with px-1">@L["Feat"]</span>
+
+                    <ArtistLinkList Artists=@track.Artists.Where(a => ImplicitArtistUris.FirstOrDefault(implicitArtistUri => implicitArtistUri == a.Uri) is null).ToList() />
+                }
+
+            </span>;
+
+        base.OnInitialized();
+    }
+
+
+    public override string Title => L["Title"];
+
+    public override string Class => "title-column";
+
+    public override int MinWidthPx => 300;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) => // TODO: title base?
+        tracks.ThenOrderByWithDirection(t => t.Title, SortSettings.Direction);
+
+    public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+        tracks.Where(t => t.Title.CaseInsensitiveContains(filterQuery));
+}

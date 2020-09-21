@@ -2,95 +2,46 @@
 @inject SpotifyService Spotify
 
 
-<HeightMeasurementProvider @ref=contentHeight Fluid>
 
     <div class="d-flex flex-column justify-content-start h-100 p-4">
 
-        <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
+        <ContextPageHeading Type=@L["Playlist"]
+                            Title=@CompletePlaylist.Playlist.GetName(link: true)
+                            By=@CompletePlaylist.Playlist.Owner.DisplayName
+                            ImageUri=@CompletePlaylist.Playlist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
 
-            <ContextPageHeading Type=@L["Playlist"]
-                                Title=@CompletePlaylist.Playlist.GetName(link: true)
-                                By=@CompletePlaylist.Playlist.Owner.DisplayName
-                                ImageUri=@CompletePlaylist.Playlist.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+            <p>
+                @(CompletePlaylist.Playlist.Public ? L["Public"] : L["Private"])
+                • @CompletePlaylist.Playlist.Followers.Total.WithThousandsSeparator() @((CompletePlaylist.Playlist.Followers.Total == 1) ? L["Follower"] : L["Followers"])
+                • @CompletePlaylist.Tracks.Count() @((CompletePlaylist.Tracks.Count() == 1) ? L["Song"] : L["Songs"]), @CompletePlaylist.HumanReadableTotalLength()
+            </p>
 
-                <p>
-                    @(CompletePlaylist.Playlist.Public ? L["Public"] : L["Private"])
-                    • @CompletePlaylist.Playlist.Followers.Total.WithThousandsSeparator() @((CompletePlaylist.Playlist.Followers.Total == 1) ? L["Follower"] : L["Followers"])
-                    • @CompletePlaylist.Tracks.Count() @((CompletePlaylist.Tracks.Count() == 1) ? L["Song"] : L["Songs"]), @CompletePlaylist.HumanReadableTotalLength()
-                </p>
+            @if (!string.IsNullOrEmpty(CompletePlaylist.Playlist.Description))
+            {
+                <p class="pt-2">@((MarkupString)CompletePlaylist.Playlist.Description)</p>
+            }
 
-                @if (!string.IsNullOrEmpty(CompletePlaylist.Playlist.Description))
-                {
-                    <p class="pt-2">@((MarkupString)CompletePlaylist.Playlist.Description)</p>
-                }
+            <PrimaryPlayPauseButton ContextUri=@CompletePlaylist.Playlist.Uri />
 
-                <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: null)) />
+        </ContextPageHeading>
 
-            </ContextPageHeading>
+        <TrackGrid Tracks=@CompletePlaylist.Tracks.Select(t => t.AsTrack()) 
+                   ContextUri=@CompletePlaylist.Playlist.Uri
+                   Search
+                   Fill>
 
-        </HeightMeasurementProvider>
+            <TitleColumn />
+            <ArtistsColumn />
+            <AddedAtColumn />
+            <DurationColumn />
 
-        @if (measurement.Taken)
-        {
-            <DxDataGrid CssClass="datagrid"
-                        DataRowCssClass="datagrid-row"
-                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
-                        VerticalScrollableHeight=@measurement.Output
-                        ShowFilterRow=false
-                        SelectionMode=@DataGridSelectionMode.None
-                        AllowColumnDragDrop=false
-                        AllowSort=true
-                        Data=@CompletePlaylist.Tracks>
-
-                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.Name)}") Caption=@L["Title"] Width="150px">
-                    <DisplayTemplate>
-                        <HighlightIfCurrentlyPlaying Uri=@((context as PlaylistTrack)!.Track.Uri)>
-                            <ActionText Text=@((context as PlaylistTrack)!.Track.Name)
-                                        OnClick=@(() => Spotify.PlayTrack(contextUri: CompletePlaylist.Playlist.Uri, trackUri: (context as PlaylistTrack)!.Track.OriginalUri())) />
-                        </HighlightIfCurrentlyPlaying>
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Caption=@L["Artists"] Width="150px" AllowSort=DefaultBoolean.False>
-                    <DisplayTemplate>
-                        @((MarkupString)((context as PlaylistTrack)!.Track.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@nameof(PlaylistTrack.AddedAt) Caption=@L["AddedAt"] Width="50px">
-                    <DisplayTemplate>
-                        @((context as PlaylistTrack)!.HumanReadableAddedAt())
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@($"{nameof(PlaylistTrack.Track)}.{nameof(FullTrack.DurationMs)}") Caption=@L["Length"] Width="50px">
-                    <DisplayTemplate>
-                        @((context as PlaylistTrack)!.Track.HumanReadableDuration())
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-            </DxDataGrid>
-        }
+        </TrackGrid>
 
     </div>
-
-</HeightMeasurementProvider>
 
 
 @code
 {
     [Parameter]
-    public CompletePlaylist CompletePlaylist { get; set; } = null!;
-
-    private HeightMeasurementProvider contentHeight = null!, contentHeaderHeight = null!;
-    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            measurement.StateHasChanged = StateHasChanged;
-            measurement.Calculate = (_) => Math.Max(contentHeight.Height - contentHeaderHeight.Height - 50, 100);
-        }
-    }
+    public CompletePlaylist CompletePlaylist { get; set; } = default!;
 }

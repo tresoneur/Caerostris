@@ -13,8 +13,9 @@ html {
     --subsection-padding: 1em 8px 0.5em 8px;
     --info-color: rgba(255, 255, 255, 0.4);
     --info-opacity: 0.4;
-    --image-border-radius: 2px;
+    --caerostris-border-radius: 2px;
     --sidebar-width: 300px;
+    --caerostris-animation-duration: 0.2s;
 }
 
 @supports (font-variation-settings: normal) {
@@ -61,3 +62,11 @@ a, a:hover {
 img:not([src]) {
     visibility: hidden;
 }
+
+.clickable { 
+
+}
+    
+    .clickable:hover {
+        cursor: pointer;
+    }

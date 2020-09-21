@@ -29,19 +29,23 @@
 
     .material-icons.md-24 {
         font-size: 24px;
-        line-height: 0;
-        position: relative;
-        top: 6.5px;
+        line-height: 1;
+        vertical-align: middle;
     }
 
     .material-icons.md-36 {
         font-size: 36px;
-        line-height: 0;
-        position: relative;
-        top: 12px;
+        line-height: 1;
+        vertical-align: middle;
     }
 
     .material-icons.md-24-inline {
         font-size: 24px;
-        line-height: 0;
+        line-height: 1;
+    }
+
+    .material-icons.rem-inline {
+        font-size: 1.5rem;
+        line-height: 1;
+        vertical-align: middle;
     }

@@ -1,53 +1,83 @@
-﻿@inject SpotifyService Spotify;
+﻿@inject SpotifyService Spotify
 
 
 @if (!(TrackId is null))
 {
-    <InlineActionIcon Icon=@(Saved ? "favorite" : "favorite_border") OnClick=@OnClick/>
+    <InlineActionIcon Icon=@(IsSaved ? "favorite" : "favorite_border") OnClick=@OnClick/>
 }
 
 
 @code
 {
     [Parameter]
-    public string TrackId { get; set; } = null!;
+    public string? TrackId { get; set; }
 
-    private bool? saved;
-    private bool Saved => saved ?? false;
+    [Parameter]
+    public string? LinkedFromId { get; set; }
+
+    [Parameter]
+    public bool? PrefetchedSavedState { get; set; }
+
+
+    private bool? isSaved;
+
+    private bool ignorePrefetched = false;
+
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
+        Spotify.AuthStateChanged += async (acquired) =>
+        {
+            if (acquired)
+                await InvokeAsync(FillSavedIfFetchingAutonomously);
+        };
 
-        await FillSaved();
+        Spotify.SavedStateChanged += async (id, saved) =>
+        {
+            await InvokeAsync(() =>
+            {
+                if (id.Equals(TrackId) || id.Equals(LinkedFromId))
+                {
+                    ignorePrefetched = true;
+                    isSaved = saved;
+                    StateHasChanged();
+                }
+            });
+        };
+
+        await FillSavedIfFetchingAutonomously();
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        await FillSaved();
+        await FillSavedIfFetchingAutonomously();
+
+        await base.OnParametersSetAsync();
     }
 
-    private async void OnAuthAcquired()
+    private bool IsPrefetchedStateAvailable =>
+        (!ignorePrefetched && !(PrefetchedSavedState is null));
+
+    private bool ShouldFetchAutonomously =>
+        (PrefetchedSavedState is null);
+
+    private bool IsSaved =>
+        (IsPrefetchedStateAvailable
+            ? PrefetchedSavedState!.Value
+            : (isSaved ?? false));
+
+    private async Task FillSavedIfFetchingAutonomously()
     {
-        await InvokeAsync(async () =>
+        if (ShouldFetchAutonomously && !(TrackId is null) && await Spotify.IsAuthGranted())
         {
-            await FillSaved();
+            isSaved = await Spotify.IsTrackSaved(TrackId, LinkedFromId);
             StateHasChanged();
-        });
-    }
-
-    private async Task FillSaved()
-    {
-        if (!(TrackId is null) && await Spotify.IsAuthGranted())
-            saved = await Spotify.IsTrackSaved(TrackId);
+        }
     }
 
     private async Task OnClick()
     {
-        if (!(TrackId is null) && !(saved is null))
-        {
-            await Spotify.ToogleTrackSaved(TrackId);
-            await FillSaved();
-        }
+        if (!(TrackId is null))
+            await Spotify.ToogleTrackSaved(TrackId, LinkedFromId);
     }
 }

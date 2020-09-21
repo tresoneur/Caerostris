@@ -3,10 +3,10 @@
 @code 
 {
     [Parameter]
-    public IEnumerable<SavedTrack> Tracks { get; set; } = null!;
+    public IEnumerable<SavedTrack> Tracks { get; set; } = default!;
 
     [Parameter]
-    public Tuple<IEnumerable<SavedTrack>, string>? SelectedTracksAndDescription { get; set; } = null!;
+    public Tuple<IEnumerable<SavedTrack>, string>? SelectedTracksAndDescription { get; set; } = default!;
 
     [Parameter]
     public EventCallback<Tuple<IEnumerable<SavedTrack>, string>?> SelectedTracksAndDescriptionChanged { get; set; }

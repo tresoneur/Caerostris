@@ -1,0 +1,27 @@
+﻿.clearable-text-input {
+    color: white;
+    min-width: 0;
+}
+
+    .clearable-text-input.with-background {
+        background-color: var(--caerostris-secondary-background-color);
+        border-radius: 2px;
+    }
+
+    .clearable-text-input label {
+        margin: 0;
+        min-width: 0;
+    }
+
+    .clearable-text-input input {
+        width: 334px;
+        border: 0;
+        background-color: transparent;
+        color: white;
+        min-width: 0;
+    }
+
+    .clearable-text-input ::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+        min-width: 0;
+    }

@@ -1,44 +1,56 @@
 ﻿@page "/library"
 
 
+@using Caerostris.Shared.Data.TrackGrid
+@using Caerostris.Shared.Data.TrackGrid.Columns
+@using Caerostris.Shared.Data.TrackGrid.Extensions
+@using Caerostris.Shared.Data.TrackGrid.ViewModel
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
 @if (tracks is null)
 {
-    <HeightMeasurementProvider OnMeasurementTaken=OnHeightMeasured Fluid>
-
-        <CenteredLoadingIndicator @ref=loadingIndicator LoadingWhat=@L["LoadingTracks"] ShowProgress />
-
-    </HeightMeasurementProvider>
+    <CenteredLoadingIndicator @ref=loadingIndicator LoadingWhat=@L["LoadingTracks"] ShowProgress />
 }
 else
 {
-    <div class="d-flex flex-column justify-content-between align-items-stretch py-4 h-100">
-        <div class="px-3 library-controls">
-            Show:
+    <div class="d-flex flex-column justify-content-start align-items-stretch p-4 h-100">
+
+        <div class="mx-3 mb-5 library-controls">
+
             <BoundInlineCheckbox Label=@L["ShowFilterRow"] @bind-Checked=@showFilterRow />
             <BoundInlineCheckbox Label=@L["ShowExplicitColumn"] @bind-Checked=@showExplicitColumn />
             <BoundInlineCheckbox Label=@L["ShowPopularityColumn"] @bind-Checked=@showPopularityColumn />
+
         </div>
-        <div>
-            <SavedTrackDataGrid Height=@datagridHeight
-                                Tracks=@tracks
-                                ShowFilterRow=@showFilterRow
-                                ShowExplicitColumn=@showExplicitColumn
-                                ShowPopularityColumn=@showPopularityColumn
-                                ShowAddedAtColumn />
-        </div>
+
+        <TrackGrid Tracks=@tracks
+                   Search
+                   Filter=@showFilterRow
+                   Fill>
+
+            <TitleColumn />
+            <ExplicitColumn IsVisible=@showExplicitColumn />
+            <ArtistsColumn />
+            <AlbumTitleColumn />
+            <AddedAtColumn />
+            <DurationColumn />
+            <PopularityColumn IsVisible=@showPopularityColumn />
+
+        </TrackGrid>
+
     </div>
 }
 
 
 @code
 {
-    private CenteredLoadingIndicator loadingIndicator = null!;
+    private CenteredLoadingIndicator loadingIndicator = default!;
 
-    private IQueryable<SavedTrack>? tracks;
+    private IEnumerable<Track>? tracks;
 
     private int datagridHeight = 550;
 
@@ -51,7 +63,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (await Spotify.IsAuthGranted())
-            tracks = (await Spotify.GetSavedTracks()).AsQueryable();
+            tracks = (await Spotify.GetSavedTracks()).Select(t => t.AsTrack());
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -60,11 +72,5 @@ else
         {
             Spotify.LibraryLoadingProgress += loadingIndicator.Update;
         }
-    }
-
-    private void OnHeightMeasured(int height)
-    {
-        /// If an explicit height is not passed to the DxDataGrid, it will default to a ~200px scrolling area instead of filling its container
-        datagridHeight = Math.Max(height - 250, 100);
     }
 }

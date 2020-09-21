@@ -1,4 +1,8 @@
-﻿@using Caerostris.Services.Spotify.Web.SpotifyAPI.Web.Enums;
+﻿@namespace Caerostris.Shared.Controls.PlaybackBar
+
+
+@using Caerostris.Services.Spotify.Web.SpotifyAPI.Web.Enums
+@using Caerostris.Shared.Controls.Progressbar
 
 
 @inject SpotifyService Spotify
@@ -10,17 +14,19 @@
 
         <div class="d-flex flex-row justify-content-start track-metadata">
 
-            <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.Item?.Album?.Images?.AtLeastOfHeight(50) />
+            <a href=@($"{Spotify.ExploreAlbumUrl}{PlaybackContext?.Item?.Album?.Id}")> <!-- TODO: clickable album img as component-->
+                <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.Item?.Album?.Images?.AtLeastOfHeight(50) />
+            </a>
 
             <div class="d-flex flex-column justify-content-center">
 
-                <div class="d-flex flex-row justify-content-start align-items-center">
+                <span class="pb-1">
 
-                    <h4 class="pb-1 pr-3 track-title">@((MarkupString)PlaybackContext.GetTrackTitle(link: true))</h4>
+                    <span class="d-inline mr-3 track-title">@((MarkupString)PlaybackContext.GetTrackTitle(link: true))</span>
 
                     <SaveButton TrackId=@PlaybackContext?.Item?.Id />
 
-                </div>
+                </span>
                 
                 <p class="track-artist">@((MarkupString)PlaybackContext.GetArtists(links: true, localUrl: Spotify.ExploreArtistUrl))</p>
 
@@ -34,7 +40,7 @@
 
                 <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
 
-                <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(PlaybackContext.IsPlayingOrNull() ? "pause" : "play_arrow") />
+                <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(PlaybackContext.IsPlaying() ? "pause" : "play_arrow") />
 
                 <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
 
@@ -47,20 +53,22 @@
         <div class="d-flex flex-row justify-content-end align-items-center playback-extra-controls">
 
             <SecondaryIndicatorIconButton OnClick=@OnShuffleButtonClick
-                                            Icon="shuffle"
-                                            On=PlaybackContext.GetShuffleState() />
+                                          Icon="shuffle"
+                                          On=PlaybackContext.GetShuffleState() />
 
             <SecondaryIndicatorIconButton OnClick=@OnRepeatButtonClick
-                                            Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat")
-                                            On="@(PlaybackContext.GetRepeatState() != RepeatState.Off)" />
+                                          Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat")
+                                          On=@(PlaybackContext.GetRepeatState() != RepeatState.Off) />
 
             <SecondaryIndicatorIconButton OnClick=@OnMuteButtonClick
-                                            Icon=@(PlaybackContext.GetVolumePercent() == 0 ? "volume_off" : "volume_up")
-                                            On=@(PlaybackContext.GetVolumePercent() == 0) />
+                                          Icon=@(IsMuted ? "volume_off" : "volume_up")
+                                          On=@IsMuted />
 
             <div class="w-25 mr-5">
+
                 <Progressbar OnClick=@OnVolumebarClick
-                                Percent=@PlaybackContext.GetVolumePercent() />
+                             Percent=@PlaybackContext.GetVolumePercent() />
+
             </div>
 
         </div>
@@ -74,6 +82,8 @@
 {
     [CascadingParameter]
     public PlaybackContext? PlaybackContext { get; set; }
+
+    private int stashedVolumePercent = 50;
 
     protected override void OnInitialized()
     {
@@ -121,10 +131,16 @@
     {
         if (!(PlaybackContext?.Device is null))
         {
-            if (PlaybackContext.Device.VolumePercent > 0)
+            var deviceVolumePercent = PlaybackContext.Device.VolumePercent;
+            if (!IsMuted)
+            {
+                stashedVolumePercent = deviceVolumePercent;
                 await Spotify.SetVolume(0);
+            }
             else
-                await Spotify.SetVolume(50);
+            {
+                await Spotify.SetVolume(stashedVolumePercent);
+            }
         }
     }
 
@@ -141,4 +157,7 @@
                 : (PlaybackContext.GetRepeatState() == RepeatState.Context)
                     ? RepeatState.Track
                     : RepeatState.Off);
+
+    private bool IsMuted => 
+        PlaybackContext.GetVolumePercent() == 0;
 }

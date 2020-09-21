@@ -2,6 +2,10 @@
 @page "/insights/{chosengraph}"
 
 
+@using Caerostris.Shared.Data.TrackGrid 
+@using Caerostris.Shared.Data.TrackGrid.Extensions 
+@using Caerostris.Shared.Data.TrackGrid.Columns 
+
 @implements IDisposable
 
 
@@ -15,50 +19,48 @@
 }
 else
 {
-    <HeightMeasurementProvider @ref=contentHeight Fluid>
+    <div class="d-flex flex-column justify-content-start h-100 p-4 insights-content">
 
-        <div class="p-4 insights-content">
+        @if (string.IsNullOrEmpty(ChosenGraph) || ChosenGraph.Equals(AddedAtRoute))
+        {
+            <AddedAtGraph Tracks=@tracks
+                          @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+        }
+        else if (ChosenGraph.Equals(AudioFeaturesRoute))
+        {
+            <AudioFeaturesGraph Tracks=@tracks
+                                AudioFeatures=@features
+                                @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+        }
+        else if (ChosenGraph.Equals(TrackLengthRoute))
+        {
+            <TrackLengthGraph Tracks=@tracks
+                              @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
+        }
 
-            <HeightMeasurementProvider @ref=chartHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
-
-                @if (string.IsNullOrEmpty(ChosenGraph) || ChosenGraph.Equals(AddedAtRoute))
-                {
-                    <AddedAtGraph Tracks=@tracks
-                                  @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
-                }
-                else if (ChosenGraph.Equals(AudioFeaturesRoute))
-                {
-                    <AudioFeaturesGraph Tracks=@tracks
-                                        AudioFeatures=@features
-                                        @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
-                }
-                else if (ChosenGraph.Equals(TrackLengthRoute))
-                {
-                    <TrackLengthGraph Tracks=@tracks
-                                      @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
-                }
-
-            </HeightMeasurementProvider>
-
-            @if (!(selectedTracksAndDescription is null))
-            {
-                <div class="insights-playlist-header">
+        @if (!(selectedTracksAndDescription is null))
+        {
+            <div class="d-flex flex-row justify-content-start insights-playlist-header">
                     
-                    <SubsectionTitle Title=@selectedTracksAndDescription.Item2 />
+                <SubsectionTitle Title=@selectedTracksAndDescription.Item2 />
 
-                    <InlineActionIcon Icon="save" OnClick=SaveAsPlaylist />
+                <InlineActionIcon Icon="save" OnClick=SaveAsPlaylist />
 
-                </div>
+            </div>
 
-                <div class="px-2 pt-2">
-                    <SavedTrackDataGrid Height=@measurement.Output
-                                        Tracks=@selectedTracksAndDescription.Item1 />
-                </div>
-            }
+            <TrackGrid Class="mx-2 mt-2" 
+                       Tracks=@selectedTracksAndDescription.Item1.Select(t => t.AsTrack()) 
+                       Fill>
 
-        </div>
+                <TitleColumn />
+                <ArtistsColumn />
+                <AddedAtColumn />
+                <DurationColumn />
 
-    </HeightMeasurementProvider>
+            </TrackGrid>
+        }
+
+    </div>
 }
 
 @code
@@ -78,9 +80,7 @@ else
 
     Tuple<IEnumerable<SavedTrack>, string>? selectedTracksAndDescription;
 
-    private CenteredLoadingIndicator loadingIndicator = null!;
-    private HeightMeasurementProvider contentHeight = null!, chartHeight = null!;
-    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
+    private CenteredLoadingIndicator loadingIndicator = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,9 +97,6 @@ else
         {
             Spotify.LibraryLoadingProgress += loadingIndicator.Update;
             Spotify.AnalyticsLoadingProgress += loadingIndicator.Update;
-
-            measurement.StateHasChanged = StateHasChanged;
-            measurement.Calculate = (_) => Math.Max(contentHeight.Height - chartHeight.Height - 100, 100);
         }
     }
 

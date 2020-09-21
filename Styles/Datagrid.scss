@@ -1,4 +1,4 @@
-﻿.datagrid *:not(.btn) {
+﻿.datagrid *:not(.btn) { /* TODO: törölni a fájlt*/
     background-color: transparent;
     color: white;
     border: 0;
@@ -29,14 +29,14 @@
     opacity: var(--info-opacity);
 }
 
-.datagrid th .dxbs-textbox {
+.datagrid th .dxbs-textbox { //TODO: hátha kell
     height: unset;
     padding: 0 0 0 12px;
     border-radius: 0;
     line-height: 1;
 }
 
-.datagrid .table-sm td, .datagrid .table-sm th, .datagrid .form-control {
+.datagrid .table-sm td, .datagrid .table-sm th, .datagrid .form-control { // TODO: hátha kell
     padding: 0;
     height: unset;
 }

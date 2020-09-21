@@ -1,11 +1,14 @@
-﻿@inject IStringLocalizer<Text> L
+﻿@using Caerostris.Shared.Controls.Progressbar
+
+
+@inject IStringLocalizer<Text> L
 
 
 <div class="d-flex flex-@(Uncertain ? "row" : "column") justify-content-center align-items-center h-100 loading-message">
 
     @if (Uncertain)
-    { 
-        <div class="spinner-border mr-4 mb-2"></div> 
+    {
+        <div class="spinner-border mr-4 mb-2"></div>
     }
 
     <h4>@LoadingMessage</h4>
@@ -30,7 +33,7 @@
         L["LoadingWhat", LoadingWhat] + (Uncertain ? "..." : $": {L["OutOf", loadingProgress, loadingTotal]}");
 
     [Parameter]
-    public string LoadingWhat { get; set; } = null!;
+    public string LoadingWhat { get; set; } = default!;
 
     [Parameter]
     public bool ShowProgress { get; set; } = false;

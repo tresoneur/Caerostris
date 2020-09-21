@@ -73,7 +73,7 @@
 @code
 {
     [Parameter]
-    public IEnumerable<AudioFeatures> AudioFeatures { get; set; } = null!;
+    public IEnumerable<AudioFeatures> AudioFeatures { get; set; } = default!;
 
 
     private IEnumerable<(SavedTrack, AudioFeatures)>? data;

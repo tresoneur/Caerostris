@@ -1,0 +1,16 @@
+﻿@code 
+{
+    [Parameter]
+    public Func<Task>? OnClick { get; set; }
+
+    [Parameter]
+    public Action<MouseEventArgs>? OnClickWithEventArgs { get; set; }
+
+    protected async Task ExecuteOnClick(MouseEventArgs e)
+    {
+        OnClickWithEventArgs?.Invoke(e);
+
+        if (!(OnClick is null))
+            await OnClick.Invoke();
+    }
+}

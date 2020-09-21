@@ -1,54 +1,68 @@
-﻿<div class="card navigation-thumbnail-card" style="width: @WidthOrDefault">
+﻿@namespace Caerostris.Shared.Cards
+
+
+@inject SpotifyService Spotify
+
+
+    <div class="card navigation-thumbnail-card" style="width: @CssWidth">
     
-    <img src=@Thumbnail class="card-img-top" style="width: @WidthOrDefault; height: @WidthOrDefault;">
+        <img src=@Thumbnail.AtLeastOfHeight(WidthPx) class="card-img-top" style="width: @CssWidth; height: @CssWidth;">
 
-    @if (!(Play is null))
-    {
-        <div class="d-flex align-items-center justify-content-center centered-button-container" 
-             style="width: @WidthOrDefault; height: @WidthOrDefault;">
-
-            <PrimaryIconButton Icon="play_arrow" OnClick=@Play />
-
-        </div>
-    }
-
-    <div class="card-body pt-3">
-
-        <a href=@Url>
-            <h5 class="card-title">@Title</h5>
-        </a>
-
-        @if (!(Details is null))
+        @if (!(ContextUri is null) || !(TrackUri is null))
         {
-            <p class="card-text">@Details</p>
+            <div class="d-flex align-items-center justify-content-center centered-button-container" 
+                 style="width: @CssWidth; height: @CssWidth;">
+
+                @if(!(ContextUri is null))
+                {
+                    <PrimaryPlayPauseButton ContextUri=@ContextUri />  
+                }
+                else if (!(TrackUri is null))
+                { 
+                    <PrimaryPlayPauseButton TrackUri=@TrackUri StartPlaybackAtTrack=@(t => Spotify.PlayTrack(contextUri: null, trackUri: t)) />  
+                }
+
+            </div>
         }
 
-    </div>
+        <div class="card-body pt-3">
 
-</div>
+            <a href=@Url>
+                <h5 class="card-title">@Title</h5>
+            </a>
+
+            @if (!(Details is null))
+            {
+                <p class="card-text">@Details</p>
+            }
+
+        </div>
+
+    </div>
 
 
 @code
 {
     [Parameter]
-    public string Width { get; set; } = null!;
+    public int WidthPx { get; set; } = 150;
 
     [Parameter]
-    public string Url { get; set; } = null!;
+    public string Url { get; set; } = default!;
 
     [Parameter]
-    public Func<Task>? Play { get; set; } = null!;
+    public string? ContextUri { get; set; }
 
     [Parameter]
-    public string Thumbnail { get; set; } = null!;
+    public string? TrackUri { get; set; }
 
     [Parameter]
-    public string Title { get; set; } = null!;
+    public List<Image> Thumbnail { get; set; } = default!;
 
     [Parameter]
-    public string Details { get; set; } = null!;
+    public string Title { get; set; } = default!;
 
-    private const string defaultWidth = "250px";
+    [Parameter]
+    public string Details { get; set; } = default!;
 
-    private string WidthOrDefault => Width ?? defaultWidth;
+    private string CssWidth => $"{WidthPx}px";
 }

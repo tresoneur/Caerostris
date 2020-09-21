@@ -2,9 +2,8 @@
 
 
     <NavigationThumbnailCard Url=@($"{Spotify.ExploreArtistUrl}{Artist.Id}")
-                             Play=@(() => Spotify.PlayTrack(Artist.Uri, null))
-                             Width="300px"
-                             Thumbnail=@Artist.Images.AtLeastOfHeight(300)
+                             ContextUri=@Artist.Uri
+                             Thumbnail=@Artist.Images
                              Title=@Artist.Name
                              Details=@Artist.GetGenres(limit: 2) />
 
@@ -12,5 +11,5 @@
 @code
 {
     [Parameter]
-    public FullArtist Artist { get; set; } = null!;
+    public FullArtist Artist { get; set; } = default!;
 }

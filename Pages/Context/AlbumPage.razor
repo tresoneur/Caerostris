@@ -2,11 +2,7 @@
 @inject SpotifyService Spotify
 
 
-<HeightMeasurementProvider @ref=contentHeight Fluid>
-
     <div class="d-flex flex-column justify-content-start h-100 p-4">
-
-        <HeightMeasurementProvider @ref=contentHeaderHeight OnMeasurementTaken=measurement.OnMeasurementTaken>
 
             <ContextPageHeading Type=@CompleteAlbum.Album.AlbumType.ToUpper()
                                 Title=@CompleteAlbum.Album.GetName(link: true)
@@ -15,66 +11,24 @@
 
                 <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>
 
-                <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: null)) />
+                <PrimaryPlayPauseButton ContextUri=@CompleteAlbum.Album.Uri />
 
             </ContextPageHeading>
 
-        </HeightMeasurementProvider>
+            <TrackGrid Tracks=@(CompleteAlbum.Tracks.Select(t => t.AsTrack())) 
+                       ContextUri=@CompleteAlbum.Album.Uri 
+                       Fill>
 
-        @if (measurement.Taken)
-        {
-            <DxDataGrid CssClass="datagrid"
-                        DataRowCssClass="datagrid-row"
-                        DataNavigationMode=@DataGridNavigationMode.VirtualScrolling
-                        VerticalScrollableHeight=@measurement.Output
-                        ShowFilterRow=false
-                        SelectionMode=@DataGridSelectionMode.None
-                        AllowColumnDragDrop=false
-                        AllowSort=true
-                        Data=@CompleteAlbum.Tracks>
+                <TitleFeatArtistsColumn ImplicitArtistUris=@CompleteAlbum.Album.Artists.Select(a => a.Uri).ToList() />
+                <DurationColumn />
 
-                <DxDataGridColumn Field=@nameof(SimpleTrack.Name) Caption=@L["Title"] Width="150px">
-                    <DisplayTemplate>
-                        <HighlightIfCurrentlyPlaying Uri=@((context as SimpleTrack)!.Uri)>
-                            <ActionText Text=@((context as SimpleTrack)!.Name)
-                                        OnClick=@(() => Spotify.PlayTrack(contextUri: CompleteAlbum.Album.Uri, trackUri: (context as SimpleTrack)!.Uri)) />
-                            @if ((context as SimpleTrack)!.Artists.Count > CompleteAlbum.Album.Artists.Count)
-                            {
-                                <span class="collab-with pl-1">@L["Feat"]</span>
-                                @((MarkupString)((context as SimpleTrack)!.Artists.Where(a => CompleteAlbum.Album.Artists.FirstOrDefault(aa => aa.Uri.Equals(a.Uri)) is null).GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
-                            }
-                        </HighlightIfCurrentlyPlaying>
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-                <DxDataGridColumn Field=@nameof(SimpleTrack.DurationMs) Caption=@L["Length"] Width="50px">
-                    <DisplayTemplate>
-                        @((context as SimpleTrack)!.HumanReadableDuration())
-                    </DisplayTemplate>
-                </DxDataGridColumn>
-
-            </DxDataGrid>
-        }
+            </TrackGrid>
 
     </div>
-
-</HeightMeasurementProvider>
 
 
 @code
 {
     [Parameter]
-    public CompleteAlbum CompleteAlbum { get; set; } = null!;
-
-    private HeightMeasurementProvider contentHeight = null!, contentHeaderHeight = null!;
-    private readonly HeightMeasurementProvider.Measurement measurement = new HeightMeasurementProvider.Measurement();
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            measurement.StateHasChanged = StateHasChanged;
-            measurement.Calculate = (_) => Math.Max(contentHeight.Height - contentHeaderHeight.Height - 50, 100);
-        }
-    }
+    public CompleteAlbum CompleteAlbum { get; set; } = default!;
 }

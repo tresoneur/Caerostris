@@ -10,30 +10,32 @@
     border-radius: 2px !important;
 }
 
-
-.user-playlists-list-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
+.user-playlists-container {
+    min-height: 0;
 }
 
-.user-playlists-list {
-    overflow-y: auto;
-    scrollbar-color: var(--scrollbar-thumb-background-color-de-emphasized) var(--scrollbar-background-color);
-}
-
-    .user-playlists-list li {
-        opacity: 0.8;
+    .user-playlists-container .user-playlists-list-title {
         font-size: 0.9rem;
-        line-height: 2;
-        list-style-type: none;
-
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        font-weight: 600;
+        text-transform: uppercase;
     }
 
-    .user-playlists-list::-webkit-scrollbar-thumb {
-        background-color: var(--scrollbar-thumb-background-color-de-emphasized);
+    .user-playlists-container .user-playlists-list {
+        min-height: 0;
+        scrollbar-color: var(--scrollbar-thumb-background-color-de-emphasized) var(--scrollbar-background-color);
     }
+
+        .user-playlists-container .user-playlists-list li {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            line-height: 2;
+            list-style-type: none;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .user-playlists-container .user-playlists-list::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb-background-color-de-emphasized);
+        }

@@ -1,19 +1,25 @@
-﻿@inject SpotifyService Spotify  
+﻿@namespace Caerostris.Shared.Controls.PlaybackBar
 
 
-    <div class="d-flex flex-row justify-content-center align-items-center w-100 duration-display">
-
-        <span class="px-3">@FormatTimeSpan(progressMs)</span>
-
-        <Progressbar OnClick=@OnClick
-                     Percent=@progressPercent />
-
-        <span class="px-3">@FormatTimeSpan(durationMs)</span>
-
-    </div>
+@using Caerostris.Shared.Controls.Progressbar
 
 
-@code 
+@inject SpotifyService Spotify
+
+
+<div class="d-flex flex-row justify-content-center align-items-center w-100 duration-display">
+
+    <span class="px-3">@FormatTimeSpan(progressMs)</span>
+
+    <Progressbar OnClick=@OnClick
+                 Percent=@progressPercent />
+
+    <span class="px-3">@FormatTimeSpan(durationMs)</span>
+
+</div>
+
+
+@code
 {
     [Parameter]
     public Func<double, Task>? OnClick { get; set; }

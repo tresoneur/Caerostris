@@ -1,0 +1,30 @@
+﻿@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+
+
+@code
+{
+    [Parameter]
+    public override RenderFragment<Track> FieldTemplate { get; set; } =
+        track =>@<text>@track.Popularity.ToString()</text>;
+
+    [Parameter]
+    public override bool IsFixedWidth { get; set; } = true;
+
+
+    public override string Title => L["Popularity"];
+
+    public override int MinWidthPx => 150;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+    tracks.ThenOrderByWithDirection(t => t.Popularity, SortSettings.Direction);
+
+    public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+        tracks.Where(t => t.Popularity.ToString().StartsWith(filterQuery));
+}

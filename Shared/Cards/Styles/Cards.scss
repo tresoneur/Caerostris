@@ -7,7 +7,7 @@
 }
 
     .navigation-thumbnail-card .card-img-top {
-        border-radius: var(--image-border-radius);
+        border-radius: var(--caerostris-border-radius);
         object-fit: cover;
         filter: drop-shadow(0px 0px 5px black);
     }
@@ -17,12 +17,14 @@
     }
 
     .navigation-thumbnail-card .card-title {
+        font-size: 1.1rem;
         font-weight: bold;
         margin-bottom: 4px;
         letter-spacing: 0.2px;
     }
 
     .navigation-thumbnail-card .card-text {
+        font-size: 0.75rem;
         opacity: var(--info-opacity);
     }
 

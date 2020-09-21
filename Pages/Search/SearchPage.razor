@@ -2,6 +2,7 @@
 
 
 @using Caerostris.Services.Spotify.Web.ViewModels
+@using Caerostris.Shared.Controls.Input 
 @using System.Threading
 
 
@@ -14,17 +15,12 @@
 
 <div class="d-flex flex-column justify-content-start h-100 pr-4 pt-4 pl-4">
 
-    <div class="ml-3 p-1 search-query-form">
+    <ClearableTextInput Class="ml-3 p-1 search-query-form"
+                        Icon="search"
+                        Placeholder=@L["SearchInputPlaceholder"]
+                        @bind-Input=@Query />
 
-        <label for="search-query"><i class="material-icons md-24">search</i></label>
-
-        <input type="text" class="search-query" placeholder=@L["SearchInputPlaceholder"] id="search-query" autocomplete="off" @bind=@Query @bind:event="oninput" />
-
-        <i class="material-icons md-24 clear-button clickable" @onclick=@(() => Query = "")>close</i>
-
-    </div>
-
-    <div class="d-flex flex-column justify-content-start overflow-auto mt-4" style="min-height: 50vh;">
+    <div class="d-flex flex-column justify-content-start overflow-auto pt-4 flex-grow-1">
 
         @if (results is null)
         {
@@ -124,7 +120,7 @@
 
     protected override void OnInitialized()
     {
-        searchTimer = new Timer(
+        searchTimer = new Timer( // TODO: ezt szebben
             callback: async _ =>
             {
                 await InvokeAsync(async () =>

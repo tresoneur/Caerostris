@@ -1,0 +1,81 @@
+﻿@namespace Caerostris.Shared.Controls.Buttons.Abstract
+
+
+@inject SpotifyService Spotify
+
+
+@code 
+{
+    [Parameter]
+    public string? ContextUri { get; set; }
+
+    [Parameter]
+    public string? TrackUri { get; set; }
+
+    [Parameter]
+    public Func<string, Task>? StartPlaybackAtTrack { get; set; }
+
+    [CascadingParameter]
+    public PlaybackContext? PlaybackContext { get; set; }
+
+    protected string Icon =>
+        IsRelevantPlaying()
+            ? "pause"
+            : "play_arrow";
+
+    protected async Task OnClick()
+    {
+        if (IsRelevantPlaying())
+        {
+            await Spotify.Pause();
+        }
+        else
+        {
+            if (!(TrackUri is null))
+            {
+                if (IsCurrentTrack(TrackUri))
+                    await Spotify.Play();
+
+                else if (!(ContextUri is null))
+                    await Spotify.PlayTrack(ContextUri, TrackUri);
+
+                else
+                    await Delegate();
+            }
+            else if (!(ContextUri is null))
+            {
+                if (IsCurrentContext(ContextUri))
+                    await Spotify.Play();
+
+                else
+                    await Spotify.PlayTrack(ContextUri, trackUri: null);
+            }
+            else
+            {
+                await Delegate();
+            }
+        }
+    }
+
+    private async Task Delegate()
+    {
+        if (!(StartPlaybackAtTrack is null) && !(TrackUri is null))
+            await StartPlaybackAtTrack(TrackUri);
+    }
+
+    private bool IsCurrentContext(string contextUri) =>
+        (PlaybackContext.HasValidItem() && (PlaybackContext?.Context?.Uri?.Equals(contextUri) ?? false));
+
+    private bool IsCurrentTrack(string trackUri) =>
+        (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(trackUri));
+
+    private bool IsContextPlaying(string contextUri) =>
+        (IsCurrentContext(contextUri) && PlaybackContext.IsPlaying());
+
+    private bool IsTrackPlaying(string trackUri) =>// TODO: track relinking
+        (IsCurrentTrack(trackUri) && PlaybackContext.IsPlaying());
+
+    private bool IsRelevantPlaying() =>
+        (((TrackUri is null) && !(ContextUri is null) && IsContextPlaying(ContextUri)) 
+            || (!(TrackUri is null) && IsTrackPlaying(TrackUri)));
+}

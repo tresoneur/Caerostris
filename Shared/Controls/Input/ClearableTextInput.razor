@@ -1,0 +1,58 @@
+﻿@namespace Caerostris.Shared.Controls.Input
+
+
+    <div class="d-flex flex-row justify-content-start align-items-center flex-shrink-0 flex-grow-0 overflow-hidden clearable-text-input @(Discreet ? "" : "with-background") @Class">
+
+        @if (!(Icon is null))
+        {
+            <label class="flex-shrink-0 flex-grow-0 px-1" for=@id>
+                <i class="material-icons md-24">@Icon</i>
+            </label>
+        }
+
+        <input type="text" 
+               class="flex-fill" 
+               placeholder=@Placeholder 
+               id=@id 
+               autocomplete="off" 
+               @bind-value=@Input @oninput=@OnInputChanged />
+
+        @if (!string.IsNullOrWhiteSpace(Input))
+        {
+            <i class="material-icons md-24 flex-shrink-0 flex-grow-0 px-1 clickable" 
+               @onclick=@(() => OnInputChanged(new ChangeEventArgs()))>
+                close
+            </i>
+        }
+
+    </div>
+
+
+@code
+{
+    [Parameter]
+    public string? Icon { get; set; }
+
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    [Parameter]
+    public string Input { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Discreet { get; set; } = false;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public EventCallback<string> InputChanged { get; set; }
+
+    private readonly string id = $"{nameof(ClearableTextInput).ToLowerInvariant()}-{new Random().Next().ToString("x")}";
+
+    private Task OnInputChanged(ChangeEventArgs e)
+    {
+        Input = e.Value?.ToString() ?? string.Empty;
+        return InputChanged.InvokeAsync(Input);
+    }
+}

@@ -1,0 +1,37 @@
+﻿@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+
+
+@code
+{
+    [Parameter]
+    public override RenderFragment<Track> FieldTemplate { get; set; } =
+        track => 
+        {
+            if (track.Explicit)
+                return @<span class="explicit-mark">EXPLICIT</span>;
+            else
+                return @<text></text>;
+        };
+
+    [Parameter]
+    public override bool IsFixedWidth { get; set; } = true;
+
+
+    public override string Title => L["Explicit"];
+
+    public override int MinWidthPx => 80;
+
+    public override HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+
+    public override bool IsFilterable => false;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+        tracks.ThenOrderByWithDirection(t => t.Explicit, SortSettings.Direction);
+}

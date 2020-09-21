@@ -1,0 +1,39 @@
+﻿@using Caerostris.Services.Spotify.Web
+
+
+@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject SpotifyService Spotify  
+
+
+@code
+{
+    [Parameter]
+    public IDictionary<string, bool> PrefetchedSavedState { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        FieldTemplate = track =>
+            @<SaveButton TrackId=@track.Id 
+                         LinkedFromId=@track.LinkedFromId 
+                         PrefetchedSavedState=@PrefetchedSavedState[track.Id] />;
+
+        base.OnInitialized();
+    }
+
+    [Parameter]
+    public override bool IsFixedWidth { get; set; } = true;
+
+
+    public override string Title => string.Empty;
+
+    public override int MinWidthPx => 50;
+
+    public override HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+
+    public override bool IsFilterable => false;
+}

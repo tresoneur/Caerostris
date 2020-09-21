@@ -1,5 +1,5 @@
 ﻿.btn {
-    border-radius: 2px;
+    border-radius: var(--caerostris-border-radius);
 }
 
 .btn-primary {
@@ -17,8 +17,9 @@
 }
 
 .inline-icon-button {
-    font-size: 21px;
-    line-height: 0;
+    font-size: 22px;
+    line-height: 1;
+    vertical-align: middle;
 }
 
 
@@ -31,7 +32,28 @@
     text-decoration: underline;
 }
 
+.inline-play-track-button {
+    border: 1px solid;
+    border-radius: var(--caerostris-border-radius);
+    width: 2em;
+    height: 2em;
+    color: inherit;
+    opacity: 0;
+}
+    .currently-playing .inline-play-track-button, tr:hover .inline-play-track-button {
+        opacity: var(--info-opacity);
+    }
 
-.material-icons.clickable:hover {
-    cursor: pointer;
+    tr:hover .inline-play-track-button:hover {
+        opacity: 1;
+        color: inherit;
+        transition: opacity var(--caerostris-animation-duration) ease;
+    }
+
+.inline-play-track-button i {
+    font-size: 1.5em;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+    top: -0.3px;
 }

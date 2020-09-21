@@ -1,7 +1,7 @@
-﻿@inherits Button
+﻿@inherits ButtonBase
 
 
-<span class="action-text" @onclick=@OnClick>
+<span class="action-text" @onclick=@ExecuteOnClick @onclick:stopPropagation=@true>
     @Text
 </span>
 
@@ -9,5 +9,5 @@
 @code 
 {
     [Parameter]
-    public string Text { get; set; } = null!;
+    public string Text { get; set; } = default!;
 }

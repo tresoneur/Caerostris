@@ -2,7 +2,7 @@
 @inject SpotifyService Spotify
 
 
-<div class="d-flex flex-column justify-content-start overflow-auto h-100 p-4">
+<div class="d-flex flex-column justify-content-start overflow-auto h-100 px-4 pt-4">
 
     <ContextPageHeading Type=@L["Artist"]
                         Title=@ArtistProfile.Artist.GetName(link: true)
@@ -10,51 +10,22 @@
 
         <p>@ArtistProfile.Artist.Followers.Total.WithThousandsSeparator() @L["Followers"] @WithSeparatorPrefixIfNotEmpty(ArtistProfile.Artist.GetGenres())</p>
 
-        <PrimaryIconButton Icon="play_arrow" OnClick=@(() => Spotify.PlayTrack(contextUri: ArtistProfile.Artist.Uri, trackUri: null)) />
+        <PrimaryPlayPauseButton ContextUri=@ArtistProfile.Artist.Uri />
 
     </ContextPageHeading>
 
 
     <SubsectionTitle Title=@L["PopularTracks"] />
 
-    <DxDataGrid CssClass="datagrid px-2 py-4"
-                DataRowCssClass="datagrid-row"
-                DataNavigationMode=@DataGridNavigationMode.ShowAllDataRows
-                ShowFilterRow=false
-                SelectionMode=@DataGridSelectionMode.None
-                AllowColumnDragDrop=false
-                AllowSort=true
-                Data=@ArtistProfile.TopTracks>
+    <TrackGrid Class="m-2 mb-4"
+               Tracks=@ArtistProfile.TopTracks.Select(t => t.AsTrack())>
 
-        <DxDataGridColumn Field=@nameof(FullTrack.Name) Caption=@L["Title"] Width="150px">
-            <DisplayTemplate>
-                <HighlightIfCurrentlyPlaying Uri=@((context as FullTrack)!.Uri)>
-                    <ActionText Text=@((context as FullTrack)!.Name)
-                                OnClick=@(() => PlayTopTracks((context as FullTrack)!.Uri)) />
-                    @if ((context as FullTrack)!.Artists.Count > 1)
-                    {
-                        <span class="collab-with pl-1">@L["Feat"]</span>
-                        @((MarkupString)((context as FullTrack)!.Artists.Where(a => !a.Uri.Equals(ArtistProfile.Artist.Uri)).GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)))
-                    }
-                </HighlightIfCurrentlyPlaying>
-            </DisplayTemplate>
-        </DxDataGridColumn>
+        <TitleFeatArtistsColumn ImplicitArtistUris=@(new[] { ArtistProfile.Artist.Uri }.ToList()) />
+        <AlbumTitleColumn />
+        <PopularityColumn />
+        <DurationColumn />
 
-        <DxDataGridColumn Field=@($"{nameof(FullTrack.Album)}.{nameof(SimpleAlbum.Name)}") Caption=@L["Album"] Width="150px">
-            <DisplayTemplate>
-                @((MarkupString)((context as FullTrack)!.Album.GetName(link: true, localUrl: Spotify.ExploreAlbumUrl)))
-            </DisplayTemplate>
-        </DxDataGridColumn>
-
-        <DxDataGridColumn Field=@nameof(FullTrack.Popularity) Caption=@L["Popularity"] Width="70px" />
-
-        <DxDataGridColumn Field=@nameof(FullTrack.DurationMs) Caption=@L["Length"] Width="50px">
-            <DisplayTemplate>
-                @((context as FullTrack)!.HumanReadableDuration())
-            </DisplayTemplate>
-        </DxDataGridColumn>
-
-    </DxDataGrid>
+    </TrackGrid>
 
 
     <SubsectionTitle Title=@L["Albums"] />
@@ -86,15 +57,8 @@
 @code
 {
     [Parameter]
-    public ArtistProfile ArtistProfile { get; set; } = null!;
+    public ArtistProfile ArtistProfile { get; set; } = default!;
 
-    private async Task PlayTopTracks(string first)
-    {
-        var uris = new List<string> { first };
-        uris.AddRange(ArtistProfile.TopTracks.Select(t => t.Uri).Where(u => !u.Equals(first)));
-
-        await Spotify.PlayTracks(uris);
-    }
-
-    private string WithSeparatorPrefixIfNotEmpty(string? str) => string.IsNullOrEmpty(str) ? string.Empty : $"• {str}";
+    private string WithSeparatorPrefixIfNotEmpty(string? str) => 
+        string.IsNullOrEmpty(str) ? string.Empty : $"• {str}"; // TODO: isn't this used in a bunch of places?
 }

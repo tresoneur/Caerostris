@@ -1,0 +1,38 @@
+﻿@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@using Caerostris.Shared.Controls.Links
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
+
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        FieldTemplate = track => 
+            @<ContextLink Title=@track.AlbumTitle 
+                          ContextId=@track.AlbumId 
+                          ContextExternalUrls=@track.AlbumExternalUrls
+                          LocalUrl=@Spotify.ExploreAlbumUrl />;
+
+        base.OnInitialized();
+    }
+
+
+    public override string Title => L["Album"];
+
+    public override int MinWidthPx => 300;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+        tracks.ThenOrderByWithDirection(t => t.AlbumTitle, SortSettings.Direction);
+
+    public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+        tracks.Where(t => t.AlbumTitle.CaseInsensitiveContains(filterQuery));
+}

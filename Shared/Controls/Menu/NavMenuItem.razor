@@ -7,13 +7,13 @@
 @code 
 {
     [Parameter]
-    public string Icon { get; set; } = null!;
+    public string Icon { get; set; } = default!;
 
     [Parameter]
-    public string Text { get; set; } = null!;
+    public string Text { get; set; } = default!;
 
     [Parameter]
-    public string Href { get; set; } = null!;
+    public string Href { get; set; } = default!;
 
     [Parameter]
     public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;

@@ -1,0 +1,29 @@
+﻿@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+
+
+@code
+{
+    [Parameter]
+    public override RenderFragment<Track> FieldTemplate { get; set; } =
+        track => @<text>@track.Title</text>;
+
+
+    public override string Title => L["Title"];
+
+    public override string Class => "title-column";
+
+    public override int MinWidthPx => 300;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+        tracks.ThenOrderByWithDirection(t => t.Title, SortSettings.Direction);
+
+    public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+        tracks.Where(t => t.Title.CaseInsensitiveContains(filterQuery));
+}

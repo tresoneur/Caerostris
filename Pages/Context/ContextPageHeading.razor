@@ -26,17 +26,17 @@
 @code
 {
     [Parameter]
-    public string Type { get; set; } = null!;
+    public string Type { get; set; } = default!;
 
     [Parameter]
-    public string ImageUri { get; set; } = null!;
+    public string ImageUri { get; set; } = default!;
 
     [Parameter]
-    public string Title { get; set; } = null!;
+    public string Title { get; set; } = default!;
 
     [Parameter]
     public string? By { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; } = null!;
+    public RenderFragment ChildContent { get; set; } = default!;
 }

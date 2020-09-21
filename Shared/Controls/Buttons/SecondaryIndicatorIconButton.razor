@@ -1,7 +1,7 @@
-﻿@inherits IconButton
+﻿@inherits IconButtonBase
 
 
-<button @onclick=@OnClick class="btn @(On ? "btn-light" : "btn-outline-light") border-0 px-2 m-2">
+<button @onclick=@ExecuteOnClick class="btn @(On ? "btn-light" : "btn-outline-light") border-0 px-2 m-2">
     <i class="material-icons md-24">@Icon</i>
 </button>
 

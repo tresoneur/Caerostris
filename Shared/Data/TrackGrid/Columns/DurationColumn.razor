@@ -1,0 +1,33 @@
+﻿@using Caerostris.Services.Spotify.Web
+
+
+@namespace Caerostris.Shared.Data.TrackGrid.Columns
+
+
+@inherits ColumnBase
+
+
+@inject IStringLocalizer<Text> L
+
+
+@code
+{
+    [Parameter]
+    public override RenderFragment<Track> FieldTemplate { get; set; } =
+        track =>@<text>@track.DurationMs.AsHumanReadableDuration()</text>;
+
+    [Parameter]
+    public override bool IsFixedWidth { get; set; } = true;
+
+
+    public override string Title => L["Length"];
+
+    public override int MinWidthPx => 100;
+
+
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+        tracks.ThenOrderByWithDirection(t => t.DurationMs, SortSettings.Direction);
+
+    public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+        tracks.Where(t => t.DurationMs.AsHumanReadableDuration().Contains(filterQuery));
+}

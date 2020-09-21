@@ -1,0 +1,293 @@
+﻿@using Caerostris.Shared.Controls.Input
+@using Caerostris.Shared.Data.TrackGrid.Columns
+@using Caerostris.Shared.Data.TrackGrid.Interfaces
+@using Caerostris.Shared.Data.TrackGrid.Parts
+@using Caerostris.Shared.Data.TrackGrid.ViewModel
+@using System.Diagnostics.CodeAnalysis
+
+
+@namespace Caerostris.Shared.Data.TrackGrid
+
+
+@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
+
+
+<CascadingValue Value="this">
+
+    <PlayButtonColumn OnClick=@Play />
+
+    <SaveButtonColumn PrefetchedSavedState=@prefetchedSavedState />
+
+    @ChildContent
+
+</CascadingValue>
+
+<div class="@(Fill ? "flex-fill" : "") d-flex flex-column justify-content-start trackgrid-container @Class">
+
+    <div class="trackgrid-head-container">
+
+        <table class="w-100 trackgrid">
+
+            <ColGroup Columns=@VisibleColumns />
+
+            <thead>
+
+                @if (Search)
+                {
+                    <tr class="search-row">
+
+                        <td colspan=@VisibleColumns.Count>
+
+                            <ClearableTextInput Class="ml-4 ml-1 mb-2 w-25"
+                                                Icon="search"
+                                                Placeholder=@L["SearchInputPlaceholder"]
+                                                Discreet
+                                                @bind-Input=@SearchQuery />
+
+                        </td>
+
+                    </tr>
+                }
+
+                <tr>
+
+                    @foreach (var column in VisibleColumns)
+                    {
+                        <th class="column-title @((column.SortSettings.Direction != SortDirection.Unsorted) ? "sorted" : "")">
+
+                            <ActionText Text=@column.Title.ToUpperInvariant()
+                                        OnClickWithEventArgs=@((e) => OnColumnTitleClick(e, column)) />
+
+                            @if (column.SortSettings.Direction != SortDirection.Unsorted)
+                            {
+                                <i class="material-icons rem-inline">
+                                    @(column.SortSettings.Direction switch
+                                              {
+                                                  SortDirection.Ascending => "arrow_drop_up",
+                                                  SortDirection.Descending => "arrow_drop_down"
+                                              })
+                                </i>
+                            }
+
+                        </th>
+                    }
+
+                </tr>
+
+                @if (Filter && !IsFilterQueryValid(SearchQuery))
+                {
+                    <tr class="filter-row">
+
+                        @foreach (var column in VisibleColumns)
+                        {
+                            <td>
+
+                                @if (column.IsFilterable)
+                                {
+                                    <ClearableTextInput Class="py-1 w-100"
+                                                        Icon=@((column.IsFixedWidth && column.MinWidthPx < 150) ? null : "filter_list")
+                                                        @bind-Input=@column.FilterQuery />
+                                }
+
+                            </td>
+                        }
+
+                    </tr>
+
+                }
+
+            </thead>
+
+        </table>
+
+    </div>
+
+    <div class="trackgrid-body-container">
+
+        <table class="w-100 trackgrid">
+
+            <ColGroup Columns=@VisibleColumns />
+
+            <tbody>
+
+                @foreach (var track in GetSortedFilteredTracks().Take(100)) // TODO: virtual scrolling
+                {
+                    <tr class="track-row @(IsPlaying(track) ? "currently-playing" : "")" @key=@track.Id>
+
+                        @foreach (var column in VisibleColumns)
+                        {
+                            <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
+
+                                @column.FieldTemplate(track)
+
+                            </td>
+                        }
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+@code
+{
+    /// <summary>
+    /// The tracks' saved status is only refetched when the reference changes.
+    /// </summary>
+    [Parameter]
+    public IEnumerable<Track> Tracks { get; set; } = default!;
+
+    [Parameter]
+    public string? ContextUri { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Fill { get; set; } = false;
+
+    [Parameter]
+    public bool Filter { get; set; } = false;
+
+    [Parameter]
+    public bool Search { get; set; } = false;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [CascadingParameter]
+    public PlaybackContext? PlaybackContext { get; set; }
+
+    private IEnumerable<Track>? tracksReference;
+
+    private List<IColumn> columns = new List<IColumn>();
+
+    private Dictionary<string, bool> prefetchedSavedState = new Dictionary<string, bool>();
+
+    private string SearchQuery { get; set; } = string.Empty;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ReferenceEquals(Tracks, tracksReference))
+        {
+            tracksReference = Tracks;
+
+            foreach (var track in Tracks)
+                prefetchedSavedState[track.Id] = false;
+
+            foreach (var idIsSavedPair in await Spotify.AreTracksSaved(Tracks.Select(t => (t.Id, t.LinkedFromId))))
+                prefetchedSavedState[idIsSavedPair.Key] = idIsSavedPair.Value;
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
+    public void AddColumn(IColumn column)
+    {
+        columns.Add(column);
+        StateHasChanged();
+    }
+
+    private IEnumerable<Track> GetSortedFilteredTracks()
+    {
+        var filtered = IsFilterQueryValid(SearchQuery)
+            ? VisibleColumns
+                .Where(c => c.IsFilterable)
+                .Aggregate(new List<Track>(), (searchResults, c) => 
+                    searchResults = searchResults
+                        .Concat(c.Filter(Tracks, SearchQuery))
+                        .GroupBy(t => t.Id)
+                        .Select(g => g.First()).ToList())
+            : VisibleColumns
+                .Where(c => c.IsFilterable && IsFilterQueryValid(c.FilterQuery))
+                .Aggregate(Tracks, (tracks, c) => tracks = c.Filter(tracks, c.FilterQuery));
+
+        var sorted = VisibleColumns
+            .Where(c => c.SortSettings.Direction != SortDirection.Unsorted)
+            .OrderBy(c => c.SortSettings.Rank)
+            .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks));
+
+        return sorted;
+    }
+
+    private bool IsFilterQueryValid([NotNullWhen(true)] string? filterQuery) => // TODO: method csoportosítás
+        !string.IsNullOrWhiteSpace(filterQuery);
+
+    private void OnColumnTitleClick(MouseEventArgs e, IColumn column)
+    {
+        // Terminology: 'select': click on an unsorted column.
+        // Click: select primary column or change sort direction of any column. When selecting, reset all other columns.
+        if (!e.ShiftKey && !e.CtrlKey)
+        {
+            if (column.SortSettings.Direction == SortDirection.Unsorted)
+                ResetSort();
+
+            column.SortSettings.SetNextSortDirection();
+        }
+
+        // Shift + click: select primary or non-primary column or change sort direction of any column.
+        else if (e.ShiftKey && !e.CtrlKey)
+        {
+            column.SortSettings.SetNextSortDirection(
+                column.SortSettings.Rank is null
+                    ? columns.Select(c => c.SortSettings.Rank).Max(r => (r is null) ? -1 : r) + 1
+                    : null);
+        }
+
+        // Ctrl + click: reset current sort settings.
+        else if (!e.ShiftKey && e.CtrlKey)
+        {
+            ResetSort();
+        }
+
+        StateHasChanged();
+    }
+
+    void ResetSort() =>
+        columns.ForEach(c => c.SortSettings.Reset());
+
+    private bool IsPlaying(Track track) =>
+        (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(track.Uri));
+
+    private async Task Play(string trackUri)
+    {
+        if (ContextUri is null
+            || columns.Any(c => c.SortSettings.Direction != SortDirection.Unsorted)
+            || columns.Any(c => IsFilterQueryValid(c.FilterQuery)))
+        {
+            await Spotify.PlayTracks(
+                GetSortedFilteredTracks()
+                    .SkipWhile(t => !t.Uri.Equals(trackUri))
+                    .Select(t => t.Uri)
+                    .Take(100));
+            // Which means that a playback started in the Library will stop before reaching the end,
+            //  because the library context is not accessible through the API.
+            //  Shuffle won't work as expected either. TODO
+        }
+        else
+        {
+            await Spotify.PlayTrack(ContextUri, trackUri); // TODO: relinking, PlayPauseButtonBase-ben is uez
+        }
+    }
+
+    private List<IColumn> VisibleColumns => columns.Where(c => c.IsVisible).ToList();
+
+    private string HorizontalAlignmentValue(IColumn column)
+    {
+        return column.HorizontalAlignment switch
+        {
+            HorizontalAlignment.Left => "left",
+            HorizontalAlignment.Center => "center",
+            HorizontalAlignment.Right => "right"
+        };
+    }
+
+}

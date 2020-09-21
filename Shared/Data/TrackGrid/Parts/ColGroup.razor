@@ -1,0 +1,21 @@
+﻿@using Caerostris.Shared.Data.TrackGrid.Interfaces
+
+
+@namespace Caerostris.Shared.Data.TrackGrid.Parts
+
+
+    <colgroup>
+
+        @foreach (var column in Columns)
+        {
+            <col style="@($"{(column.IsFixedWidth ? "width" : "min-width")}: {column.MinWidthPx}px;")" />
+        }
+
+    </colgroup>
+
+
+@code 
+{
+    [Parameter]
+    public List<IColumn> Columns { get; set; } = default!;
+}
