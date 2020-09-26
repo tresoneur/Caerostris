@@ -15,7 +15,7 @@
 
             </ContextPageHeading>
 
-            <TrackGrid Tracks=@(CompleteAlbum.Tracks.Select(t => t.AsTrack())) 
+            <TrackGrid Tracks=@(CompleteAlbum.Tracks.Select(t => t.AsTrack()).ToList()) 
                        ContextUri=@CompleteAlbum.Album.Uri 
                        Fill>
 

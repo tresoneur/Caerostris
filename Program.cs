@@ -33,7 +33,7 @@ namespace Caerostris
 
             var services = builder.Services;
 
-            services.AddLocalization(/*options => options.ResourcesPath = "Resources"*/);
+            services.AddLocalization();
             services.AddScoped<Text>();
 
             services.AddBlazoredModal();

@@ -4,6 +4,7 @@
 @using Caerostris.Shared.Data.TrackGrid.Parts
 @using Caerostris.Shared.Data.TrackGrid.ViewModel
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.AspNetCore.Components.Web.Virtualization
 
 
 @namespace Caerostris.Shared.Data.TrackGrid
@@ -63,10 +64,10 @@
                             {
                                 <i class="material-icons rem-inline">
                                     @(column.SortSettings.Direction switch
-                                              {
-                                                  SortDirection.Ascending => "arrow_drop_up",
-                                                  SortDirection.Descending => "arrow_drop_down"
-                                              })
+                                        {
+                                            SortDirection.Ascending => "arrow_drop_up",
+                                            SortDirection.Descending => "arrow_drop_down"
+                                        })
                                 </i>
                             }
 
@@ -111,8 +112,8 @@
 
             <tbody>
 
-                @foreach (var track in GetSortedFilteredTracks().Take(100)) // TODO: virtual scrolling
-                {
+                <Virtualize Items=@GetSortedFilteredTracks()  Context="track">
+                        
                     <tr class="track-row @(IsPlaying(track) ? "currently-playing" : "")" @key=@track.Id>
 
                         @foreach (var column in VisibleColumns)
@@ -125,7 +126,10 @@
                         }
 
                     </tr>
-                }
+
+                    <!-- TODO: Placeholder -->
+                
+                </Virtualize>
 
             </tbody>
 
@@ -142,7 +146,7 @@
     /// The tracks' saved status is only refetched when the reference changes.
     /// </summary>
     [Parameter]
-    public IEnumerable<Track> Tracks { get; set; } = default!;
+    public ICollection<Track> Tracks { get; set; } = default!;
 
     [Parameter]
     public string? ContextUri { get; set; }
@@ -196,7 +200,7 @@
         StateHasChanged();
     }
 
-    private IEnumerable<Track> GetSortedFilteredTracks()
+    private ICollection<Track> GetSortedFilteredTracks()
     {
         var filtered = IsFilterQueryValid(SearchQuery)
             ? VisibleColumns
@@ -208,12 +212,13 @@
                         .Select(g => g.First()).ToList())
             : VisibleColumns
                 .Where(c => c.IsFilterable && IsFilterQueryValid(c.FilterQuery))
-                .Aggregate(Tracks, (tracks, c) => tracks = c.Filter(tracks, c.FilterQuery));
+                .Aggregate(Tracks, (tracks, c) => tracks = c.Filter(tracks, c.FilterQuery).ToList());
 
         var sorted = VisibleColumns
             .Where(c => c.SortSettings.Direction != SortDirection.Unsorted)
             .OrderBy(c => c.SortSettings.Rank)
-            .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks));
+            .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks))
+            .ToList();
 
         return sorted;
     }

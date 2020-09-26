@@ -50,9 +50,7 @@ else
 {
     private CenteredLoadingIndicator loadingIndicator = default!;
 
-    private IEnumerable<Track>? tracks;
-
-    private int datagridHeight = 550;
+    private ICollection<Track>? tracks;
 
     private bool
         showFilterRow = true,
@@ -63,7 +61,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (await Spotify.IsAuthGranted())
-            tracks = (await Spotify.GetSavedTracks()).Select(t => t.AsTrack());
+            tracks = (await Spotify.GetSavedTracks()).Select(t => t.AsTrack()).ToList();
     }
 
     protected override void OnAfterRender(bool firstRender)

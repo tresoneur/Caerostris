@@ -18,7 +18,7 @@
     <SubsectionTitle Title=@L["PopularTracks"] />
 
     <TrackGrid Class="m-2 mb-4"
-               Tracks=@ArtistProfile.TopTracks.Select(t => t.AsTrack())>
+               Tracks=@ArtistProfile.TopTracks.Select(t => t.AsTrack()).ToList()>
 
         <TitleFeatArtistsColumn ImplicitArtistUris=@(new[] { ArtistProfile.Artist.Uri }.ToList()) />
         <AlbumTitleColumn />

@@ -49,7 +49,7 @@ else
             </div>
 
             <TrackGrid Class="mx-2 mt-2" 
-                       Tracks=@selectedTracksAndDescription.Item1.Select(t => t.AsTrack()) 
+                       Tracks=@selectedTracksAndDescription.Item1.Select(t => t.AsTrack()).ToList()
                        Fill>
 
                 <TitleColumn />

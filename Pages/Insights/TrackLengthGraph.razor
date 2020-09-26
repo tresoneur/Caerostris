@@ -3,7 +3,6 @@
 
 @inject IStringLocalizer<Text> L
 
-
 <DxChart Data=@Tracks.OrderBy(s => s.Track.DurationMs)>
 
     <DxChartTitle Text=@L["TrackLengthGraphTitle"] />
@@ -53,7 +52,7 @@
 
     private async Task OnIntervalSelected(string label)
     {
-        var segments = label.Split(new [] { "-", " min" }, StringSplitOptions.RemoveEmptyEntries);
+        var segments = label.Split(new[] { "-", " min" }, StringSplitOptions.RemoveEmptyEntries);
         int min = int.Parse(segments[0]), max = int.Parse(segments[1]);
 
         SelectedTracksAndDescription = new Tuple<IEnumerable<SavedTrack>, string>
