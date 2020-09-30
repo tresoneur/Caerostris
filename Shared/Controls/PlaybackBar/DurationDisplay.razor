@@ -64,5 +64,5 @@
     }
 
     private string FormatTimeSpan(TimeSpan timeSpan) =>
-        $"{Math.Floor(timeSpan.TotalMinutes)}:{timeSpan.Seconds.ToString("00")}";
+        $"{Math.Floor(timeSpan.TotalMinutes)}:{timeSpan.Seconds:00}";
 }

@@ -1,11 +1,14 @@
-﻿@inject SpotifyService Spotify
+﻿@namespace Caerostris.Shared.Providers
 
 
-<CascadingValue Value=@PlaybackContext>
+@inject SpotifyService Spotify
 
-    @ChildContent
 
-</CascadingValue>
+    <CascadingValue Value=@PlaybackContext>
+
+        @ChildContent
+
+    </CascadingValue>
 
 
 @code 

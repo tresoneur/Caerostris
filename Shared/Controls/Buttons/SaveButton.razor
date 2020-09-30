@@ -1,10 +1,13 @@
-﻿@inject SpotifyService Spotify
+﻿@namespace Caerostris.Shared.Controls.Buttons
 
 
-@if (!(TrackId is null))
-{
-    <InlineActionIcon Icon=@(IsSaved ? "favorite" : "favorite_border") OnClick=@OnClick/>
-}
+@inject SpotifyService Spotify
+
+
+    @if (TrackId is not null)
+    {
+        <InlineActionIcon Icon=@(IsSaved ? "favorite" : "favorite_border") OnClick=@OnClick />
+    }
 
 
 @code
@@ -56,7 +59,7 @@
     }
 
     private bool IsPrefetchedStateAvailable =>
-        (!ignorePrefetched && !(PrefetchedSavedState is null));
+        (!ignorePrefetched && (PrefetchedSavedState is not null));
 
     private bool ShouldFetchAutonomously =>
         (PrefetchedSavedState is null);
@@ -68,7 +71,7 @@
 
     private async Task FillSavedIfFetchingAutonomously()
     {
-        if (ShouldFetchAutonomously && !(TrackId is null) && await Spotify.IsAuthGranted())
+        if (ShouldFetchAutonomously && (TrackId is not null) && await Spotify.IsAuthGranted())
         {
             isSaved = await Spotify.IsTrackSaved(TrackId, LinkedFromId);
             StateHasChanged();
@@ -77,7 +80,7 @@
 
     private async Task OnClick()
     {
-        if (!(TrackId is null))
+        if (TrackId is not null)
             await Spotify.ToogleTrackSaved(TrackId, LinkedFromId);
     }
 }

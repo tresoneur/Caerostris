@@ -1,4 +1,7 @@
-﻿@inject SpotifyService Spotify
+﻿@namespace Caerostris.Shared.Cards
+
+
+@inject SpotifyService Spotify
 
 
     <NavigationThumbnailCard Url=@($"{Spotify.ExploreArtistUrl}{Artist.Id}")

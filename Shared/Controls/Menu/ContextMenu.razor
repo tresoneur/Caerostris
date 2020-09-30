@@ -1,12 +1,15 @@
-﻿<div class="nav flex-column pl-3 pr-4">
-    @if (!(ItemAttributes is null))
-    {
-        @foreach (var item in ItemAttributes)
+﻿@namespace Caerostris.Shared.Controls.Menu
+
+
+    <div class="nav flex-column pl-3 pr-4">
+        @if (ItemAttributes is not null)
         {
-            <NavMenuItem @attributes=@item />
+            @foreach (var item in ItemAttributes)
+            {
+                <NavMenuItem @attributes=@item />
+            }
         }
-    }
-</div>
+    </div>
 
 @code
 {

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris", "Caerostris.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyService", "..\SpotifyService\SpotifyService.csproj", "{2B0E552A-0C75-4540-A703-5F75EB86DD96}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris.Server", "..\CaerostrisServer\Caerostris.Server.csproj", "{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2B0E552A-0C75-4540-A703-5F75EB86DD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B0E552A-0C75-4540-A703-5F75EB86DD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B0E552A-0C75-4540-A703-5F75EB86DD96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

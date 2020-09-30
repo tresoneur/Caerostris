@@ -1,21 +1,31 @@
 ﻿@page "/"
 
 
+@namespace Caerostris.Pages.Playback
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-<div>
-    <p class="p-3 playback-status">@L["Playback", (username ?? L["LoadingEllipsis"])]</p>
-</div>
-<div class="playback-cover-image-container">
-    @if (!(coverImage is null))
-    {
-        <a href=@albumUrl>
-            <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;" />
-        </a>
-    }
-</div>
+    <div>
+
+        <p class="p-3 playback-status">@L["Playback", (username ?? L["LoadingEllipsis"])]</p>
+
+    </div>
+
+    <div class="playback-cover-image-container">
+
+        @if (coverImage is not null)
+        {
+            <a href=@albumUrl>
+
+                <img class="playback-cover-image" src="@coverImage" style="height: 65vh; width: auto;" />
+
+            </a>
+        }
+
+    </div>
 
 
 @code

@@ -1,0 +1,80 @@
+﻿@namespace Caerostris.Shared.Cards
+
+
+@inject IStringLocalizer<Text> L
+
+
+    @if (Sections.Tracks.Any())
+    {
+        <SubsectionTitle Title=@L["Tracks"] />
+
+        <CardTileLayout>
+
+            @foreach (var track in Sections.Tracks)
+            {
+                <TrackCard Track=@track />
+            }
+
+        </CardTileLayout>
+    }
+
+    @if (Sections.Artists.Any())
+    {
+        <SubsectionTitle Title=@L["Artists"] />
+
+        <CardTileLayout>
+
+            @foreach (var artist in Sections.Artists)
+            {
+                <ArtistCard Artist=@artist />
+            }
+
+        </CardTileLayout>
+    }
+
+    @if (Sections.Albums.Any())
+    {
+        <SubsectionTitle Title=@L["Albums"] /> // TODO: section component
+
+        <CardTileLayout>
+
+            @foreach (var album in Sections.Albums)
+            {
+                <AlbumCard Album=@album />
+            }
+
+        </CardTileLayout>
+    }
+
+    @if (Sections.Playlists.Any())
+    {
+        <SubsectionTitle Title=@L["Playlists"] />
+
+        <CardTileLayout>
+
+            @foreach (var playlist in Sections.Playlists)
+            {
+                <PlaylistCard Playlist=@playlist />
+            }
+
+        </CardTileLayout>
+    }
+
+    @if (!Sections.Albums.Any()
+        && !Sections.Artists.Any()
+        && !Sections.Playlists.Any()
+        && !Sections.Tracks.Any())
+    {
+        <CenteredInfo Text=@NoItemsMessage />
+    }
+    
+
+
+@code
+{
+    [Parameter]
+    public Sections Sections { get; set; } = default!;
+
+    [Parameter]
+    public string NoItemsMessage { get; set; } = string.Empty;
+}

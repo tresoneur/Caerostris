@@ -1,15 +1,20 @@
 ﻿@using Blazored.Modal
 @using Blazored.Modal.Services
 
+
+@namespace Caerostris.Shared.Auth
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
+@inject NavigationManager NavManager
 @inject IModalService ModalService
 
 
 @code
 {
     /// <summary>
-    /// The AuthDaemon component is responsible for orchestrating the user auth process.
+    /// The AuthDaemon component is responsible for orchestrating the authorization process.
     /// </summary>
 
     protected override async Task OnInitializedAsync()
@@ -24,25 +29,13 @@
 
     private async void OnAuthStateChanged(bool state)
     {
-        await InvokeAsync(() =>
-        {
-            if (!state)
-                ShowModal();
-            else
-                CloseModal();
-        });
+        await InvokeAsync(() => { if (!state && !NavManager.Uri.Contains(Spotify.RelativeCallbackUrl)) ShowModal(); });
     }
 
-    private void ShowModal()
-    {
-        var options = new ModalOptions()
+    private void ShowModal() =>
+        ModalService.Show<AuthModal>(title: L["AuthModalTitle"], new ModalOptions()
         {
             HideCloseButton = true,
             DisableBackgroundCancel = true
-        };
-
-        ModalService.Show<AuthModal>(title: L["AuthModalTitle"], options);
-    }
-
-    private void CloseModal() { /* Redirect */ }
+        });
 }

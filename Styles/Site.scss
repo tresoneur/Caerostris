@@ -6,6 +6,7 @@
 @import "Chart.scss";
 
 @import "../Shared/Cards/Styles/Cards.scss";
+@import "../Shared/Context/Styles/Context.scss";
 @import "../Shared/Controls/Progressbar/Styles/Progressbar.scss";
 @import "../Shared/Controls/Buttons/Styles/Buttons.scss";
 @import "../Shared/Controls/Input/Styles/Input.scss";
@@ -17,7 +18,6 @@
 @import "../Shared/Layout/Styles/Layout.scss";
 @import "../Shared/Typography/Styles/Typography.scss";
 
-@import "../Pages/Context/Styles/Context.scss";
 @import "../Pages/Insights/Styles/Insights.scss";
 @import "../Pages/Library/Styles/Library.scss";
 @import "../Pages/Playback/Styles/Playback.scss";

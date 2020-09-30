@@ -6,6 +6,9 @@
 @using System.Threading
 
 
+@namespace Caerostris.Pages.Search
+
+
 @implements IDisposable
 
 
@@ -13,93 +16,32 @@
 @inject SpotifyService Spotify
 
 
-<div class="d-flex flex-column justify-content-start h-100 pr-4 pt-4 pl-4">
+    <div class="d-flex flex-column justify-content-start h-100 pt-4 px-4">
 
-    <ClearableTextInput Class="ml-3 p-1 search-query-form"
-                        Icon="search"
-                        Placeholder=@L["SearchInputPlaceholder"]
-                        @bind-Input=@Query />
+        <ClearableTextInput Class="ml-3 p-1 search-query-form"
+                            Icon="search"
+                            Placeholder=@L["SearchInputPlaceholder"]
+                            @bind-Input=@Query />
 
-    <div class="d-flex flex-column justify-content-start overflow-auto pt-4 flex-grow-1">
+        <div class="d-flex flex-column justify-content-start overflow-auto pt-4 flex-grow-1">
 
-        @if (results is null)
-        {
-            <CenteredInfo Text=@L["SearchResultsWillAppearHere"] />
-        }
-        else
-        {
-            @if (results.Tracks.Any())
+            @if (results is null)
             {
-                <SubsectionTitle Title=@L["Tracks"] />
-
-                <CardTileLayout>
-
-                    @foreach (var track in results.Tracks)
-                    {
-                        <TrackCard Track=@track />
-                    }
-
-                </CardTileLayout>
+                <CenteredInfo Text=@L["SearchResultsWillAppearHere"] />
+            }
+            else
+            {
+                <CardTileSections Sections=@results NoItemsMessage=@L["NoResults"] />
             }
 
-            @if (results.Artists.Any())
-            {
-                <SubsectionTitle Title=@L["Artists"] />
-
-                <CardTileLayout>
-
-                    @foreach (var artist in results.Artists)
-                    {
-                        <ArtistCard Artist=@artist />
-                    }
-
-                </CardTileLayout>
-            }
-
-            @if (results.Albums.Any())
-            {
-                <SubsectionTitle Title=@L["Albums"] />
-
-                <CardTileLayout>
-
-                    @foreach (var album in results.Albums)
-                    {
-                        <AlbumCard Album=@album />
-                    }
-
-                </CardTileLayout>
-            }
-
-            @if (results.Playlists.Any())
-            {
-                <SubsectionTitle Title=@L["Playlists"] />
-
-                <CardTileLayout>
-
-                    @foreach (var playlist in results.Playlists)
-                    {
-                        <PlaylistCard Playlist=@playlist />
-                    }
-
-                </CardTileLayout>
-            }
-
-            @if (!results.Albums.Any()
-                 && !results.Artists.Any()
-                 && !results.Playlists.Any()
-                 && !results.Tracks.Any())
-            {
-                <CenteredInfo Text=@L["NoResults"] />
-            }
-        }
+        </div>
 
     </div>
 
-</div>
 
 @code
 {
-    private SearchResults? results;
+    private Sections? results;
 
     private bool hasQueryChanged = false;
     private Timer? searchTimer;

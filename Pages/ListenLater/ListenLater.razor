@@ -1,0 +1,40 @@
+﻿@page "/listen-later"
+
+
+@namespace Caerostris.Pages.ListenLater
+
+
+@using Caerostris.Services.Spotify.Web.ViewModels
+
+
+@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
+
+
+    <div class="d-flex h-100 pt-4 px-4">
+
+        <div class="d-flex flex-column justify-content-start flex-grow-1 overflow-auto">
+
+            @if (listenLaterItems is null)
+            {
+                <CenteredLoadingIndicator LoadingWhat=@L["LoadingListenLater"] /> 
+            }
+            else
+            {
+                <CardTileSections Sections=@listenLaterItems NoItemsMessage=@L["ListenLaterItemsWillAppearHere"] />
+            }
+
+        </div>
+
+    </div>
+
+
+@code
+{
+    private Sections? listenLaterItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listenLaterItems = await Spotify.GetListenLaterItems();
+    }
+}

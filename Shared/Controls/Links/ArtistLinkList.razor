@@ -1,18 +1,21 @@
-﻿@inject SpotifyService Spotify
+﻿@namespace Caerostris.Shared.Controls.Links
 
 
-@foreach (var (artist, isLast) in Artists.Select(a => (a, Artists.Last() == a)))
-{
-    <ContextLink Title=@artist.Name
-                 ContextId=@artist.Id
-                 ContextExternalUrls=@artist.ExternalUrls
-                 LocalUrl=@Spotify.ExploreArtistUrl />
-    
-    @if (!isLast)
+@inject SpotifyService Spotify
+
+
+    @foreach (var (artist, isLast) in Artists.Select(a => (a, Artists.Last() == a)))
     {
-        <text>, </text>
+        <ContextLink Title=@artist.Name
+                     ContextId=@artist.Id
+                     ContextExternalUrls=@artist.ExternalUrls
+                     LocalUrl=@Spotify.ExploreArtistUrl />
+    
+        @if (!isLast)
+        {
+            <text>, </text>
+        }
     }
-}
 
 @code
 {

@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <DxExtendStartupHost>False</DxExtendStartupHost>
+    <PublishTrimmed>False</PublishTrimmed>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -17,9 +18,9 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="4.0.0" />
-	<PackageReference Include="BuildWebCompiler" Version="1.12.394" />
-	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.1.20451.17" />
-	<PackageReference Include="DevExpress.Blazor" Version="20.1.7" />
+	  <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.1.20451.17" />
+	  <PackageReference Include="DevExpress.Blazor" Version="20.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-rc.1.20451.17 " PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0-rc.1.20451.17" />

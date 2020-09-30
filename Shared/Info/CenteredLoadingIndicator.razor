@@ -1,26 +1,29 @@
-﻿@using Caerostris.Shared.Controls.Progressbar
+﻿@namespace Caerostris.Shared.Info
+
+
+@using Caerostris.Shared.Controls.Progressbar
 
 
 @inject IStringLocalizer<Text> L
 
 
-<div class="d-flex flex-@(Uncertain ? "row" : "column") justify-content-center align-items-center h-100 loading-message">
+    <div class="d-flex flex-@(Uncertain ? "row" : "column") justify-content-center align-items-center h-100 loading-message">
 
-    @if (Uncertain)
-    {
-        <div class="spinner-border mr-4 mb-2"></div>
-    }
+        @if (Uncertain)
+        {
+            <div class="spinner-border mr-4 mb-2"></div>
+        }
 
-    <h4>@LoadingMessage</h4>
+        <h4>@LoadingMessage</h4>
 
-    @if (!Uncertain)
-    {
-        <div class="w-25 pt-2">
-            <Progressbar Percent=@((loadingTotal > 0) ? ((double)loadingProgress / (double)loadingTotal * 100d) : 0) />
-        </div>
-    }
+        @if (!Uncertain)
+        {
+            <div class="w-25 pt-2">
+                <Progressbar Percent=@((loadingTotal > 0) ? ((double)loadingProgress / (double)loadingTotal * 100d) : 0) />
+            </div>
+        }
 
-</div>
+    </div>
 
 
 @code

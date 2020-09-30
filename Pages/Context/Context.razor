@@ -1,33 +1,41 @@
 ﻿@page "/context"
 
 
+@using Caerostris.Shared.Context
+@using Caerostris.Services.Spotify.Web.ViewModels
+
+
+@namespace Caerostris.Pages.Context
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-@if (context is null)
-{
-    <CenteredLoadingIndicator LoadingWhat=@L["LoadingContext"] />
-}
-else
-{
-    @if (!(context?.Item1 is null))
+    @if (context is null)
     {
-        <ArtistPage ArtistProfile=@context?.Item1 />
-    }
-    else if (!(context?.Item2 is null))
-    {
-        <AlbumPage CompleteAlbum=@context?.Item2 />
-    }
-    else if (!(context?.Item3 is null))
-    {
-        <PlaylistPage CompletePlaylist=@context?.Item3 />
+        <CenteredLoadingIndicator LoadingWhat=@L["LoadingContext"] />
     }
     else
     {
-        <CenteredInfo Text=@L["CantDisplayContext"] />
+        @if (context?.Item1 is not null)
+        {
+            <ArtistPage ArtistProfile=@context?.Item1 />
+        }
+        else if (context?.Item2 is not null)
+        {
+            <AlbumPage CompleteAlbum=@context?.Item2 />
+        }
+        else if (context?.Item3 is not null)
+        {
+            <PlaylistPage CompletePlaylist=@context?.Item3 />
+        }
+        else
+        {
+            <CenteredInfo Text=@L["CantDisplayContext"] />
+        }
     }
-}
+
 
 @code
 {
@@ -43,7 +51,7 @@ else
     {
         await InvokeAsync(async () =>
         {
-            if (!(playback is null))
+            if (playback is not null)
             {
                 context = null;
                 StateHasChanged();

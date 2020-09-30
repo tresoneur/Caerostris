@@ -1,11 +1,14 @@
-﻿@inject SpotifyService Spotify
+﻿@namespace Caerostris.Shared.Cards
 
 
-<NavigationThumbnailCard Url=@($"{Spotify.ExplorePlaylistUrl}{Playlist.Id}")
-                         ContextUri=@Playlist.Uri
-                         Thumbnail=@Playlist.Images
-                         Title=@Playlist.Name
-                         Details=@($"{Playlist.Owner.DisplayName} • {Playlist.Tracks.Total} tracks") />
+@inject SpotifyService Spotify
+
+
+    <NavigationThumbnailCard Url=@($"{Spotify.ExplorePlaylistUrl}{Playlist.Id}")
+                             ContextUri=@Playlist.Uri
+                             Thumbnail=@Playlist.Images
+                             Title=@Playlist.Name
+                             Details=@($"{Playlist.Owner.DisplayName} • {Playlist.Tracks.Total} tracks") />
 
 
 @code

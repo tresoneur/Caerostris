@@ -129,7 +129,7 @@
 
     private async Task OnMuteButtonClick()
     {
-        if (!(PlaybackContext?.Device is null))
+        if (PlaybackContext?.Device is not null)
         {
             var deviceVolumePercent = PlaybackContext.Device.VolumePercent;
             if (!IsMuted)

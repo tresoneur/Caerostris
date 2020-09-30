@@ -133,6 +133,15 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Audio feature.
+        /// </summary>
+        public static string AudioFeature {
+            get {
+                return ResourceManager.GetString("AudioFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio features.
         /// </summary>
         public static string AudioFeaturesGraphShortName {
@@ -160,7 +169,7 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: to use this app, you&apos;ll need to connect a Spotify Premium account..
+        ///   Looks up a localized string similar to Note: to access the full functionality of this app, you&apos;ll need to connect a Spotify Premium account..
         /// </summary>
         public static string AuthModalNote {
             get {
@@ -295,6 +304,24 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Albums, artists and playlists you add to your Listen Later list will appear here.
+        /// </summary>
+        public static string ListenLaterItemsWillAppearHere {
+            get {
+                return ResourceManager.GetString("ListenLaterItemsWillAppearHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listen later.
+        /// </summary>
+        public static string ListenLaterMenuItem {
+            get {
+                return ResourceManager.GetString("ListenLaterMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to album.
         /// </summary>
         public static string LoadingAlbum {
@@ -336,6 +363,15 @@ namespace Caerostris.Resources {
         public static string LoadingEllipsis {
             get {
                 return ResourceManager.GetString("LoadingEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to items.
+        /// </summary>
+        public static string LoadingListenLater {
+            get {
+                return ResourceManager.GetString("LoadingListenLater", resourceCulture);
             }
         }
         
@@ -511,7 +547,7 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You should be getting redirected soon....
+        ///   Looks up a localized string similar to Please wait, you should be getting redirected soon. Communicating with the Cærostris authorization server....
         /// </summary>
         public static string ShouldBeRedirectedSoon {
             get {

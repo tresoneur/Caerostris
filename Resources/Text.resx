@@ -151,7 +151,7 @@
     <value>Connect account</value>
   </data>
   <data name="AuthModalNote" xml:space="preserve">
-    <value>Note: to use this app, you'll need to connect a Spotify Premium account.</value>
+    <value>Note: to access the full functionality of this app, you'll need to connect a Spotify Premium account.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
     <value>Spotify authorization needed</value>
@@ -266,7 +266,7 @@
     <value>Search results will appear here</value>
   </data>
   <data name="ShouldBeRedirectedSoon" xml:space="preserve">
-    <value>You should be getting redirected soon...</value>
+    <value>Please wait, you should be getting redirected soon. Communicating with the Cærostris authorization server...</value>
   </data>
   <data name="ShowExplicitColumn" xml:space="preserve">
     <value>explicit</value>
@@ -312,5 +312,17 @@
   </data>
   <data name="Playlist" xml:space="preserve">
     <value>PLAYLIST</value>
+  </data>
+  <data name="AudioFeature" xml:space="preserve">
+    <value>Audio feature</value>
+  </data>
+  <data name="ListenLaterMenuItem" xml:space="preserve">
+    <value>Listen later</value>
+  </data>
+  <data name="LoadingListenLater" xml:space="preserve">
+    <value>items</value>
+  </data>
+  <data name="ListenLaterItemsWillAppearHere" xml:space="preserve">
+    <value>Albums, artists and playlists you add to your Listen Later list will appear here</value>
   </data>
 </root>

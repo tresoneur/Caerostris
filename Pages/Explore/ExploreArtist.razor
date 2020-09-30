@@ -5,14 +5,14 @@
 @inject SpotifyService Spotify
 
 
-@if (artist is null)
-{
-    <CenteredLoadingIndicator LoadingWhat=@L["LoadingArtist"] />
-}
-else
-{
-    <ArtistPage ArtistProfile=@artist />
-}
+    @if (artist is null)
+    {
+        <CenteredLoadingIndicator LoadingWhat=@L["LoadingArtist"] />
+    }
+    else
+    {
+        <ArtistPage ArtistProfile=@artist />
+    }
 
 
 @code

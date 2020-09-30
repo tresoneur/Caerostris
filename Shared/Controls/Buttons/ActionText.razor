@@ -1,12 +1,15 @@
-﻿@inherits ButtonBase
+﻿@namespace Caerostris.Shared.Controls.Buttons
 
 
-<span class="action-text" @onclick=@ExecuteOnClick @onclick:stopPropagation=@true>
-    @Text
-</span>
+@inherits ButtonBase
 
 
-@code 
+    <span class="action-text" @onclick=@ExecuteOnClick @onclick:stopPropagation=@true>
+        @Text
+    </span>
+
+
+@code
 {
     [Parameter]
     public string Text { get; set; } = default!;

@@ -1,4 +1,7 @@
-﻿@code 
+﻿@namespace Caerostris.Shared.Controls.Buttons.Abstract
+
+
+@code
 {
     [Parameter]
     public Func<Task>? OnClick { get; set; }
@@ -10,7 +13,7 @@
     {
         OnClickWithEventArgs?.Invoke(e);
 
-        if (!(OnClick is null))
+        if (OnClick is not null)
             await OnClick.Invoke();
     }
 }

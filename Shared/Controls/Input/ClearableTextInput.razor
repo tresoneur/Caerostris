@@ -3,7 +3,7 @@
 
     <div class="d-flex flex-row justify-content-start align-items-center flex-shrink-0 flex-grow-0 overflow-hidden clearable-text-input @(Discreet ? "" : "with-background") @Class">
 
-        @if (!(Icon is null))
+        @if (Icon is not null)
         {
             <label class="flex-shrink-0 flex-grow-0 px-1" for=@id>
                 <i class="material-icons md-24">@Icon</i>
@@ -48,7 +48,7 @@
     [Parameter]
     public EventCallback<string> InputChanged { get; set; }
 
-    private readonly string id = $"{nameof(ClearableTextInput).ToLowerInvariant()}-{new Random().Next().ToString("x")}";
+    private readonly string id = $"{nameof(ClearableTextInput).ToLowerInvariant()}-{new Random().Next():x}";
 
     private Task OnInputChanged(ChangeEventArgs e)
     {

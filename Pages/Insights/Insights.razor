@@ -2,9 +2,10 @@
 @page "/insights/{chosengraph}"
 
 
+@using Caerostris.Shared.Data.Graphs 
 @using Caerostris.Shared.Data.TrackGrid 
 @using Caerostris.Shared.Data.TrackGrid.Extensions 
-@using Caerostris.Shared.Data.TrackGrid.Columns 
+@using Caerostris.Shared.Data.TrackGrid.Columns
 
 @implements IDisposable
 
@@ -38,7 +39,7 @@ else
                               @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
         }
 
-        @if (!(selectedTracksAndDescription is null))
+        @if (selectedTracksAndDescription is not null)
         {
             <div class="d-flex flex-row justify-content-start insights-playlist-header">
                     
@@ -50,6 +51,7 @@ else
 
             <TrackGrid Class="mx-2 mt-2" 
                        Tracks=@selectedTracksAndDescription.Item1.Select(t => t.AsTrack()).ToList()
+                       AllSaved
                        Fill>
 
                 <TitleColumn />
@@ -97,27 +99,28 @@ else
         {
             Spotify.LibraryLoadingProgress += loadingIndicator.Update;
             Spotify.AnalyticsLoadingProgress += loadingIndicator.Update;
+            SetContextMenu();
         }
     }
 
-    protected override void OnParametersSet()
+    private void SetContextMenu()
     {
         const string Href = nameof(NavMenuItem.Href),
             Match = nameof(NavMenuItem.Match),
             Icon = nameof(NavMenuItem.Icon),
             Text = nameof(NavMenuItem.Text);
 
-        ContextMenu?.Set("insights", new List<Dictionary<String, object>>() // TODO: onparametesset gets called even if the component will never get rendered (e.g. because the user clicked away)
+        ContextMenu?.Set("insights", new List<Dictionary<String, object>>()
         {
-            new Dictionary<String, object>()
+            new ()
             {
                 { Href, string.Empty }, { Match, NavLinkMatch.All }, { Icon, "date_range" }, { Text, L["AddedAtGraphShortName"].Value }
             },
-            new Dictionary<String, object>()
+            new ()
             {
                 { Href, AudioFeaturesRoute }, { Icon, "graphic_eq" }, { Text, L["AudioFeaturesGraphShortName"].Value }
             },
-            new Dictionary<String, object>()
+            new ()
             {
                 { Href, TrackLengthRoute }, { Icon, "query_builder" }, { Text, L["TrackLengthGraphShortName"].Value }
             }
@@ -126,7 +129,7 @@ else
 
     private async Task SaveAsPlaylist()
     {
-        if (!(selectedTracksAndDescription is null))
+        if (selectedTracksAndDescription is not null)
             await Spotify.CreatePlaylist(
                 selectedTracksAndDescription.Item2,
                 L["CreatedWithCaerostrisInsights"],

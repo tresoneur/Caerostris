@@ -31,18 +31,18 @@
         }
         else
         {
-            if (!(TrackUri is null))
+            if (TrackUri is not null)
             {
                 if (IsCurrentTrack(TrackUri))
                     await Spotify.Play();
 
-                else if (!(ContextUri is null))
+                else if (ContextUri is not null)
                     await Spotify.PlayTrack(ContextUri, TrackUri);
 
                 else
                     await Delegate();
             }
-            else if (!(ContextUri is null))
+            else if (ContextUri is not null)
             {
                 if (IsCurrentContext(ContextUri))
                     await Spotify.Play();
@@ -59,7 +59,7 @@
 
     private async Task Delegate()
     {
-        if (!(StartPlaybackAtTrack is null) && !(TrackUri is null))
+        if ((StartPlaybackAtTrack is not null) && (TrackUri is not null))
             await StartPlaybackAtTrack(TrackUri);
     }
 
@@ -67,7 +67,7 @@
         (PlaybackContext.HasValidItem() && (PlaybackContext?.Context?.Uri?.Equals(contextUri) ?? false));
 
     private bool IsCurrentTrack(string trackUri) =>
-        (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(trackUri));
+        (PlaybackContext.IsTrackPlaying(trackUri));
 
     private bool IsContextPlaying(string contextUri) =>
         (IsCurrentContext(contextUri) && PlaybackContext.IsPlaying());
@@ -76,6 +76,6 @@
         (IsCurrentTrack(trackUri) && PlaybackContext.IsPlaying());
 
     private bool IsRelevantPlaying() =>
-        (((TrackUri is null) && !(ContextUri is null) && IsContextPlaying(ContextUri)) 
-            || (!(TrackUri is null) && IsTrackPlaying(TrackUri)));
+        (((TrackUri is null) && (ContextUri is not null) && IsContextPlaying(ContextUri)) 
+            || ((TrackUri is not null) && IsTrackPlaying(TrackUri)));
 }

@@ -1,17 +1,19 @@
-﻿@inject IStringLocalizer<Text> L
+﻿@namespace Caerostris.Shared.Context 
+
+
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
     <div class="d-flex flex-column justify-content-start h-100 p-4">
 
             <ContextPageHeading Type=@CompleteAlbum.Album.AlbumType.ToUpper()
+                                Uri=@CompleteAlbum.Album.Uri
                                 Title=@CompleteAlbum.Album.GetName(link: true)
                                 By=@CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)
-                                ImageUri=@CompleteAlbum.Album.Images.OrderBy(i => i.Height).LastOrDefault()?.Url>
+                                Image=@CompleteAlbum.Album.Images>
 
                 <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>
-
-                <PrimaryPlayPauseButton ContextUri=@CompleteAlbum.Album.Uri />
 
             </ContextPageHeading>
 

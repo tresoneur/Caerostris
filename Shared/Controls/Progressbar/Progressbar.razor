@@ -1,7 +1,7 @@
 ﻿@namespace Caerostris.Shared.Controls.Progressbar
 
 
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 
 
     <div id=@Id
@@ -13,7 +13,7 @@
             <div class="position-relative progressbar-progress"
                  style="width: @FormattedPercent;">
 
-                @if (!(OnClick is null))
+                @if (OnClick is not null)
                 {
                     <div class="position-absolute progressbar-handle"></div>
                 }
@@ -21,7 +21,6 @@
             </div>
 
         </div>
-
 
     </div>
 
@@ -34,19 +33,19 @@
     [Parameter]
     public double Percent { get; set; }
 
-    private const string JSHelper = "CaerostrisUtils";
+    private const string JsHelper = "CaerostrisUtils";
     private readonly string Id = "progressbar-" + new Random().Next().ToString("x");
 
     private async void OnProgressbarClick(MouseEventArgs e)
     {
-        /// I refrain from commenting on the current state of JSInterop, but I had to write JS functions to get some attributes of a DOM object
-        double progressbarWidth = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetWidth", $"#{Id}");
-        double progressbarPosition = await JSRuntime.InvokeAsync<double>($"{JSHelper}.GetClientPositionX", $"#{Id}");
+        // I refrain from commenting on the current state of JSInterop, but I had to write JS functions to get some attributes of a DOM object
+        double progressbarWidth = await JsRuntime.InvokeAsync<double>($"{JsHelper}.GetWidth", $"#{Id}");
+        double progressbarPosition = await JsRuntime.InvokeAsync<double>($"{JsHelper}.GetClientPositionX", $"#{Id}");
 
         double position = e.ClientX - progressbarPosition;
         double progress = position / progressbarWidth;
 
-        if (!(OnClick is null))
+        if (OnClick is not null)
             await OnClick(progress);
     }
 

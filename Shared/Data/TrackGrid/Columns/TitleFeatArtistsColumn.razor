@@ -13,7 +13,7 @@
 @code
 {
     [Parameter]
-    public List<string> ImplicitArtistUris { get; set; } = new List<string>();
+    public List<string> ImplicitArtistUris { get; set; } = new ();
 
     protected override void OnInitialized()
     {
@@ -42,7 +42,7 @@
     public override int MinWidthPx => 300;
 
 
-    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) => // TODO: title base?
+    public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
         tracks.ThenOrderByWithDirection(t => t.Title, SortSettings.Direction);
 
     public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>

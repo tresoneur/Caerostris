@@ -1,0 +1,61 @@
+﻿@namespace Caerostris.Shared.Data.Graphs
+
+
+@inherits TrackSelectionGraph
+
+
+@inject IStringLocalizer<Text> L
+
+
+    <DxChart Data=@Tracks.OrderBy(s => s.AddedAt)>
+
+        <DxChartTitle Text=@L["AddedAtGraphTitle"] />
+
+        <DxChartArgumentAxis Type=ChartAxisType.Discrete>
+
+            <DxChartAxisTitle Text=@L["MonthOfYear"] HorizontalAlignment=@HorizontalAlignment.Center />
+
+        </DxChartArgumentAxis>
+
+        <DxChartCommonSeries NameField=@((SavedTrack s) => s.AddedAt.Year)
+                             ArgumentField=@((SavedTrack s) => s.AddedAt.Month)
+                             AggregationMethod=@Enumerable.Sum
+                             ValueField=@(_ => 1)
+                             SeriesType=@ChartSeriesType.Bar />
+
+        <DxChartTooltip>
+
+            <div class="p-2 d-flex flex-column align-items-center">
+
+                <p>
+                    <b>@($"{WebApiModelExtensions.HumanReadableMonth(int.Parse(context.Point.Argument.ToString()))} {context.Point.SeriesName}")</b>
+                </p>
+
+                <p>
+                    <b> @context.Point.Value </b> @L["NumSavedTracks"]
+                </p>
+
+                <ActionText Text=@L["ShowTracks"]
+                            OnClick=@(() => OnMonthSelected(context.Point.SeriesName.ToString(), context.Point.Argument.ToString())) />
+
+            </div>
+
+        </DxChartTooltip>
+
+    </DxChart>
+
+
+@code
+{
+    private async Task OnMonthSelected(string yearLabel, string monthLabel)
+    {
+        int year = int.Parse(yearLabel), month = int.Parse(monthLabel);
+        SelectedTracksAndDescription = new
+        (
+            Tracks.Where(t => t.AddedAt.Year == year && t.AddedAt.Month == month),
+            L["SongsYouSavedIn", WebApiModelExtensions.HumanReadableMonth(month), year]
+        );
+
+        await OnSelectedTracksAndDescriptionChanged();
+    }
+}

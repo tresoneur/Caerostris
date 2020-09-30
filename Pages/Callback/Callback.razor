@@ -1,6 +1,9 @@
 ﻿@page "/callback"
 
 
+@namespace Caerostris.Pages.Callback
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 @inject NavigationManager NavManager
@@ -13,6 +16,6 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        await Spotify.ContinueAuthOnCallback(NavManager.ToAbsoluteUri("callback").ToString());
+        await Spotify.ContinueAuthOnCallback(NavManager.ToAbsoluteUri(Spotify.RelativeCallbackUrl).ToString());
     }
 }

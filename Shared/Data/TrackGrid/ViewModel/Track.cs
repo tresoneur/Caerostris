@@ -22,7 +22,7 @@ namespace Caerostris.Shared.Data.TrackGrid.ViewModel
 
         public Dictionary<string, string> AlbumExternalUrls { get; set; } = default!;
 
-        public int AlbumTrackNumber { get; set; } // TODO: column?
+        public int AlbumTrackNumber { get; set; }
 
         public List<SimpleArtist> Artists { get; set; } = default!;
 

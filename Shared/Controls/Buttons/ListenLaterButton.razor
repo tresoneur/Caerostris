@@ -1,0 +1,34 @@
+﻿@namespace Caerostris.Shared.Controls.Buttons
+
+
+@inject SpotifyService Spotify
+
+
+    <SecondaryIndicatorIconButton Icon="watch_later" On=@addedToListenLater OnClick=@OnButtonClick />
+
+
+@code 
+{
+    [Parameter]
+    public string Uri { get; set; } = default!;
+
+    private bool addedToListenLater = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        addedToListenLater = await Spotify.IsAddedToListenLater(Uri);
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnButtonClick()
+    {
+        if (addedToListenLater)
+            await Spotify.RemoveListenLaterItem(Uri);
+        else
+            await Spotify.AddListenLaterItem(Uri);
+
+        addedToListenLater = !addedToListenLater;
+        StateHasChanged();
+    }
+}

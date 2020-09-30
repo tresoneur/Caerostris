@@ -151,7 +151,7 @@
     <value>Fiók csatlakoztatása</value>
   </data>
   <data name="AuthModalNote" xml:space="preserve">
-    <value>Megjegyzés: az alkalmazás használatához Spotify Premium fiókot kell csatlakoztatnod.</value>
+    <value>Megjegyzés: az alkalmazás teljeskörű használatához Spotify Premium fiókot kell csatlakoztatnod.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
     <value>Spotify-fiók csatlakoztatása szükséges</value>
@@ -193,7 +193,7 @@
     <value>Hossz</value>
   </data>
   <data name="LibraryMenuItem" xml:space="preserve">
-    <value>Mentett számok</value>
+    <value>Mentett számaid</value>
   </data>
   <data name="LoadingAlbum" xml:space="preserve">
     <value>Album</value>
@@ -241,7 +241,7 @@
     <value>Éppen játszott</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Lejátszási listák</value>
+    <value>Lejátszási listáid</value>
   </data>
   <data name="Popularity" xml:space="preserve">
     <value>Népszerűség</value>
@@ -265,7 +265,7 @@
     <value>A keresési eredmények itt fognak megjelenni</value>
   </data>
   <data name="ShouldBeRedirectedSoon" xml:space="preserve">
-    <value>Hamarosan át leszel irányítva...</value>
+    <value>Kérlek várj, hamarosan át leszel irányítva. Kommunikálás a Cærostris authorizációs szerverrel...</value>
   </data>
   <data name="ShowExplicitColumn" xml:space="preserve">
     <value>explicit</value>
@@ -311,5 +311,17 @@
   </data>
   <data name="Playlist" xml:space="preserve">
     <value>LEJÁTSZÁSI LISTA</value>
+  </data>
+  <data name="AudioFeature" xml:space="preserve">
+    <value>Metrika</value>
+  </data>
+  <data name="ListenLaterMenuItem" xml:space="preserve">
+    <value>Hallasd meg később</value>
+  </data>
+  <data name="LoadingListenLater" xml:space="preserve">
+    <value>Felvett elemek</value>
+  </data>
+  <data name="ListenLaterItemsWillAppearHere" xml:space="preserve">
+    <value>A későbbi meghallgatásra elmentett albumjaid, előadóid és lejátszási listáid itt fognak megjelenni</value>
   </data>
 </root>

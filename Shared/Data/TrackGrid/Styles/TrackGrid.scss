@@ -23,7 +23,7 @@
 }
 
 table.trackgrid {
-    --trackgrid-cue-color: #282828;
+    --trackgrid-cue-color: rgba(255, 255, 255, 0.075);
 
     table-layout: fixed;
     min-width: 0;
@@ -42,12 +42,13 @@ table.trackgrid {
         padding: calc(0.5 * var(--padding)) calc(0.5 * var(--padding));
     }
 
-    .trackgrid tr:not(.search-row) {
+    .trackgrid tr.title-row, .trackgrid tr.filter-row, .trackgrid tr.track-row:not(:last-of-type) {
         border-bottom: 1px solid var(--trackgrid-cue-color) !important;
     }
 
     .trackgrid tr.track-row:hover {
         background-color: var(--trackgrid-cue-color);
+        border-bottom: 1px solid transparent !important;
     }
 
     .trackgrid tr.track-row td {

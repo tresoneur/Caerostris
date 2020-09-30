@@ -1,8 +1,6 @@
 ﻿using Caerostris.Shared.Data.TrackGrid.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Caerostris.Shared.Data.TrackGrid.Extensions
 {
@@ -13,20 +11,13 @@ namespace Caerostris.Shared.Data.TrackGrid.Extensions
             Func<TSource, TKey> keySelector, 
             SortDirection direction)
         {
-            switch (direction)
+            return direction switch
             {
-                case SortDirection.Unsorted:
-                    throw new ArgumentException("Refusing to sort unsorted");
-
-                case SortDirection.Ascending:
-                    return source.ThenBy(keySelector);
-
-                case SortDirection.Descending:
-                    return source.ThenByDescending(keySelector);
-
-                default:
-                    throw new ArgumentException("No such direction");
-            }
+                SortDirection.Unsorted => throw new ArgumentException("Refusing to sort unsorted"),
+                SortDirection.Ascending => source.ThenBy(keySelector),
+                SortDirection.Descending => source.ThenByDescending(keySelector),
+                _ => throw new ArgumentException($"No such {nameof(SortDirection)}.")
+            };
         }
     }
 }

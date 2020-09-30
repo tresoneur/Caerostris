@@ -1,0 +1,69 @@
+﻿@using Caerostris.Services.Spotify.Web.ViewModels
+@using Caerostris.Shared
+@using Caerostris.Shared.Context 
+@using Caerostris.Shared.Controls.Buttons
+@using Caerostris.Shared.Data.TrackGrid
+@using Caerostris.Shared.Data.TrackGrid.Columns
+@using Caerostris.Shared.Data.TrackGrid.Extensions
+@using Caerostris.Shared.Data.TrackGrid.Interfaces
+@using Caerostris.Shared.Data.TrackGrid.ViewModel
+
+
+
+@namespace Caerostris.Shared.Context
+
+
+@inject IStringLocalizer<Text> L
+
+
+<div class="d-flex flex-row justify-content-start align-items-center pb-4 mb-4">
+
+    <img src=@Image.OrderBy(i => i.Height).LastOrDefault()?.Url class="mr-4 context-page-heading-image" />
+
+    <div class="d-flex flex-column justify-content-center align-items-start flex-fill h-100">
+
+        <p class="context-page-heading-type">@Type</p>
+
+        <h4 class="context-page-heading-title">@((MarkupString)Title)</h4>
+
+        @if (By is not null)
+        {
+            <div><span class="context-page-heading-by">@L["By"]</span> @((MarkupString)By)</div>
+        }
+
+        <div class="context-page-heading-childcontent">
+
+            @ChildContent
+
+            <PrimaryPlayPauseButton ContextUri=@Uri />
+
+            <span class="mx-2"></span>
+
+            <ListenLaterButton Uri=@Uri />
+        </div>
+
+    </div>
+
+</div>
+
+
+@code
+{
+    [Parameter]
+    public string Type { get; set; } = default!;
+
+    [Parameter]
+    public List<Image> Image { get; set; } = default!;
+
+    [Parameter]
+    public string Title { get; set; } = default!;
+
+    [Parameter]
+    public string Uri { get; set; } = default!;
+
+    [Parameter]
+    public string? By { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+}

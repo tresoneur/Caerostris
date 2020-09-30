@@ -14,130 +14,133 @@
 @inject SpotifyService Spotify
 
 
-<CascadingValue Value="this">
+    <CascadingValue Value=@this>
 
-    <PlayButtonColumn OnClick=@Play />
+        <PlayButtonColumn OnClick=@Play />
 
-    <SaveButtonColumn PrefetchedSavedState=@prefetchedSavedState />
+        <SaveButtonColumn PrefetchedSavedState=@prefetchedSavedState />
 
-    @ChildContent
+        @ChildContent
 
-</CascadingValue>
+    </CascadingValue>
 
-<div class="@(Fill ? "flex-fill" : "") d-flex flex-column justify-content-start trackgrid-container @Class">
+    <div class="@(Fill ? "flex-fill" : "") d-flex flex-column justify-content-start trackgrid-container @Class">
 
-    <div class="trackgrid-head-container">
+        <div class="trackgrid-head-container">
 
-        <table class="w-100 trackgrid">
+            <table class="w-100 trackgrid">
 
-            <ColGroup Columns=@VisibleColumns />
+                <ColGroup Columns=@VisibleColumns />
 
-            <thead>
+                <thead>
 
-                @if (Search)
-                {
-                    <tr class="search-row">
-
-                        <td colspan=@VisibleColumns.Count>
-
-                            <ClearableTextInput Class="ml-4 ml-1 mb-2 w-25"
-                                                Icon="search"
-                                                Placeholder=@L["SearchInputPlaceholder"]
-                                                Discreet
-                                                @bind-Input=@SearchQuery />
-
-                        </td>
-
-                    </tr>
-                }
-
-                <tr>
-
-                    @foreach (var column in VisibleColumns)
+                    @if (Search)
                     {
-                        <th class="column-title @((column.SortSettings.Direction != SortDirection.Unsorted) ? "sorted" : "")">
+                        <tr class="search-row">
 
-                            <ActionText Text=@column.Title.ToUpperInvariant()
-                                        OnClickWithEventArgs=@((e) => OnColumnTitleClick(e, column)) />
+                            <td colspan=@VisibleColumns.Count>
 
-                            @if (column.SortSettings.Direction != SortDirection.Unsorted)
-                            {
-                                <i class="material-icons rem-inline">
-                                    @(column.SortSettings.Direction switch
-                                        {
-                                            SortDirection.Ascending => "arrow_drop_up",
-                                            SortDirection.Descending => "arrow_drop_down"
-                                        })
-                                </i>
-                            }
+                                <ClearableTextInput Class="ml-4 ml-1 mb-2 w-25"
+                                                    Icon="search"
+                                                    Placeholder=@L["SearchInputPlaceholder"]
+                                                    Discreet
+                                                    @bind-Input=@SearchQuery />
 
-                        </th>
+                            </td>
+
+                        </tr>
                     }
 
-                </tr>
-
-                @if (Filter && !IsFilterQueryValid(SearchQuery))
-                {
-                    <tr class="filter-row">
+                    <tr class="title-row">
 
                         @foreach (var column in VisibleColumns)
                         {
-                            <td>
+                            <th class="column-title @((column.SortSettings.Direction != SortDirection.Unsorted) ? "sorted" : "")">
 
-                                @if (column.IsFilterable)
+                                <ActionText Text=@column.Title.ToUpperInvariant()
+                                            OnClickWithEventArgs=@((e) => OnColumnTitleClick(e, column)) />
+
+                                @if (column.SortSettings.Direction != SortDirection.Unsorted)
                                 {
-                                    <ClearableTextInput Class="py-1 w-100"
-                                                        Icon=@((column.IsFixedWidth && column.MinWidthPx < 150) ? null : "filter_list")
-                                                        @bind-Input=@column.FilterQuery />
+                                    <i class="material-icons rem-inline">
+                                        @(column.SortSettings.Direction switch
+                                            {
+                                                SortDirection.Ascending => "arrow_drop_up",
+                                                SortDirection.Descending => "arrow_drop_down",
+                                                _ => throw new ArgumentException($"No such {nameof(SortDirection)}.")
+                                            })
+                                    </i>
+
+                                    @(VisibleColumns.Max(c => c.SortSettings.Rank) > 0
+                                        ? column.SortSettings.Rank + 1
+                                        : string.Empty)
                                 }
 
-                            </td>
+                            </th>
                         }
 
                     </tr>
 
-                }
+                    @if (Filter && !IsFilterQueryValid(SearchQuery))
+                    {
+                        <tr class="filter-row">
 
-            </thead>
+                            @foreach (var column in VisibleColumns)
+                            {
+                                <td>
 
-        </table>
+                                    @if (column.IsFilterable)
+                                    {
+                                        <ClearableTextInput Class="py-1 w-100"
+                                                            Icon=@((column.IsFixedWidth && column.MinWidthPx < 150) ? null : "filter_list")
+                                                            @bind-Input=@column.FilterQuery />
+                                    }
 
-    </div>
+                                </td>
+                            }
 
-    <div class="trackgrid-body-container">
+                        </tr>
 
-        <table class="w-100 trackgrid">
+                    }
 
-            <ColGroup Columns=@VisibleColumns />
+                </thead>
 
-            <tbody>
+            </table>
 
-                <Virtualize Items=@GetSortedFilteredTracks()  Context="track">
+        </div>
+
+        <div class="trackgrid-body-container">
+
+            <table class="w-100 trackgrid">
+
+                <ColGroup Columns=@VisibleColumns />
+
+                <tbody>
+
+                    <Virtualize Items=@SortedFilteredTracks  Context="track">
                         
-                    <tr class="track-row @(IsPlaying(track) ? "currently-playing" : "")" @key=@track.Id>
+                        <tr class="track-row @(IsPlaying(track) ? "currently-playing" : "")" @key=@track.Id>
 
-                        @foreach (var column in VisibleColumns)
-                        {
-                            <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
+                            @foreach (var column in VisibleColumns)
+                            {
+                                <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
 
-                                @column.FieldTemplate(track)
+                                    @column.FieldTemplate(track)
 
-                            </td>
-                        }
+                                </td>
+                            }
 
-                    </tr>
-
-                    <!-- TODO: Placeholder -->
+                        </tr>
                 
-                </Virtualize>
+                    </Virtualize>
 
-            </tbody>
+                </tbody>
 
-        </table>
+            </table>
+
+        </div>
 
     </div>
-
-</div>
 
 
 @code
@@ -164,6 +167,9 @@
     public bool Search { get; set; } = false;
 
     [Parameter]
+    public bool AllSaved { get; set; } = false;
+
+    [Parameter]
     public string? Class { get; set; }
 
     [CascadingParameter]
@@ -171,9 +177,9 @@
 
     private IEnumerable<Track>? tracksReference;
 
-    private List<IColumn> columns = new List<IColumn>();
+    private List<IColumn> columns = new ();
 
-    private Dictionary<string, bool> prefetchedSavedState = new Dictionary<string, bool>();
+    private Dictionary<string, bool> prefetchedSavedState = new ();
 
     private string SearchQuery { get; set; } = string.Empty;
 
@@ -185,10 +191,11 @@
             tracksReference = Tracks;
 
             foreach (var track in Tracks)
-                prefetchedSavedState[track.Id] = false;
+                prefetchedSavedState[track.Id] = AllSaved;
 
-            foreach (var idIsSavedPair in await Spotify.AreTracksSaved(Tracks.Select(t => (t.Id, t.LinkedFromId))))
-                prefetchedSavedState[idIsSavedPair.Key] = idIsSavedPair.Value;
+            if (!AllSaved)
+                foreach (var idIsSavedPair in await Spotify.AreTracksSaved(Tracks.Select(t => (t.Id, t.LinkedFromId))))
+                    prefetchedSavedState[idIsSavedPair.Key] = idIsSavedPair.Value;
         }
 
         await base.OnParametersSetAsync();
@@ -200,31 +207,33 @@
         StateHasChanged();
     }
 
-    private ICollection<Track> GetSortedFilteredTracks()
+    private List<IColumn> VisibleColumns => columns.Where(c => c.IsVisible).ToList();
+
+    private ICollection<Track> SortedFilteredTracks
     {
-        var filtered = IsFilterQueryValid(SearchQuery)
-            ? VisibleColumns
-                .Where(c => c.IsFilterable)
-                .Aggregate(new List<Track>(), (searchResults, c) => 
-                    searchResults = searchResults
-                        .Concat(c.Filter(Tracks, SearchQuery))
-                        .GroupBy(t => t.Id)
-                        .Select(g => g.First()).ToList())
-            : VisibleColumns
-                .Where(c => c.IsFilterable && IsFilterQueryValid(c.FilterQuery))
-                .Aggregate(Tracks, (tracks, c) => tracks = c.Filter(tracks, c.FilterQuery).ToList());
+        get
+        {
+            var filtered = IsFilterQueryValid(SearchQuery)
+                ? VisibleColumns
+                    .Where(c => c.IsFilterable)
+                    .Aggregate(new List<Track>(), (searchResults, c) =>
+                        searchResults
+                            .Concat(c.Filter(Tracks, SearchQuery))
+                            .GroupBy(t => t.Id)
+                            .Select(g => g.First()).ToList())
+                : VisibleColumns
+                    .Where(c => c.IsFilterable && IsFilterQueryValid(c.FilterQuery))
+                    .Aggregate(Tracks, (tracks, c) => (Filter ? c.Filter(tracks, c.FilterQuery!).ToList() : tracks));
 
-        var sorted = VisibleColumns
-            .Where(c => c.SortSettings.Direction != SortDirection.Unsorted)
-            .OrderBy(c => c.SortSettings.Rank)
-            .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks))
-            .ToList();
+            var sorted = VisibleColumns
+                .Where(c => c.SortSettings.Direction != SortDirection.Unsorted)
+                .OrderBy(c => c.SortSettings.Rank)
+                .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks))
+                .ToList();
 
-        return sorted;
+            return sorted;
+        }
     }
-
-    private bool IsFilterQueryValid([NotNullWhen(true)] string? filterQuery) => // TODO: method csoportosítás
-        !string.IsNullOrWhiteSpace(filterQuery);
 
     private void OnColumnTitleClick(MouseEventArgs e, IColumn column)
     {
@@ -242,9 +251,9 @@
         else if (e.ShiftKey && !e.CtrlKey)
         {
             column.SortSettings.SetNextSortDirection(
-                column.SortSettings.Rank is null
-                    ? columns.Select(c => c.SortSettings.Rank).Max(r => (r is null) ? -1 : r) + 1
-                    : null);
+                (column.SortSettings.Rank is null)
+                    ? (columns.Select(c => c.SortSettings.Rank).Max(r => r ?? -1) + 1)
+                    : (int?) null);
         }
 
         // Ctrl + click: reset current sort settings.
@@ -259,8 +268,11 @@
     void ResetSort() =>
         columns.ForEach(c => c.SortSettings.Reset());
 
+    private bool IsFilterQueryValid([NotNullWhen(true)] string? filterQuery) =>
+        !string.IsNullOrWhiteSpace(filterQuery);
+
     private bool IsPlaying(Track track) =>
-        (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(track.Uri));
+    (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(track.Uri));
 
     private async Task Play(string trackUri)
     {
@@ -269,13 +281,13 @@
             || columns.Any(c => IsFilterQueryValid(c.FilterQuery)))
         {
             await Spotify.PlayTracks(
-                GetSortedFilteredTracks()
+                SortedFilteredTracks
                     .SkipWhile(t => !t.Uri.Equals(trackUri))
                     .Select(t => t.Uri)
                     .Take(100));
             // Which means that a playback started in the Library will stop before reaching the end,
             //  because the library context is not accessible through the API.
-            //  Shuffle won't work as expected either. TODO
+            //  Shuffle won't work as expected either.
         }
         else
         {
@@ -283,15 +295,14 @@
         }
     }
 
-    private List<IColumn> VisibleColumns => columns.Where(c => c.IsVisible).ToList();
-
     private string HorizontalAlignmentValue(IColumn column)
     {
         return column.HorizontalAlignment switch
         {
             HorizontalAlignment.Left => "left",
             HorizontalAlignment.Center => "center",
-            HorizontalAlignment.Right => "right"
+            HorizontalAlignment.Right => "right",
+            _ => throw new ArgumentException($"No such {nameof(HorizontalAlignment)}.")
         };
     }
 

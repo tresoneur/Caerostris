@@ -1,4 +1,8 @@
-﻿@inject IJSRuntime JS 
+﻿@namespace Caerostris.Shared.Data.Graphs.Abstract
+
+
+@inject IJSRuntime JsRuntime
+
 
 @code 
 {
@@ -19,7 +23,7 @@
 
     protected Task OnSelectedTracksAndDescriptionChanged()
     {
-        _ = JS.InvokeVoidAsync($"{CaerostrisUtils}.{RemoveCssClassFunction}", TooltipSelector, TooltipShowClass);
+        _ = JsRuntime.InvokeVoidAsync($"{CaerostrisUtils}.{RemoveCssClassFunction}", TooltipSelector, TooltipShowClass);
         return SelectedTracksAndDescriptionChanged.InvokeAsync(SelectedTracksAndDescription);
     }
 }

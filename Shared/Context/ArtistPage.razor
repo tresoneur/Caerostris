@@ -1,0 +1,66 @@
+﻿@namespace Caerostris.Shared.Context
+
+
+@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
+
+
+    <div class="d-flex flex-column justify-content-start overflow-auto h-100 px-4 pt-4">
+
+        <ContextPageHeading Type=@L["Artist"]
+                            Uri=@ArtistProfile.Artist.Uri
+                            Title=@ArtistProfile.Artist.GetName(link: true)
+                            Image=@ArtistProfile.Artist.Images>
+
+            <p>@ArtistProfile.Artist.Followers.Total.WithThousandsSeparator() @L["Followers"] @WithSeparatorPrefixIfNotEmpty(ArtistProfile.Artist.GetGenres())</p>
+
+        </ContextPageHeading>
+
+
+        <SubsectionTitle Title=@L["PopularTracks"] />
+
+        <TrackGrid Class="m-2 mb-4"
+                   Tracks=@ArtistProfile.TopTracks.Select(t => t.AsTrack()).ToList()>
+
+            <TitleFeatArtistsColumn ImplicitArtistUris=@(new[] { ArtistProfile.Artist.Uri }.ToList()) />
+            <AlbumTitleColumn />
+            <PopularityColumn />
+            <DurationColumn />
+
+        </TrackGrid>
+
+
+        <SubsectionTitle Title=@L["Albums"] />
+
+        <CardTileLayout>
+
+            @foreach (var album in ArtistProfile.Albums)
+            {
+                <AlbumCard Album=@album />
+            }
+
+        </CardTileLayout>
+
+
+        <SubsectionTitle Title=@L["FansAlsoLike"] />
+
+        <CardTileLayout>
+
+            @foreach (var artist in ArtistProfile.RelatedArtists)
+            {
+                <ArtistCard Artist=@artist />
+            }
+
+        </CardTileLayout>
+
+    </div>
+
+
+@code
+{
+    [Parameter]
+    public ArtistProfile ArtistProfile { get; set; } = default!;
+
+    private string WithSeparatorPrefixIfNotEmpty(string? str) =>
+        string.IsNullOrEmpty(str) ? string.Empty : $"• {str}";
+}

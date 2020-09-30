@@ -1,6 +1,7 @@
-﻿
+﻿@namespace Caerostris.Shared.Controls.Links
 
-<a href=@(string.IsNullOrEmpty(LocalUrl) ? ContextExternalUrls["spotify"] : $"{LocalUrl}{ContextId}")>@Title</a>
+
+    <a href=@(string.IsNullOrEmpty(LocalUrl) ? ContextExternalUrls["spotify"] : $"{LocalUrl}{ContextId}")>@Title</a>
 
 
 @code

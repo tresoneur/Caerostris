@@ -8,16 +8,16 @@
     
         <img src=@Thumbnail.AtLeastOfHeight(WidthPx) class="card-img-top" style="width: @CssWidth; height: @CssWidth;">
 
-        @if (!(ContextUri is null) || !(TrackUri is null))
+        @if ((ContextUri is not null) || (TrackUri is not null))
         {
             <div class="d-flex align-items-center justify-content-center centered-button-container" 
                  style="width: @CssWidth; height: @CssWidth;">
 
-                @if(!(ContextUri is null))
+                @if(ContextUri is not null)
                 {
                     <PrimaryPlayPauseButton ContextUri=@ContextUri />  
                 }
-                else if (!(TrackUri is null))
+                else if (TrackUri is not null)
                 { 
                     <PrimaryPlayPauseButton TrackUri=@TrackUri StartPlaybackAtTrack=@(t => Spotify.PlayTrack(contextUri: null, trackUri: t)) />  
                 }
@@ -31,7 +31,7 @@
                 <h5 class="card-title">@Title</h5>
             </a>
 
-            @if (!(Details is null))
+            @if (Details is not null)
             {
                 <p class="card-text">@Details</p>
             }
@@ -63,6 +63,7 @@
 
     [Parameter]
     public string Details { get; set; } = default!;
+
 
     private string CssWidth => $"{WidthPx}px";
 }

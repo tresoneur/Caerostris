@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Caerostris.Shared.Data.TrackGrid.ViewModel
 {
@@ -24,7 +21,7 @@ namespace Caerostris.Shared.Data.TrackGrid.ViewModel
         /// </summary>
         public void SetNextSortDirection(int? sortRank = null)
         {
-            if (!(sortRank is null))
+            if (sortRank is not null)
                 Rank = sortRank;
 
             else if (Rank is null)
@@ -45,7 +42,8 @@ namespace Caerostris.Shared.Data.TrackGrid.ViewModel
             {
                 SortDirection.Unsorted => SortDirection.Ascending,
                 SortDirection.Ascending => SortDirection.Descending,
-                SortDirection.Descending => SortDirection.Ascending
+                SortDirection.Descending => SortDirection.Ascending,
+                _ => throw new ArgumentException($"No such {nameof(SortDirection)}.")
             };
         }
     }

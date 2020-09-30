@@ -1,6 +1,9 @@
-﻿@inherits IconButtonBase
+﻿@namespace Caerostris.Shared.Controls.Buttons
 
 
-<button @onclick=@ExecuteOnClick class="btn btn-outline-light border-0 px-2 m-2">
-    <i class="material-icons md-24">@Icon</i>
-</button>
+@inherits IconButtonBase
+
+
+    <button @onclick=@ExecuteOnClick class="btn btn-outline-light border-0 px-2 m-2 secondary-button">
+        <i class="material-icons md-24">@Icon</i>
+    </button>

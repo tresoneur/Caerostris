@@ -1,18 +1,21 @@
 ﻿@page "/album/{Id}"
 
 
+@namespace Caerostris.Pages.Explore
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-@if (album is null)
-{
-    <CenteredLoadingIndicator LoadingWhat=@L["LoadingAlbum"] />
-}
-else
-{
-    <AlbumPage CompleteAlbum=@album />
-}
+    @if (album is null)
+    {
+        <CenteredLoadingIndicator LoadingWhat=@L["LoadingAlbum"] />
+    }
+    else
+    {
+        <AlbumPage CompleteAlbum=@album />
+    }
 
 
 @code

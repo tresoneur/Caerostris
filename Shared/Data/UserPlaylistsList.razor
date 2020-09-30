@@ -1,24 +1,27 @@
-﻿@inject IStringLocalizer<Text> L
+﻿@namespace Caerostris.Shared.Data
+
+
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-@if (!(playlists is null))
-{
-    <aside class="d-flex flex-column flex-fill my-2 pl-4 pr-3 w-100 user-playlists-container">
+    @if (playlists is not null)
+    {
+        <aside class="d-flex flex-column flex-fill my-2 pl-4 pr-3 w-100 user-playlists-container">
 
-        <h4 class="user-playlists-list-title">@L["Playlists"]</h4>
+            <h4 class="user-playlists-list-title">@L["Playlists"]</h4>
 
-        <ol class="flex-fill overflow-auto m-0 p-0 user-playlists-list">
+            <ol class="flex-fill overflow-auto m-0 p-0 user-playlists-list">
 
-            @foreach (var playlist in playlists)
-            {
-                <li>@((MarkupString)playlist.GetName(link: true, localUrl: Spotify.ExplorePlaylistUrl))</li>
-            }
+                @foreach (var playlist in playlists)
+                {
+                    <li>@((MarkupString)playlist.GetName(link: true, localUrl: Spotify.ExplorePlaylistUrl))</li>
+                }
 
-        </ol>
+            </ol>
 
-    </aside>
-}
+        </aside>
+    }
 
 
 @code

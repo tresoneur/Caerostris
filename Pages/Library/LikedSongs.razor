@@ -1,6 +1,10 @@
 ﻿@page "/library"
 
 
+@namespace Caerostris.Pages.Library
+
+
+@using Caerostris.Shared.Controls.Input 
 @using Caerostris.Shared.Data.TrackGrid
 @using Caerostris.Shared.Data.TrackGrid.Columns
 @using Caerostris.Shared.Data.TrackGrid.Extensions
@@ -28,6 +32,7 @@ else
         </div>
 
         <TrackGrid Tracks=@tracks
+                   AllSaved
                    Search
                    Filter=@showFilterRow
                    Fill>
