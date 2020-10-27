@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
+
+
+@namespace Caerostris.Shared.Info
+
+
+    <Title Value=@(PlaybackContext.ValidTrackItemOrNull() is FullTrack track ? $"{CaerostrisTitle} — {track.Name}" : CaerostrisTitle)></Title>
+    
+
+@code 
+{
+    [CascadingParameter]
+    public CurrentlyPlayingContext? PlaybackContext { get; set; }
+
+    private const string CaerostrisTitle = "Cærostris";
+}

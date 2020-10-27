@@ -1,0 +1,61 @@
+﻿@namespace Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+    <aside class="py-1 rightclickmenu" 
+           style=@CssStyle>
+        
+        <ol class="m-0 p-0">
+
+            <CascadingValue Value=@this>
+
+                @ChildContent
+
+            </CascadingValue>
+
+        </ol>
+
+    </aside>
+
+
+@code
+{
+    [Parameter]
+    public int X { get; set; }
+
+    [Parameter]
+    public int Y { get; set; }
+
+    [Parameter]
+    public bool InvertedPositioning { get; set; } = false;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+
+    private DateTimeOffset suppressHide = DateTimeOffset.UnixEpoch;
+
+    private string CssStyle =>
+        (InvertedPositioning ? $"bottom: calc(100vh - {Y}px); right: calc(100vw - {X}px);" : $"top: {Y+1}px; left: {X+1}px;") +
+        $" visibility:{(ChildContent is not null).ToString().ToLowerInvariant()};";
+
+
+    public void Show(MouseEventArgs eventArgs, RenderFragment items, bool invertedPositioning = false)
+    {
+        X = (int)Math.Round(eventArgs.ClientX);
+        Y = (int)Math.Round(eventArgs.ClientY);
+        InvertedPositioning = invertedPositioning;
+        ChildContent = items;
+
+        suppressHide = DateTimeOffset.Now;
+        StateHasChanged();
+    }
+
+    public void Hide(bool fromChildItem = false)
+    {
+        if (fromChildItem || suppressHide.AddMilliseconds(100) < DateTimeOffset.Now)
+        {
+            ChildContent = null;
+            StateHasChanged();
+        }
+    }
+}

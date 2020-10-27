@@ -7,8 +7,11 @@
     <NavigationThumbnailCard Url=@($"{Spotify.ExplorePlaylistUrl}{Playlist.Id}")
                              ContextUri=@Playlist.Uri
                              Thumbnail=@Playlist.Images
-                             Title=@Playlist.Name
-                             Details=@($"{Playlist.Owner.DisplayName} • {Playlist.Tracks.Total} tracks") />
+                             Title=@Playlist.Name>
+
+        <Details>@($"{Playlist.Owner.DisplayName} • {Playlist.Tracks.Total} tracks")</Details>
+
+    </NavigationThumbnailCard>
 
 
 @code

@@ -1,0 +1,25 @@
+﻿@namespace Caerostris.Shared.Auth
+
+
+@inject IStringLocalizer<Text> L
+@inject SpotifyService Spotify
+@inject NavigationManager NavManager
+
+
+<hr>
+
+<p>@L["LogoutModalNote"]</p>
+
+<hr>
+
+<button @onclick=@OnLogoutButtonClick class="btn btn-primary float-right">@L["LogoutModalAccept"]</button>
+
+
+@code
+{
+    private async Task OnLogoutButtonClick()
+    {
+        await Spotify.Logout();
+        NavManager.NavigateTo(NavManager.BaseUri, forceLoad: true);
+    }
+}

@@ -1,0 +1,31 @@
+﻿@using Caerostris.Shared.Controls.Links 
+
+
+@namespace Caerostris.Shared.Info
+
+
+@inject IStringLocalizer<Text> L
+
+
+    <li class="attribution">
+
+        @Name
+        
+        @if (Author is not null) { <text>. <span class="collab-with">@L["By"]</span> @Author</text> }
+        
+        <NewTabLink Href=@Link><i class="material-icons pl-2 md-24">link</i></NewTabLink> 
+
+    </li>
+
+
+@code 
+{
+    [Parameter]
+    public string Name { get; set; } = default!;
+
+    [Parameter]
+    public string Link { get; set; } = default!;
+
+    [Parameter]
+    public string? Author { get; set; }
+}

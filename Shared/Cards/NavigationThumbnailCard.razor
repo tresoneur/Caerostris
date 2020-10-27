@@ -25,7 +25,7 @@
             </div>
         }
 
-        <div class="card-body pt-3">
+        <div class="card-body pt-2">
 
             <a href=@Url>
                 <h5 class="card-title">@Title</h5>
@@ -33,7 +33,7 @@
 
             @if (Details is not null)
             {
-                <p class="card-text">@Details</p>
+                <span class="card-text">@Details</span>
             }
 
         </div>
@@ -62,7 +62,7 @@
     public string Title { get; set; } = default!;
 
     [Parameter]
-    public string Details { get; set; } = default!;
+    public RenderFragment? Details { get; set; }
 
 
     private string CssWidth => $"{WidthPx}px";

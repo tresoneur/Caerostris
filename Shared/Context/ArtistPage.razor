@@ -9,7 +9,9 @@
 
         <ContextPageHeading Type=@L["Artist"]
                             Uri=@ArtistProfile.Artist.Uri
-                            Title=@ArtistProfile.Artist.GetName(link: true)
+                            LocalUrl=@Spotify.ExploreArtistUrl
+                            ExternalUrls=@ArtistProfile.Artist.ExternalUrls
+                            Title=@ArtistProfile.Artist.Name
                             Image=@ArtistProfile.Artist.Images>
 
             <p>@ArtistProfile.Artist.Followers.Total.WithThousandsSeparator() @L["Followers"] @WithSeparatorPrefixIfNotEmpty(ArtistProfile.Artist.GetGenres())</p>
@@ -20,7 +22,7 @@
         <SubsectionTitle Title=@L["PopularTracks"] />
 
         <TrackGrid Class="m-2 mb-4"
-                   Tracks=@ArtistProfile.TopTracks.Select(t => t.AsTrack()).ToList()>
+                   Tracks=@ArtistProfile.TopTracks.Select((t, i) => t.AsTrack(i)).ToList()>
 
             <TitleFeatArtistsColumn ImplicitArtistUris=@(new[] { ArtistProfile.Artist.Uri }.ToList()) />
             <AlbumTitleColumn />

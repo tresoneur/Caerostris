@@ -151,7 +151,11 @@
     <value>Fiók csatlakoztatása</value>
   </data>
   <data name="AuthModalNote" xml:space="preserve">
-    <value>Megjegyzés: az alkalmazás teljeskörű használatához Spotify Premium fiókot kell csatlakoztatnod.</value>
+    <value>Megjegyzés: az alkalmazás teljeskörű használatához Spotify Premium fiókot kell csatlakoztatnod. 
+
+A Cærostris sütiket tárol el a böngésződben a Spotify-fiók csatlakoztatásához. Az adataid sosem hagyják el a böngészőt, ezalól az egyetlen kivételt a felhatalmazáshoz használt token képezi, melyet a Cærostris authorizációs szerver kezel. A Cærostris-nak adott engedélyeket bármikor visszavonhatod a Spotify-fiókod beállításaiban.
+
+A Cærostris a Spotify Playback SDK-t használja a böngészőbeli zenelejátszáshoz, amely betölti a Google Analytics-et. Ha szeretnéd megakadályozni, hogy a Google adatokat gyűjtsön rólad, telepítsd a uBlock Origin kiegészítőt a böngésződben.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
     <value>Spotify-fiók csatlakoztatása szükséges</value>
@@ -208,7 +212,7 @@
     <value>Lejátszási környezet</value>
   </data>
   <data name="LoadingEllipsis" xml:space="preserve">
-    <value>Betöltés...</value>
+    <value>Betöltés alatt...</value>
   </data>
   <data name="LoadingPlaylist" xml:space="preserve">
     <value>Lejátszási lista</value>
@@ -235,7 +239,7 @@
     <value>{0} / {1}</value>
   </data>
   <data name="Playback" xml:space="preserve">
-    <value>Lejátszás: {0}</value>
+    <value>Bejelentkezve mint: {0}</value>
   </data>
   <data name="PlaybackMenuItem" xml:space="preserve">
     <value>Éppen játszott</value>
@@ -280,7 +284,7 @@
     <value>Mutasd a számokat</value>
   </data>
   <data name="ShowTracksAroundThisValue" xml:space="preserve">
-    <value>Mutass számokat ezen érték körül</value>
+    <value>Mutass számokat e körül az érték körül</value>
   </data>
   <data name="Song" xml:space="preserve">
     <value>szám</value>
@@ -322,6 +326,74 @@
     <value>Felvett elemek</value>
   </data>
   <data name="ListenLaterItemsWillAppearHere" xml:space="preserve">
-    <value>A későbbi meghallgatásra elmentett albumjaid, előadóid és lejátszási listáid itt fognak megjelenni</value>
+    <value>A későbbi meghallgatásra elmentett albumaid, előadóid és lejátszási listáid itt fognak megjelenni</value>
+  </data>
+  <data name="CopySpotifyUrl" xml:space="preserve">
+    <value>Spotify link másolása</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Sajnos az alkalmazásnak nincsen a  megadott címhez tartozó oldala.</value>
+  </data>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>A Cærostris-ról</value>
+  </data>
+  <data name="CurrentTrackUnavailable" xml:space="preserve">
+    <value>Nincs lejátszott szám.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Kijelentkezés</value>
+  </data>
+  <data name="LogoutModalNote" xml:space="preserve">
+    <value>Figyelmeztetés: a későbbi meghallgatásra elmentett albumaid, előadóid és lejátszási listáid törlődni fognak. Ezután már nem lesz mód visszaszerezned őket.</value>
+  </data>
+  <data name="LogoutModalTitle" xml:space="preserve">
+    <value>Kijelentkezés</value>
+  </data>
+  <data name="LogoutModalAccept" xml:space="preserve">
+    <value>Kijelentkezés a fentiek ellenére</value>
+  </data>
+  <data name="Introduction" xml:space="preserve">
+    <value>A Cærostris egy nyílt forráskódú, kísérleti Blazor WebAssembly Spotify PWA kliens. Tudj meg többet </value>
+  </data>
+  <data name="IntroductionRepo" xml:space="preserve">
+    <value>a projekt GitHub-oldalán.</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Verzió:</value>
+  </data>
+  <data name="AboutSectionAbout" xml:space="preserve">
+    <value>A Cærostris-ról</value>
+  </data>
+  <data name="AboutSectionHelp" xml:space="preserve">
+    <value>Segítség a használathoz</value>
+  </data>
+  <data name="TrackGridControlsTitle" xml:space="preserve">
+    <value>A zeneszámtáblázat használata</value>
+  </data>
+  <data name="TrackGridControls" xml:space="preserve">
+    <value>Kattintás oszlopcímen: az oszlop szerinti elsődleges rendezés / rendezés irányának megváltoztatása.
+Shift + kattintás oszlopcímen: további oszlopok szerinti rendezés / rendezés irányának megváltoztatása.
+Ctrl + kattintás oszlopcímen: a táblázat rendezésének megszüntetése.
+Jobbkattintás egy soron: kontextusmenü mutatása.</value>
+  </data>
+  <data name="MediaControlsTitle" xml:space="preserve">
+    <value>Média lejátszásának irányítása</value>
+  </data>
+  <data name="MediaControls" xml:space="preserve">
+    <value>A zene lejátszását a 'lejátszás/szünet', 'előző szám' és 'következő szám' médiagombokkal irányíthatod.</value>
+  </data>
+  <data name="AboutSectionAttributions" xml:space="preserve">
+    <value>Felhasznált szellemi tulajdon</value>
+  </data>
+  <data name="AboutSectionLegal" xml:space="preserve">
+    <value>Jogi tudnivalók</value>
+  </data>
+  <data name="Disclaimers" xml:space="preserve">
+    <value>Cærostris is not affiliated, associated, authorized, endorsed by or in any way officially connected to Spotify.
+The Spotify Platform, Spotify Service, Spotify Content and any Spotify Marks are the property of Spotify or Spotify’s licensors and protected by intellectual property rights.
+És úgy egyébként nagy általánosságban az életemért esengek.</value>
+  </data>
+  <data name="StallmanWasRight" xml:space="preserve">
+    <value>Stallmannek igaza volt.</value>
   </data>
 </root>

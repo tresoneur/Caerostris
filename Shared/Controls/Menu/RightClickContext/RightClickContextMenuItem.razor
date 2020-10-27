@@ -1,0 +1,40 @@
+﻿@using Caerostris.Shared.Controls.Buttons.Abstract
+
+
+@namespace Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+@inherits IconButtonBase
+
+
+    <li>
+
+        <button @onclick=@HideParentThenExecuteOnClick class="btn border-0 px-3 py-2 w-100 rightclickmenu-item-button @Class">
+
+            <i class="material-icons md-24">@Icon</i>
+
+            <span class="ml-2">@Text</span>
+
+        </button>
+
+    </li>
+
+
+@code
+{
+    [Parameter]
+    public string Text { get; set; } = default!;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [CascadingParameter]
+    public RightClickContextMenu? ParentMenu { get; set; }
+
+
+    private async Task HideParentThenExecuteOnClick(MouseEventArgs e)
+    {
+        ParentMenu?.Hide(fromChildItem: true);
+        await ExecuteOnClick(e);
+    }
+}

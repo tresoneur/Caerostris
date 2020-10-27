@@ -1,0 +1,14 @@
+﻿@namespace Caerostris.Shared.Controls.Links
+
+
+    <a href=@Href target="_blank">@ChildContent</a>
+
+
+@code 
+{
+    [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

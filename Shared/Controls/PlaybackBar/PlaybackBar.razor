@@ -1,10 +1,13 @@
 ﻿@namespace Caerostris.Shared.Controls.PlaybackBar
 
 
-@using Caerostris.Services.Spotify.Web.SpotifyAPI.Web.Enums
+@using SpotifyAPI.Web
+@using Caerostris.Shared.Controls.Links
 @using Caerostris.Shared.Controls.Progressbar
+@using Caerostris.Services.Spotify.Web.ViewModels
 
 
+@inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
@@ -14,21 +17,36 @@
 
         <div class="d-flex flex-row justify-content-start track-metadata">
 
-            <a href=@($"{Spotify.ExploreAlbumUrl}{PlaybackContext?.Item?.Album?.Id}")> <!-- TODO: clickable album img as component-->
-                <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.Item?.Album?.Images?.AtLeastOfHeight(50) />
+            <a href=@($"{Spotify.ExploreAlbumUrl}{PlaybackContext?.ValidTrackItemOrNull()?.Album?.Id}")>
+                <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.ValidTrackItemOrNull()?.Album?.Images?.AtLeastOfHeight(50) />
             </a>
 
             <div class="d-flex flex-column justify-content-center">
 
-                <span class="pb-1">
+                <div class="d-flex">
 
-                    <span class="d-inline mr-3 track-title">@((MarkupString)PlaybackContext.GetTrackTitle(link: true))</span>
+                    <div class="mr-3 pb-1 track-title">
 
-                    <SaveButton TrackId=@PlaybackContext?.Item?.Id />
+                        @if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
+                        {
+                            <a href="/context">@track.Name</a>
+                        }
+                        else if (PlaybackContext is null)
+                        {
+                            @L["LoadingEllipsis"]
+                        }
+                        else if(PlaybackContext.Item is null)
+                        {
+                            @L["CurrentTrackUnavailable"]
+                        }
 
-                </span>
+                    </div>
+
+                    <SaveButton TrackId=@PlaybackContext?.ValidTrackItemOrNull()?.Id />
+
+                </div>
                 
-                <p class="track-artist">@((MarkupString)PlaybackContext.GetArtists(links: true, localUrl: Spotify.ExploreArtistUrl))</p>
+                <div class="track-artist"><ArtistLinkList Artists=@PlaybackContext?.ValidTrackItemOrNull()?.Artists /></div>
 
             </div>
 
@@ -57,8 +75,10 @@
                                           On=PlaybackContext.GetShuffleState() />
 
             <SecondaryIndicatorIconButton OnClick=@OnRepeatButtonClick
-                                          Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track ? "repeat_one" : "repeat")
-                                          On=@(PlaybackContext.GetRepeatState() != RepeatState.Off) />
+                                          Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track.AsString() ? "repeat_one" : "repeat")
+                                          On=@(PlaybackContext.GetRepeatState() != RepeatState.Off.AsString()) />
+
+            <DeviceSelectionButton />
 
             <SecondaryIndicatorIconButton OnClick=@OnMuteButtonClick
                                           Icon=@(IsMuted ? "volume_off" : "volume_up")
@@ -81,7 +101,7 @@
 @code
 {
     [CascadingParameter]
-    public PlaybackContext? PlaybackContext { get; set; }
+    public CurrentlyPlayingContext? PlaybackContext { get; set; }
 
     private int stashedVolumePercent = 50;
 
@@ -97,7 +117,7 @@
 
     private async Task OnPlayPauseButtonClick()
     {
-        if (PlaybackContext.HasValidItem())
+        if (PlaybackContext.HasValidTrackItem())
             if (PlaybackContext.IsPlaying)
                 await Spotify.Pause();
             else
@@ -106,13 +126,13 @@
 
     private async Task OnSkipToNextButtonClick()
     {
-        if (PlaybackContext.HasValidItem())
+        if (PlaybackContext.HasValidTrackItem())
             await Spotify.Next();
     }
 
     private async Task OnSkipToPreviousButtonClick()
     {
-        if (PlaybackContext.HasValidItem())
+        if (PlaybackContext.HasValidTrackItem())
         {
             if (PlaybackContext.ProgressMs < 5 * 1000)
                 await Spotify.Previous();
@@ -123,15 +143,15 @@
 
     private async Task OnProgressbarClick(double progress)
     {
-        if (PlaybackContext.HasValidItem())
-            await Spotify.Seek(Convert.ToInt32(PlaybackContext.Item.DurationMs * progress));
+        if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
+            await Spotify.Seek(Convert.ToInt32(track.DurationMs * progress));
     }
 
     private async Task OnMuteButtonClick()
     {
         if (PlaybackContext?.Device is not null)
         {
-            var deviceVolumePercent = PlaybackContext.Device.VolumePercent;
+            var deviceVolumePercent = PlaybackContext.Device.VolumePercent ?? 100;
             if (!IsMuted)
             {
                 stashedVolumePercent = deviceVolumePercent;
@@ -152,12 +172,12 @@
 
     private async Task OnRepeatButtonClick() =>
         await Spotify.SetRepeat(
-            (PlaybackContext.GetRepeatState() == RepeatState.Off)
+            (PlaybackContext.GetRepeatState() == RepeatState.Off.AsString())
                 ? RepeatState.Context
-                : (PlaybackContext.GetRepeatState() == RepeatState.Context)
+                : (PlaybackContext.GetRepeatState() == RepeatState.Context.AsString())
                     ? RepeatState.Track
                     : RepeatState.Off);
 
-    private bool IsMuted => 
+    private bool IsMuted =>
         PlaybackContext.GetVolumePercent() == 0;
 }

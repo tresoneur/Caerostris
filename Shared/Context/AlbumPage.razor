@@ -1,32 +1,42 @@
-﻿@namespace Caerostris.Shared.Context 
+﻿@using Caerostris.Shared.Controls.Links
+
+
+@namespace Caerostris.Shared.Context
 
 
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-    <div class="d-flex flex-column justify-content-start h-100 p-4">
+<div class="d-flex flex-column justify-content-start h-100 p-4">
 
-            <ContextPageHeading Type=@CompleteAlbum.Album.AlbumType.ToUpper()
-                                Uri=@CompleteAlbum.Album.Uri
-                                Title=@CompleteAlbum.Album.GetName(link: true)
-                                By=@CompleteAlbum.Album.Artists.GetArtists(link: true, localUrl: Spotify.ExploreArtistUrl)
-                                Image=@CompleteAlbum.Album.Images>
+    <ContextPageHeading Type=@CompleteAlbum.Album.AlbumType
+                        Uri=@CompleteAlbum.Album.Uri
+                        LocalUrl=@Spotify.ExploreAlbumUrl
+                        ExternalUrls=@CompleteAlbum.Album.ExternalUrls
+                        Title=@CompleteAlbum.Album.Name
+                        Image=@CompleteAlbum.Album.Images>
 
-                <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>
+        <By>
+            <ArtistLinkList Artists=@CompleteAlbum.Album.Artists />
+        </By>
 
-            </ContextPageHeading>
+        <ChildContent>
+            <p>@CompleteAlbum.Album.ReleaseDate • @CompleteAlbum.Tracks.Count() @((CompleteAlbum.Tracks.Count() > 1) ? L["Songs"] : L["Song"]), @CompleteAlbum.HumanReadableTotalLength()</p>
+        </ChildContent>
 
-            <TrackGrid Tracks=@(CompleteAlbum.Tracks.Select(t => t.AsTrack()).ToList()) 
-                       ContextUri=@CompleteAlbum.Album.Uri 
-                       Fill>
+    </ContextPageHeading>
 
-                <TitleFeatArtistsColumn ImplicitArtistUris=@CompleteAlbum.Album.Artists.Select(a => a.Uri).ToList() />
-                <DurationColumn />
+    <TrackGrid Tracks=@(CompleteAlbum.Tracks.Select((t, i) => t.AsTrack(i)).ToList())
+               ContextUri=@CompleteAlbum.Album.Uri
+               Fill>
 
-            </TrackGrid>
+        <TitleFeatArtistsColumn ImplicitArtistUris=@CompleteAlbum.Album.Artists.Select(a => a.Uri).ToList() />
+        <DurationColumn />
 
-    </div>
+    </TrackGrid>
+
+</div>
 
 
 @code

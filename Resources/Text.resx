@@ -151,7 +151,11 @@
     <value>Connect account</value>
   </data>
   <data name="AuthModalNote" xml:space="preserve">
-    <value>Note: to access the full functionality of this app, you'll need to connect a Spotify Premium account.</value>
+    <value>Note: to access the full functionality of this app, you'll need to connect a Spotify Premium account. Cærostris places cookies in your browser to enable Spotify authorization. 
+
+All of your data stays on your device, with the single exception of an authorization token that may be sent to the Cærostris authorization server. You can revoke this token at any time in your Spotify account settings. 
+
+Cærostris uses the Spotify Playback SDK to play music in the browser, which loads Google Analytics. To prevent Google from tracking you, install the uBlock Origin addon in your browser.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
     <value>Spotify authorization needed</value>
@@ -236,7 +240,7 @@
     <value>{0} out of {1}</value>
   </data>
   <data name="Playback" xml:space="preserve">
-    <value>Playback: {0}</value>
+    <value>Logged in as: {0}</value>
   </data>
   <data name="PlaybackMenuItem" xml:space="preserve">
     <value>Playback</value>
@@ -324,5 +328,72 @@
   </data>
   <data name="ListenLaterItemsWillAppearHere" xml:space="preserve">
     <value>Albums, artists and playlists you add to your Listen Later list will appear here</value>
+  </data>
+  <data name="CopySpotifyUrl" xml:space="preserve">
+    <value>Copy Spotify link</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Sorry, there's nothing at this address.</value>
+  </data>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="CurrentTrackUnavailable" xml:space="preserve">
+    <value>Nothing's playing.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="LogoutModalNote" xml:space="preserve">
+    <value>Warning: your Listen Later list will also be deleted. Once deleted, there is no way to recover it.</value>
+  </data>
+  <data name="LogoutModalTitle" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="LogoutModalAccept" xml:space="preserve">
+    <value>Log out anyway</value>
+  </data>
+  <data name="Introduction" xml:space="preserve">
+    <value>Cærostris is an open source, experimental Blazor WebAssembly Spotify PWA client. Find out more at </value>
+  </data>
+  <data name="IntroductionRepo" xml:space="preserve">
+    <value>the project's GitHub page.</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="AboutSectionAbout" xml:space="preserve">
+    <value>About Cærostris</value>
+  </data>
+  <data name="AboutSectionHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="TrackGridControlsTitle" xml:space="preserve">
+    <value>TrackGrid controls</value>
+  </data>
+  <data name="TrackGridControls" xml:space="preserve">
+    <value>Click on a column title: sort by the column / change the sort direction of the column.
+Shift + click on a column title: select additional columns to sort by / change sort direction of the column.
+Ctrl + click on a column title: reset current sort settings.
+Right click on a row: show context menu.</value>
+  </data>
+  <data name="MediaControlsTitle" xml:space="preserve">
+    <value>Media controls</value>
+  </data>
+  <data name="MediaControls" xml:space="preserve">
+    <value>You can control the playback with the 'play/pause', 'previous track' and 'next track' media buttons.</value>
+  </data>
+  <data name="AboutSectionAttributions" xml:space="preserve">
+    <value>Attributions</value>
+  </data>
+  <data name="AboutSectionLegal" xml:space="preserve">
+    <value>Legal</value>
+  </data>
+  <data name="Disclaimers" xml:space="preserve">
+    <value>Cærostris is not affiliated, associated, authorized, endorsed by or in any way officially connected to Spotify.
+The Spotify Platform, Spotify Service, Spotify Content and any Spotify Marks are the property of Spotify or Spotify’s licensors and protected by intellectual property rights.</value>
+  </data>
+  <data name="StallmanWasRight" xml:space="preserve">
+    <value>Stallman was right.</value>
   </data>
 </root>

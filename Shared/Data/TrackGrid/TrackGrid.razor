@@ -3,6 +3,7 @@
 @using Caerostris.Shared.Data.TrackGrid.Interfaces
 @using Caerostris.Shared.Data.TrackGrid.Parts
 @using Caerostris.Shared.Data.TrackGrid.ViewModel
+@using Caerostris.Services.Spotify.Web.ViewModels
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 
@@ -40,7 +41,7 @@
 
                             <td colspan=@VisibleColumns.Count>
 
-                                <ClearableTextInput Class="ml-4 ml-1 mb-2 w-25"
+                                <ClearableTextInput Class="ml-3 mb-2 w-25"
                                                     Icon="search"
                                                     Placeholder=@L["SearchInputPlaceholder"]
                                                     Discreet
@@ -92,7 +93,7 @@
                                     @if (column.IsFilterable)
                                     {
                                         <ClearableTextInput Class="py-1 w-100"
-                                                            Icon=@((column.IsFixedWidth && column.MinWidthPx < 150) ? null : "filter_list")
+                                                            Icon="filter_list"
                                                             @bind-Input=@column.FilterQuery />
                                     }
 
@@ -117,20 +118,9 @@
 
                 <tbody>
 
-                    <Virtualize Items=@SortedFilteredTracks  Context="track">
+                    <Virtualize Items=@SortedFilteredTracks Context="track" OverscanCount="10">
                         
-                        <tr class="track-row @(IsPlaying(track) ? "currently-playing" : "")" @key=@track.Id>
-
-                            @foreach (var column in VisibleColumns)
-                            {
-                                <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
-
-                                    @column.FieldTemplate(track)
-
-                                </td>
-                            }
-
-                        </tr>
+                        <TrackRow Track=@track VisibleColumns=@VisibleColumns />
                 
                     </Virtualize>
 
@@ -172,8 +162,6 @@
     [Parameter]
     public string? Class { get; set; }
 
-    [CascadingParameter]
-    public PlaybackContext? PlaybackContext { get; set; }
 
     private IEnumerable<Track>? tracksReference;
 
@@ -225,13 +213,13 @@
                     .Where(c => c.IsFilterable && IsFilterQueryValid(c.FilterQuery))
                     .Aggregate(Tracks, (tracks, c) => (Filter ? c.Filter(tracks, c.FilterQuery!).ToList() : tracks));
 
-            var sorted = VisibleColumns
+            var sortedFiltered = VisibleColumns
                 .Where(c => c.SortSettings.Direction != SortDirection.Unsorted)
                 .OrderBy(c => c.SortSettings.Rank)
                 .Aggregate(filtered.OrderBy(t => 0), (tracks, c) => c.Sort(tracks))
                 .ToList();
 
-            return sorted;
+            return sortedFiltered;
         }
     }
 
@@ -271,9 +259,6 @@
     private bool IsFilterQueryValid([NotNullWhen(true)] string? filterQuery) =>
         !string.IsNullOrWhiteSpace(filterQuery);
 
-    private bool IsPlaying(Track track) =>
-    (PlaybackContext.HasValidItem() && PlaybackContext.Item.Uri.Equals(track.Uri));
-
     private async Task Play(string trackUri)
     {
         if (ContextUri is null
@@ -286,24 +271,12 @@
                     .Select(t => t.Uri)
                     .Take(100));
             // Which means that a playback started in the Library will stop before reaching the end,
-            //  because the library context is not accessible through the API.
-            //  Shuffle won't work as expected either.
+            // because the library context is not accessible through the API.
+            // Shuffle won't work as expected either.
         }
         else
         {
-            await Spotify.PlayTrack(ContextUri, trackUri); // TODO: relinking, PlayPauseButtonBase-ben is uez
+            await Spotify.PlayTrack(ContextUri, trackUri);
         }
     }
-
-    private string HorizontalAlignmentValue(IColumn column)
-    {
-        return column.HorizontalAlignment switch
-        {
-            HorizontalAlignment.Left => "left",
-            HorizontalAlignment.Center => "center",
-            HorizontalAlignment.Right => "right",
-            _ => throw new ArgumentException($"No such {nameof(HorizontalAlignment)}.")
-        };
-    }
-
 }

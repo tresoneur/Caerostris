@@ -1,0 +1,26 @@
+﻿.rightclickmenu {
+    position: absolute;
+    background-color: var(--caerostris-menu-color);
+}
+
+.rightclickmenu > ol {
+    list-style: none;
+}
+
+.rightclickmenu .rightclickmenu-item-button {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 0;
+    color: white;
+    text-align: start;
+}
+
+.rightclickmenu .rightclickmenu-item-button * {
+    vertical-align: middle;
+}
+
+.rightclickmenu .rightclickmenu-item-button:hover {
+    background-color: var(--caerostris-secondary-background-color);
+    color: white;
+}

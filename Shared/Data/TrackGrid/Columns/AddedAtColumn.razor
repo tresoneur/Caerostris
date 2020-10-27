@@ -1,7 +1,4 @@
-﻿@using Caerostris.Services.Spotify.Web
-
-
-@namespace Caerostris.Shared.Data.TrackGrid.Columns
+﻿@namespace Caerostris.Shared.Data.TrackGrid.Columns
 
 
 @inherits ColumnBase
@@ -14,7 +11,7 @@
 {
     [Parameter]
     public override RenderFragment<Track> FieldTemplate { get; set; } =
-        track => @<text>@track.AddedAt.AsHumanReadableAddedAt()</text>;
+        track =>@<text>@track.AddedAt.AsHumanReadableAddedAt()</text>;
 
     [Parameter]
     public override bool IsFixedWidth { get; set; } = true;
@@ -26,8 +23,8 @@
 
 
     public override IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
-        tracks.ThenOrderByWithDirection(t => t.AddedAt, SortSettings.Direction);
+    tracks.ThenOrderByWithDirection(t => t.AddedAt, SortSettings.Direction);
 
     public override IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
-        tracks.Where(t => t.AddedAt.ToString("yyyy-MM-dd").Contains(filterQuery));
+    tracks.Where(t => t.AddedAt.ToString("yyyy-MM-dd").Contains(filterQuery));
 }

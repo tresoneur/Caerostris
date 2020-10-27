@@ -16,14 +16,12 @@
     public EventCallback<Tuple<IEnumerable<SavedTrack>, string>?> SelectedTracksAndDescriptionChanged { get; set; }
 
 
-    private const string CaerostrisUtils = "CaerostrisUtils";
-    private const string RemoveCssClassFunction = "RemoveCssClass";
     private const string TooltipSelector = ".dx-chart-tooltips>div";
     private const string TooltipShowClass = "show";
 
     protected Task OnSelectedTracksAndDescriptionChanged()
     {
-        _ = JsRuntime.InvokeVoidAsync($"{CaerostrisUtils}.{RemoveCssClassFunction}", TooltipSelector, TooltipShowClass);
+        _ = JsRuntime.InvokeVoidAsync($"{NativeResources.JsUtils}.{NativeResources.RemoveCssClassFunction}", TooltipSelector, TooltipShowClass);
         return SelectedTracksAndDescriptionChanged.InvokeAsync(SelectedTracksAndDescription);
     }
 }

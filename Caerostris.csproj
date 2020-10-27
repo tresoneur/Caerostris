@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <Deterministic>False</Deterministic>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <DxExtendStartupHost>False</DxExtendStartupHost>
     <PublishTrimmed>False</PublishTrimmed>
     <Nullable>enable</Nullable>
@@ -19,11 +21,12 @@
   <ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="4.0.0" />
 	  <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
-	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.1.20451.17" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.2.20475.17" />
 	  <PackageReference Include="DevExpress.Blazor" Version="20.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-rc.1.20451.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-rc.1.20451.17 " PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0-rc.1.20451.17" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-rc.2.20475.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-rc.2.20475.17" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0-rc.2.20475.17" />
   </ItemGroup>
 
     <ItemGroup>
@@ -31,7 +34,7 @@
     </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SpotifyService\SpotifyService.csproj" />
+    <ProjectReference Include="..\SpotifyService\Caerostris.Services.Spotify.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,10 +47,10 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Text.hu.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Text.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

@@ -25,7 +25,7 @@
     public Func<double, Task>? OnClick { get; set; }
 
     [CascadingParameter]
-    public PlaybackContext? PlaybackContext { get; set; }
+    public CurrentlyPlayingContext? PlaybackContext { get; set; }
 
     private TimeSpan progressMs;
     private TimeSpan durationMs;
@@ -41,11 +41,11 @@
     {
         await InvokeAsync(() =>
         {
-            if (PlaybackContext.HasValidItem())
+            if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
             {
                 progressMs = TimeSpan.FromMilliseconds(newProgressMs);
-                durationMs = TimeSpan.FromMilliseconds(PlaybackContext.Item.DurationMs);
-                progressPercent = ((double)newProgressMs / (double)PlaybackContext.Item.DurationMs) * 100d;
+                durationMs = TimeSpan.FromMilliseconds(track.DurationMs);
+                progressPercent = ((double)newProgressMs / (double)track.DurationMs) * 100d;
             }
             else
             {

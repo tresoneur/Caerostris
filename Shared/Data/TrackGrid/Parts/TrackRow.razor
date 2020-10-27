@@ -1,0 +1,60 @@
+﻿@using Caerostris.Shared.Data.TrackGrid.Interfaces
+@using Caerostris.Shared.Data.TrackGrid.ViewModel
+
+
+
+@namespace Caerostris.Shared.Data.TrackGrid.Parts
+
+
+<tr class="track-row @(IsPlaying(Track) ? "currently-playing" : "")"
+    @key=@Track.UniqueId
+    @oncontextmenu=@OnTrackRowClick 
+    @oncontextmenu:preventDefault=@true>
+
+    @foreach (var column in VisibleColumns)
+    {
+        <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
+
+            @column.FieldTemplate(Track)
+
+        </td>
+    }
+
+</tr>
+
+
+@code
+{
+    [Parameter]
+    public Track Track { get; set; } = default!;
+
+    [Parameter]
+    public List<IColumn> VisibleColumns { get; set; } = default!;
+
+    [CascadingParameter]
+    public CurrentlyPlayingContext? PlaybackContext { get; set; }
+
+    [CascadingParameter]
+    public RightClickContextMenu? RightClickMenu { get; set; }
+
+
+    private bool IsPlaying(Track track) =>
+        (PlaybackContext.ValidTrackItemOrNull() is FullTrack item && (item.Uri == track.Uri));
+
+    private string HorizontalAlignmentValue(IColumn column)
+    {
+        return column.HorizontalAlignment switch
+        {
+            HorizontalAlignment.Left => "left",
+            HorizontalAlignment.Center => "center",
+            HorizontalAlignment.Right => "right",
+            _ => throw new ArgumentException($"No such {nameof(HorizontalAlignment)}.")
+        };
+    }
+
+    private void OnTrackRowClick(MouseEventArgs e)
+    {
+        if (e.Button == 2 /* Right mouse button */)
+            RightClickMenu?.Show(e, @<CopyUrlRightClickContextMenuItem Url="@Track.ExternalUrl" />);
+    }
+}

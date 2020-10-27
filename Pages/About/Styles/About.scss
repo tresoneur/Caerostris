@@ -1,0 +1,17 @@
+﻿.about-page {
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.about-page a {
+    text-decoration: underline;
+}
+
+.about-page > p {
+    margin-left: 1rem;
+}
+
+.copyleft {
+    display: inline-block;
+    transform: rotate(180deg);
+}

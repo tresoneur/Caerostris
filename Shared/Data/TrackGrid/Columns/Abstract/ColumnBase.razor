@@ -1,6 +1,7 @@
 ﻿@using Caerostris.Shared.Data.TrackGrid
 @using Caerostris.Shared.Data.TrackGrid.Interfaces
 @using Caerostris.Shared.Data.TrackGrid.ViewModel
+@using Caerostris.Services.Spotify.Web.ViewModels
 
 
 @namespace Caerostris.Shared.Data.TrackGrid.Columns.Abstract
@@ -9,53 +10,53 @@
 @implements IColumn
 
 
-@code 
+@code
 {
     [Parameter]
     public virtual RenderFragment<Track> FieldTemplate { get; set; } =
-        _ => @<text>Override me</text>;
+        _ =>@<text>Override me</text>;
 
-    [Parameter]
-    public virtual bool IsFixedWidth { get; set; } = false;
+[Parameter]
+public virtual bool IsFixedWidth { get; set; } = false;
 
-    [Parameter]
-    public virtual bool IsVisible { get; set; } = true;
+[Parameter]
+public virtual bool IsVisible { get; set; } = true;
 
-    [Parameter]
-    public virtual HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;
-
-
-    [CascadingParameter]
-    private TrackGrid? Parent { get; set; }
+[Parameter]
+public virtual HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;
 
 
-    public virtual string Title => "Override me";
-
-    public virtual string Class => "";
-
-    public virtual int MinWidthPx => 100;
+[CascadingParameter]
+private TrackGrid? Parent { get; set; }
 
 
-    public virtual SortSettings SortSettings { get; set; } = new ();
+public virtual string Title => "Override me";
+
+public virtual string Class => "";
+
+public virtual int MinWidthPx => 100;
 
 
-    public virtual bool IsFilterable => true;
-
-    public virtual string? FilterQuery { get; set; } = null;
+public virtual SortSettings SortSettings { get; set; } = new();
 
 
-    public virtual IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
-        tracks;
+public virtual bool IsFilterable => true;
 
-    public virtual IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
-        tracks;
+public virtual string? FilterQuery { get; set; } = null;
 
 
-    protected override void OnInitialized()
-    {
-        if (Parent is null)
-            throw new ArgumentNullException("Place me in a TrackGrid");
+public virtual IOrderedEnumerable<Track> Sort(IOrderedEnumerable<Track> tracks) =>
+tracks;
 
-        Parent.AddColumn(this);
-    }
+public virtual IEnumerable<Track> Filter(IEnumerable<Track> tracks, string filterQuery) =>
+tracks;
+
+
+protected override void OnInitialized()
+{
+if (Parent is null)
+throw new ArgumentNullException("Place me in a TrackGrid");
+
+Parent.AddColumn(this);
+}
 }

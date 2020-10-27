@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris", "Caerostris.csproj", "{57DCE696-D955-41E2-8692-F35AF6378246}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyService", "..\SpotifyService\SpotifyService.csproj", "{2B0E552A-0C75-4540-A703-5F75EB86DD96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris.Services.Spotify", "..\SpotifyService\Caerostris.Services.Spotify.csproj", "{2B0E552A-0C75-4540-A703-5F75EB86DD96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caerostris.Server", "..\CaerostrisServer\Caerostris.Server.csproj", "{2C5E5B4D-8C30-411F-AE3A-BF66C884905F}"
 EndProject

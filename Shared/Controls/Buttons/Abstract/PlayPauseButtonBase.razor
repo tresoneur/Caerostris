@@ -16,7 +16,7 @@
     public Func<string, Task>? StartPlaybackAtTrack { get; set; }
 
     [CascadingParameter]
-    public PlaybackContext? PlaybackContext { get; set; }
+    public CurrentlyPlayingContext? PlaybackContext { get; set; }
 
     protected string Icon =>
         IsRelevantPlaying()
@@ -64,18 +64,18 @@
     }
 
     private bool IsCurrentContext(string contextUri) =>
-        (PlaybackContext.HasValidItem() && (PlaybackContext?.Context?.Uri?.Equals(contextUri) ?? false));
+        (PlaybackContext.HasValidTrackItem() && (PlaybackContext?.Context?.Uri?.Equals(contextUri) ?? false));
 
     private bool IsCurrentTrack(string trackUri) =>
-        (PlaybackContext.IsTrackPlaying(trackUri));
+        (PlaybackContext.IsCurrentTrack(trackUri));
 
     private bool IsContextPlaying(string contextUri) =>
         (IsCurrentContext(contextUri) && PlaybackContext.IsPlaying());
 
-    private bool IsTrackPlaying(string trackUri) =>// TODO: track relinking
+    private bool IsTrackPlaying(string trackUri) =>
         (IsCurrentTrack(trackUri) && PlaybackContext.IsPlaying());
 
     private bool IsRelevantPlaying() =>
-        (((TrackUri is null) && (ContextUri is not null) && IsContextPlaying(ContextUri)) 
+        (((TrackUri is null) && (ContextUri is not null) && IsContextPlaying(ContextUri))
             || ((TrackUri is not null) && IsTrackPlaying(TrackUri)));
 }

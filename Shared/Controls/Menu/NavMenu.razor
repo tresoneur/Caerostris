@@ -1,23 +1,47 @@
-﻿@namespace Caerostris.Shared.Controls.Menu
+﻿@using Caerostris.Shared.Controls.Buttons
+
+
+@namespace Caerostris.Shared.Controls.Menu
 
 
 @inject IStringLocalizer<Text> L
+@inject IJSRuntime JsRuntime
 
 
-    <div class="p-3 pt-4">
-        <a class="d-flex flex-row justify-content-start align-items-center text-decoration-none" href="">
-            <img src="/icons/caerostris-icon-white.png" class="spotify-logo" />
-            <span class="caerostris-logo pl-2">Cærostris</span>
+    <div class="d-flex flex-row justify-content-between align-items-center p-3 pt-4">
+
+        <a class="text-decoration-none" href="">
+
+            <img src="/icons/caerostris-icon-white.png" class="align-middle spotify-logo" />
+
+            <span class="align-middle caerostris-logo pl-2">Cærostris</span>
+
         </a>
+
+        <span>
+
+            <InlineActionIcon Icon="chevron_left" 
+                              OnClick=@(() => { JsRuntime.InvokeVoidAsync("history.back"); return Task.CompletedTask; }) />
+
+            <InlineActionIcon Icon="chevron_right" 
+                              OnClick=@(() => { JsRuntime.InvokeVoidAsync("history.forward"); return Task.CompletedTask; }) />
+
+        </span>
+
     </div>
 
     <nav>
+
         <ul class="nav flex-column pl-3 pr-4">
+
             <NavMenuItem Href="" Match=@NavLinkMatch.All Icon="play_arrow" Text=@L["PlaybackMenuItem"] />
             <NavMenuItem Href="context" Icon="playlist_play" Text=@L["ContextMenuItem"] />
             <NavMenuItem Href="library" Icon="library_music" Text=@L["LibraryMenuItem"] />
             <NavMenuItem Href="insights" Icon="insert_chart" Text=@L["InsightsMenuItem"] />
             <NavMenuItem Href="listen-later" Icon="watch_later" Text=@L["ListenLaterMenuItem"] />
             <NavMenuItem Href="search" Icon="search" Text=@L["SearchMenuItem"] />
+            <NavMenuItem Href="about" Icon="help" Text=@L["AboutMenuItem"] />
+
         </ul>
+
     </nav>

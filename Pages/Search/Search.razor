@@ -41,6 +41,10 @@
 
 @code
 {
+    // One would normally use the System.Reactive (Async)Observable class for the pattern implemented below.
+    // In this case, however, an additional dependency that the user would have to download isn't worth it 
+    // given that this is the only place in the application where it could be used.
+
     private Sections? results;
 
     private bool hasQueryChanged = false;
@@ -62,7 +66,7 @@
 
     protected override void OnInitialized()
     {
-        searchTimer = new Timer( // TODO: ezt szebben
+        searchTimer = new Timer(
             callback: async _ =>
             {
                 await InvokeAsync(async () =>

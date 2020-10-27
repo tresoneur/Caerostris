@@ -1,4 +1,7 @@
-﻿@namespace Caerostris.Shared.Cards
+﻿@using Caerostris.Shared.Controls.Links 
+
+
+@namespace Caerostris.Shared.Cards
 
 
 @inject SpotifyService Spotify
@@ -7,8 +10,12 @@
     <NavigationThumbnailCard Url=@($"{Spotify.ExploreAlbumUrl}{Track.Album.Id}")
                              TrackUri=@Track.Uri
                              Thumbnail=@Track.Album.Images
-                             Title=@Track.Name
-                             Details=@($"{Track.Artists.GetArtists()} • {Track.Album.Name}") />
+                             Title=@Track.Name>
+    
+        
+        <Details><ArtistLinkList Artists=@Track.Artists /> • @Track.Album.Name</Details>
+        
+    </NavigationThumbnailCard>
 
 
 @code

@@ -1,14 +1,25 @@
 ﻿.blazored-modal {
     color: white;
-    background-color: #052767;
-    border-radius: 2px;
+    background-color: var(--caerostris-primary-background-color-from);
+    border-radius: var(--caerostris-border-radius);
     border: 0;
+    line-height: 1.5;
 }
 
-    .blazored-modal .blazored-modal-header {
-        padding-bottom: 1rem;
+    .blazored-modal-wrapper {
+        max-width: 50vw;
+    }
+
+    .blazored-modal .btn {
+        background-color: var(--caerostris-primary-color);
+        border-color: var(--caerostris-primary-color);
+    }
+
+    .blazored-modal .blazored-modal-close {
+        color: white;
+        padding: 0.5rem 1rem;
     }
 
     .blazored-modal hr {
-        color: var(--info-color);
+        border-top: 1px solid var(--info-color);
     }

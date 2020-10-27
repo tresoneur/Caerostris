@@ -1,4 +1,5 @@
 ﻿using Caerostris.Shared.Data.TrackGrid.ViewModel;
+using Caerostris.Services.Spotify.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Linq;

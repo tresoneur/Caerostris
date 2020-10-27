@@ -1,18 +1,25 @@
 ﻿@page "/"
 
 
+@using Blazored.Modal.Services
+@using Caerostris.Shared.Auth
+
+
 @namespace Caerostris.Pages.Playback
 
 
 @inject IStringLocalizer<Text> L
+@inject IModalService ModalService
 @inject SpotifyService Spotify
 
 
-    <div>
+    <aside class="d-flex flex-column align-items-end m-3">
 
-        <p class="p-3 playback-status">@L["Playback", (username ?? L["LoadingEllipsis"])]</p>
+        <p class="mb-2 playback-status">@L["Playback", Username]</p>
 
-    </div>
+        <ActionText Text=@L["Logout"] OnClick=@ShowLogoutModal />
+
+    </aside>
 
     <div class="playback-cover-image-container">
 
@@ -34,6 +41,8 @@
     private string? coverImage;
     private string? albumUrl;
 
+    private string? Username => username ?? L["LoadingEllipsis"];
+
     protected override async Task OnInitializedAsync()
     {
         Spotify.PlaybackChanged += OnPlaybackChanged;
@@ -46,13 +55,13 @@
         }
     }
 
-    private async Task OnPlaybackChanged(PlaybackContext playback)
+    private async Task OnPlaybackChanged(CurrentlyPlayingContext playback)
     {
         await InvokeAsync(() =>
         {
-            var image = playback?.Item?.Album?.Images?.OrderBy((img) => -img.Height).FirstOrDefault();
+            var image = playback?.ValidTrackItemOrNull()?.Album?.Images?.OrderBy((img) => -img.Height).FirstOrDefault();
             coverImage = image?.Url;
-            albumUrl = $"{Spotify.ExploreAlbumUrl}{playback?.Item?.Album?.Id}";
+            albumUrl = $"{Spotify.ExploreAlbumUrl}{playback?.ValidTrackItemOrNull()?.Album?.Id}";
 
             StateHasChanged();
         });
@@ -70,5 +79,11 @@
     private async Task FillUsername()
     {
         username ??= await Spotify.GetUsername();
+    }
+
+    private Task ShowLogoutModal()
+    {
+        ModalService.Show<LogoutModal>(title: L["LogoutModalTitle"]);
+        return Task.CompletedTask;
     }
 }

@@ -1,7 +1,8 @@
 ﻿@namespace Caerostris.Shared.Controls.Menu
 
 
-    <div class="nav flex-column pl-3 pr-4">
+    <nav class="nav flex-column pl-3 pr-4">
+
         @if (ItemAttributes is not null)
         {
             @foreach (var item in ItemAttributes)
@@ -9,7 +10,9 @@
                 <NavMenuItem @attributes=@item />
             }
         }
-    </div>
+
+    </nav>
+
 
 @code
 {

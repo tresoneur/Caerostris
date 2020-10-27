@@ -32,7 +32,7 @@
         background-color: rgba(0, 0, 0, 0.7);
         position: absolute;
         opacity: 0;
-        transition: 0.25s;
+        transition: var(--caerostris-animation-duration);
     }
 
         .navigation-thumbnail-card .centered-button-container .btn {

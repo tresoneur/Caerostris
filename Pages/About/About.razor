@@ -1,0 +1,67 @@
+﻿@page "/about"
+
+
+@using Caerostris.Shared.Info
+@using System.Reflection
+
+
+@namespace Caerostris.Pages.About
+
+
+@inject IStringLocalizer<Text> L
+
+
+    <div class="d-flex flex-column overflow-auto p-4 h-100 about-page">
+
+        <SubsectionTitle Title=@L["AboutSectionAbout"] />
+
+        <p>@L["Introduction"]<a href="https://github.com/tresoneur/Caerostris" target="_blank">@L["IntroductionRepo"]</a></p>
+
+        <p>@L["Version"] @Assembly.GetExecutingAssembly().GetName().Version?.ToString()</p>
+
+
+        <SubsectionTitle Title=@L["AboutSectionHelp"] />
+
+        <p>
+            <b>@L["TrackGridControlsTitle"]</b>:
+            @L["TrackGridControls"]
+        </p>
+
+        <p>
+            <b>@L["MediaControlsTitle"]</b>:
+            @L["MediaControls"]
+        </p>
+
+
+        <SubsectionTitle Title=@L["AboutSectionAttributions"] />
+
+        <ul>
+
+            <Attribution Name="Blazor. ASP.NET Core" Link="https://github.com/dotnet/aspnetcore/blob/master/LICENSE.txt" />
+            <Attribution Name="Mono Runtime. AngleSharp. Other Blazor dependencies" Link="https://github.com/dotnet/aspnetcore/blob/master/src/Components/THIRD-PARTY-NOTICES.txt" />
+            <Attribution Name="Spotify (the service). The Spotify Web API. The Spotify Web Playback SDK" Link="https://developer.spotify.com/terms/" Author="Spotify Ltd." />
+            <Attribution Name="SpotifyAPI-NET" Link="https://github.com/JohnnyCrazy/SpotifyAPI-NET/blob/master/LICENSE" Author="Jonas Dellinger" />
+            <Attribution Name="Bootstrap v4.3.1" Link="https://github.com/twbs/bootstrap/blob/master/LICENSE" Author="Bootstrap Authors; Twitter, Inc." />
+            <Attribution Name="Material Icons" Link="https://github.com/google/material-design-icons/blob/master/LICENSE" Author="Google, Inc." />
+            <Attribution Name="Inter variable font" Link="https://github.com/rsms/inter/blob/master/LICENSE.txt" Author="Rasmus Andersson" />
+            <Attribution Name="Blazor Extensions" Link="https://github.com/BlazorExtensions/Storage/blob/master/LICENSE" />
+            <Attribution Name="Blazor IndexedDb" Link="https://github.com/wtulloch/Blazor.IndexedDB/blob/master/LICENSE" Author="William Tulloch" />
+            <Attribution Name="Blazored Modal" Link="https://github.com/Blazored/Modal/blob/main/LICENSE" />
+            <Attribution Name="DevExpress Blazor Components (DxChart)" Link="https://www.devexpress.com/Support/EULAs/blazor.xml" Author="Developer Express, Inc." />
+            <Attribution Name="Humanizer" Link="https://github.com/Humanizr/Humanizer/blob/master/LICENSE" Author=".NET Foundation and Contributors" />
+            <Attribution Name="AutoMapper" Link="https://github.com/AutoMapper/AutoMapper/blob/master/LICENSE.txt" Author="Jimmy Bogard" />
+            <Attribution Name="Newtonsoft Json" Link="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md" Author="James Newton-King" />
+            <Attribution Name="EntityFrameworkCore DataEncryption (in SpotifyAuthServer)" Link="https://github.com/Eastrall/EntityFrameworkCore.DataEncryption/blob/master/LICENSE" Author="Filipe GP (Eastrall)" />
+            <Attribution Name="Open Iconic" Link="https://github.com/iconic/open-iconic/blob/master/FONT-LICENSE" Author="Waybury" />
+            <Attribution Name="WebCompiler" Link="https://github.com/madskristensen/WebCompiler/blob/master/LICENSE" Author="Mads Kristensen" />
+
+        </ul>
+
+
+        <SubsectionTitle Title=@L["AboutSectionLegal"] />
+
+        <p>@L["Disclaimers"]</p>
+
+        <p><span class="copyleft">&copy;</span> 2019-2020 <b>tresoneur</b>. Licensed under AGPLv3. <a href="https://www.gnu.org/philosophy/fsfs/rms-essays.pdf" target="_blank">@L["StallmanWasRight"]</a></p>
+
+    </div>

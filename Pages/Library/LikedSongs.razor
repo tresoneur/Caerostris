@@ -7,8 +7,8 @@
 @using Caerostris.Shared.Controls.Input 
 @using Caerostris.Shared.Data.TrackGrid
 @using Caerostris.Shared.Data.TrackGrid.Columns
-@using Caerostris.Shared.Data.TrackGrid.Extensions
 @using Caerostris.Shared.Data.TrackGrid.ViewModel
+@using Caerostris.Services.Spotify.Web.ViewModels
 
 
 @inject IStringLocalizer<Text> L
@@ -66,7 +66,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (await Spotify.IsAuthGranted())
-            tracks = (await Spotify.GetSavedTracks()).Select(t => t.AsTrack()).ToList();
+            tracks = (await Spotify.GetSavedTracks()).Select((t, i) => t.AsTrack(i)).ToList();
     }
 
     protected override void OnAfterRender(bool firstRender)

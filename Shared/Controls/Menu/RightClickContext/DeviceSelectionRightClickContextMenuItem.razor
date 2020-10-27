@@ -1,0 +1,31 @@
+﻿@namespace Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+@inject SpotifyService Spotify
+
+
+    <RightClickContextMenuItem Icon=@DeviceIcon
+                               Text=@Device.Name
+                               Class=@(Device.IsActive ? "currently-playing" : null)
+                               OnClick=@OnPlaybackTransfer />
+
+
+@code 
+{
+    [Parameter]
+    public Device Device { get; set; }
+
+
+    private string DeviceIcon =>
+        Device.Type switch
+        {
+            "Computer" =>               "computer",
+            "Tablet" or "Smartphone" => "devices_other",
+            "Speaker" =>                "speaker",
+            "Unknown" =>                "device_unknown",
+            _ =>                        "tv"
+        };
+
+    private async Task OnPlaybackTransfer() =>
+        await Spotify.TransferPlayback(Device.Id);
+}

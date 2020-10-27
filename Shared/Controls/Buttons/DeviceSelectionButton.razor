@@ -1,0 +1,20 @@
+﻿@using Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+@namespace Caerostris.Shared.Controls.Buttons
+
+
+    <SecondaryIconButton Icon="speaker" OnClickWithEventArgs=@OnDeviceSelectionClick />
+
+
+@code 
+{
+    [CascadingParameter]
+    public RightClickContextMenu? RightClickMenu { get; set; }
+
+
+    private void OnDeviceSelectionClick(MouseEventArgs e)
+    {
+        RightClickMenu?.Show(e, @<DeviceSelectionRightClickContextMenuItems />, invertedPositioning: true);
+    }
+}

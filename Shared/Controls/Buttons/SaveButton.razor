@@ -81,6 +81,6 @@
     private async Task OnClick()
     {
         if (TrackId is not null)
-            await Spotify.ToogleTrackSaved(TrackId, LinkedFromId);
+            await Spotify.ToggleTrackSaved(TrackId, LinkedFromId);
     }
 }

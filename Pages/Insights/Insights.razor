@@ -22,18 +22,18 @@ else
 {
     <div class="d-flex flex-column justify-content-start h-100 p-4 insights-content">
 
-        @if (string.IsNullOrEmpty(ChosenGraph) || ChosenGraph.Equals(AddedAtRoute))
+        @if (string.IsNullOrEmpty(ChosenGraph) || ChosenGraph == AddedAtRoute)
         {
             <AddedAtGraph Tracks=@tracks
                           @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
         }
-        else if (ChosenGraph.Equals(AudioFeaturesRoute))
+        else if (ChosenGraph == AudioFeaturesRoute)
         {
             <AudioFeaturesGraph Tracks=@tracks
                                 AudioFeatures=@features
                                 @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
         }
-        else if (ChosenGraph.Equals(TrackLengthRoute))
+        else if (ChosenGraph == TrackLengthRoute)
         {
             <TrackLengthGraph Tracks=@tracks
                               @bind-SelectedTracksAndDescription=@selectedTracksAndDescription />
@@ -50,7 +50,7 @@ else
             </div>
 
             <TrackGrid Class="mx-2 mt-2" 
-                       Tracks=@selectedTracksAndDescription.Item1.Select(t => t.AsTrack()).ToList()
+                       Tracks=@selectedTracksAndDescription.Item1.Select((t, i) => t.AsTrack(i)).ToList()
                        AllSaved
                        Fill>
 
@@ -78,7 +78,7 @@ else
         TrackLengthRoute = "track-length";
 
     private IQueryable<SavedTrack>? tracks;
-    private IQueryable<AudioFeatures>? features;
+    private IQueryable<TrackAudioFeatures>? features;
 
     Tuple<IEnumerable<SavedTrack>, string>? selectedTracksAndDescription;
 

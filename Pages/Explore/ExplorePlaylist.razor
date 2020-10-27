@@ -24,6 +24,7 @@
     public string Id { get; set; } = default!;
 
     private CompletePlaylist? playlist;
+    private string? lastId = null;
 
     protected override async Task OnInitializedAsync() => await Update();
 
@@ -31,7 +32,12 @@
 
     private async Task Update()
     {
-        playlist = null;
-        playlist = await Spotify.GetPlaylist(Id);
+        if (lastId != Id)
+        { 
+            playlist = null;
+            playlist = await Spotify.GetPlaylist(Id);
+
+            lastId = Id;
+        }
     }
 }

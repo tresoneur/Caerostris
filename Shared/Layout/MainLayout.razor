@@ -1,53 +1,67 @@
 ﻿@namespace Caerostris.Shared.Layout
 
-
 @using Caerostris.Shared.Auth
 @using Caerostris.Shared.Providers
 @using Caerostris.Shared.Controls.PlaybackBar
+@using Caerostris.Shared.Controls.Menu
+@using Caerostris.Shared.Controls.Menu.RightClickContext 
+@using Caerostris.Shared.Info
 @using Blazored.Modal 
 
 
 @inherits LayoutComponentBase
 
 
-    <CascadingValue Value=@menu>
+    <CascadingValue Value=@sidebarMenu>
+    <CascadingValue Value=@rightClickMenu>
+    <PlaybackContextProvider>
 
-        <PlaybackContextProvider>
+        <TabTitle />
 
-            <div class="d-flex flex-column w-100 h-100">
+        <div class="d-flex flex-column w-100 h-100" @onclick=@(() => rightClickMenu?.Hide())>
 
-                <div class="d-flex flex-row flex-fill overflow-auto">
+            <div class="d-flex flex-row flex-fill overflow-auto">
 
-                    <div class="d-flex flex-column sidebar">
-                        <NavMenu />
-                        <UserPlaylistsList />
-                    </div>
+                <div class="d-flex flex-column sidebar">
 
-                    <div class="pt-3 px-3 h-100 flex-fill">
+                    <NavMenu />
 
-                        @Body
-
-                    </div>
-
-                    <div class="sidebar">
-                        <ContextMenu @ref=@menu />
-                    </div>
+                    <UserPlaylistsList />
 
                 </div>
 
-                <PlaybackBar />
+                <div class="pt-3 px-3 h-100 flex-fill">
+
+                    @Body
+
+                </div>
+
+                <div class="sidebar">
+
+                    <ContextMenu @ref=@sidebarMenu />
+
+                </div>
 
             </div>
 
-        </PlaybackContextProvider>
+            <PlaybackBar />
+
+        </div>
 
         <AuthDaemon />
 
         <BlazoredModal />
+    
+        <RightClickContextMenu @ref=@rightClickMenu />
 
+    </PlaybackContextProvider>
     </CascadingValue>
+    </CascadingValue>
+
 
 @code
 {
-    private ContextMenu? menu;
+    private ContextMenu? sidebarMenu;
+
+    private RightClickContextMenu? rightClickMenu;
 }

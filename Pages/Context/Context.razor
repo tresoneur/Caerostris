@@ -47,7 +47,7 @@
         await OnContextChanged(await Spotify.GetPlayback());
     }
 
-    private async Task OnContextChanged(PlaybackContext? playback)
+    private async Task OnContextChanged(CurrentlyPlayingContext? playback)
     {
         await InvokeAsync(async () =>
         {

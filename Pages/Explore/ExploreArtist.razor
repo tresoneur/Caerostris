@@ -21,6 +21,7 @@
     public string Id { get; set; } = default!;
 
     private ArtistProfile? artist;
+    private string? lastId = null;
 
     protected override async Task OnInitializedAsync() => await Update();
 
@@ -28,7 +29,12 @@
 
     private async Task Update()
     {
-        artist = null;
-        artist = await Spotify.GetArtist(Id);
+        if (lastId != Id)
+        { 
+            artist = null;
+            artist = await Spotify.GetArtist(Id);
+
+            lastId = Id;
+        }
     }
 }

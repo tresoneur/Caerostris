@@ -22,7 +22,7 @@ namespace Caerostris.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Text {
+    internal class Text {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Caerostris.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Caerostris.Resources.Text", typeof(Text).Assembly);
@@ -51,7 +51,7 @@ namespace Caerostris.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,54 @@ namespace Caerostris.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string AboutMenuItem {
+            get {
+                return ResourceManager.GetString("AboutMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About Cærostris.
+        /// </summary>
+        internal static string AboutSectionAbout {
+            get {
+                return ResourceManager.GetString("AboutSectionAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attributions.
+        /// </summary>
+        internal static string AboutSectionAttributions {
+            get {
+                return ResourceManager.GetString("AboutSectionAttributions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string AboutSectionHelp {
+            get {
+                return ResourceManager.GetString("AboutSectionHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legal.
+        /// </summary>
+        internal static string AboutSectionLegal {
+            get {
+                return ResourceManager.GetString("AboutSectionLegal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Added.
         /// </summary>
-        public static string AddedAt {
+        internal static string AddedAt {
             get {
                 return ResourceManager.GetString("AddedAt", resourceCulture);
             }
@@ -72,7 +117,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Saved tracks history.
         /// </summary>
-        public static string AddedAtGraphShortName {
+        internal static string AddedAtGraphShortName {
             get {
                 return ResourceManager.GetString("AddedAtGraphShortName", resourceCulture);
             }
@@ -81,7 +126,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Saved tracks history.
         /// </summary>
-        public static string AddedAtGraphTitle {
+        internal static string AddedAtGraphTitle {
             get {
                 return ResourceManager.GetString("AddedAtGraphTitle", resourceCulture);
             }
@@ -90,7 +135,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
-        public static string Album {
+        internal static string Album {
             get {
                 return ResourceManager.GetString("Album", resourceCulture);
             }
@@ -99,7 +144,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Albums.
         /// </summary>
-        public static string Albums {
+        internal static string Albums {
             get {
                 return ResourceManager.GetString("Albums", resourceCulture);
             }
@@ -108,7 +153,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to {0} around {1}.
         /// </summary>
-        public static string Around {
+        internal static string Around {
             get {
                 return ResourceManager.GetString("Around", resourceCulture);
             }
@@ -117,7 +162,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to ARTIST.
         /// </summary>
-        public static string Artist {
+        internal static string Artist {
             get {
                 return ResourceManager.GetString("Artist", resourceCulture);
             }
@@ -126,7 +171,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Artists.
         /// </summary>
-        public static string Artists {
+        internal static string Artists {
             get {
                 return ResourceManager.GetString("Artists", resourceCulture);
             }
@@ -135,7 +180,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Audio feature.
         /// </summary>
-        public static string AudioFeature {
+        internal static string AudioFeature {
             get {
                 return ResourceManager.GetString("AudioFeature", resourceCulture);
             }
@@ -144,7 +189,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Audio features.
         /// </summary>
-        public static string AudioFeaturesGraphShortName {
+        internal static string AudioFeaturesGraphShortName {
             get {
                 return ResourceManager.GetString("AudioFeaturesGraphShortName", resourceCulture);
             }
@@ -153,7 +198,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Audio features of your saved tracks over time (avg per month).
         /// </summary>
-        public static string AudioFeaturesGraphTitle {
+        internal static string AudioFeaturesGraphTitle {
             get {
                 return ResourceManager.GetString("AudioFeaturesGraphTitle", resourceCulture);
             }
@@ -162,16 +207,20 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Connect account.
         /// </summary>
-        public static string AuthModalAccept {
+        internal static string AuthModalAccept {
             get {
                 return ResourceManager.GetString("AuthModalAccept", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: to access the full functionality of this app, you&apos;ll need to connect a Spotify Premium account..
+        ///   Looks up a localized string similar to Note: to access the full functionality of this app, you&apos;ll need to connect a Spotify Premium account. Cærostris places cookies in your browser to enable Spotify authorization. 
+        ///
+        ///All of your data stays on your device, with the single exception of an authorization token that may be sent to the Cærostris authorization server. You can revoke this token at any time in your Spotify account settings. 
+        ///
+        ///Cærostris uses the Spotify Playback SDK to play music in the browser, which loads Google Analytics. To preven [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string AuthModalNote {
+        internal static string AuthModalNote {
             get {
                 return ResourceManager.GetString("AuthModalNote", resourceCulture);
             }
@@ -180,7 +229,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Spotify authorization needed.
         /// </summary>
-        public static string AuthModalTitle {
+        internal static string AuthModalTitle {
             get {
                 return ResourceManager.GetString("AuthModalTitle", resourceCulture);
             }
@@ -189,7 +238,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Beats per minute.
         /// </summary>
-        public static string BeatsPerMinute {
+        internal static string BeatsPerMinute {
             get {
                 return ResourceManager.GetString("BeatsPerMinute", resourceCulture);
             }
@@ -198,7 +247,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to By.
         /// </summary>
-        public static string By {
+        internal static string By {
             get {
                 return ResourceManager.GetString("By", resourceCulture);
             }
@@ -207,7 +256,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Can&apos;t display this context.
         /// </summary>
-        public static string CantDisplayContext {
+        internal static string CantDisplayContext {
             get {
                 return ResourceManager.GetString("CantDisplayContext", resourceCulture);
             }
@@ -216,25 +265,53 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Context.
         /// </summary>
-        public static string ContextMenuItem {
+        internal static string ContextMenuItem {
             get {
                 return ResourceManager.GetString("ContextMenuItem", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy Spotify link.
+        /// </summary>
+        internal static string CopySpotifyUrl {
+            get {
+                return ResourceManager.GetString("CopySpotifyUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Created with Cærostris Insights.
         /// </summary>
-        public static string CreatedWithCaerostrisInsights {
+        internal static string CreatedWithCaerostrisInsights {
             get {
                 return ResourceManager.GetString("CreatedWithCaerostrisInsights", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nothing&apos;s playing..
+        /// </summary>
+        internal static string CurrentTrackUnavailable {
+            get {
+                return ResourceManager.GetString("CurrentTrackUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cærostris is not affiliated, associated, authorized, endorsed by or in any way officially connected to Spotify.
+        ///The Spotify Platform, Spotify Service, Spotify Content and any Spotify Marks are the property of Spotify or Spotify’s licensors and protected by intellectual property rights..
+        /// </summary>
+        internal static string Disclaimers {
+            get {
+                return ResourceManager.GetString("Disclaimers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Explicit.
         /// </summary>
-        public static string Explicit {
+        internal static string Explicit {
             get {
                 return ResourceManager.GetString("Explicit", resourceCulture);
             }
@@ -243,7 +320,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Fans also like.
         /// </summary>
-        public static string FansAlsoLike {
+        internal static string FansAlsoLike {
             get {
                 return ResourceManager.GetString("FansAlsoLike", resourceCulture);
             }
@@ -252,7 +329,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to — with.
         /// </summary>
-        public static string Feat {
+        internal static string Feat {
             get {
                 return ResourceManager.GetString("Feat", resourceCulture);
             }
@@ -261,7 +338,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to follower.
         /// </summary>
-        public static string Follower {
+        internal static string Follower {
             get {
                 return ResourceManager.GetString("Follower", resourceCulture);
             }
@@ -270,7 +347,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to followers.
         /// </summary>
-        public static string Followers {
+        internal static string Followers {
             get {
                 return ResourceManager.GetString("Followers", resourceCulture);
             }
@@ -279,16 +356,34 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Insights.
         /// </summary>
-        public static string InsightsMenuItem {
+        internal static string InsightsMenuItem {
             get {
                 return ResourceManager.GetString("InsightsMenuItem", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cærostris is an open source, experimental Blazor WebAssembly Spotify PWA client. Find out more at .
+        /// </summary>
+        internal static string Introduction {
+            get {
+                return ResourceManager.GetString("Introduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the project&apos;s GitHub page..
+        /// </summary>
+        internal static string IntroductionRepo {
+            get {
+                return ResourceManager.GetString("IntroductionRepo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Length.
         /// </summary>
-        public static string Length {
+        internal static string Length {
             get {
                 return ResourceManager.GetString("Length", resourceCulture);
             }
@@ -297,7 +392,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Library.
         /// </summary>
-        public static string LibraryMenuItem {
+        internal static string LibraryMenuItem {
             get {
                 return ResourceManager.GetString("LibraryMenuItem", resourceCulture);
             }
@@ -306,7 +401,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Albums, artists and playlists you add to your Listen Later list will appear here.
         /// </summary>
-        public static string ListenLaterItemsWillAppearHere {
+        internal static string ListenLaterItemsWillAppearHere {
             get {
                 return ResourceManager.GetString("ListenLaterItemsWillAppearHere", resourceCulture);
             }
@@ -315,7 +410,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Listen later.
         /// </summary>
-        public static string ListenLaterMenuItem {
+        internal static string ListenLaterMenuItem {
             get {
                 return ResourceManager.GetString("ListenLaterMenuItem", resourceCulture);
             }
@@ -324,7 +419,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to album.
         /// </summary>
-        public static string LoadingAlbum {
+        internal static string LoadingAlbum {
             get {
                 return ResourceManager.GetString("LoadingAlbum", resourceCulture);
             }
@@ -333,7 +428,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to analytics.
         /// </summary>
-        public static string LoadingAnalytics {
+        internal static string LoadingAnalytics {
             get {
                 return ResourceManager.GetString("LoadingAnalytics", resourceCulture);
             }
@@ -342,7 +437,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to artist.
         /// </summary>
-        public static string LoadingArtist {
+        internal static string LoadingArtist {
             get {
                 return ResourceManager.GetString("LoadingArtist", resourceCulture);
             }
@@ -351,7 +446,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to context.
         /// </summary>
-        public static string LoadingContext {
+        internal static string LoadingContext {
             get {
                 return ResourceManager.GetString("LoadingContext", resourceCulture);
             }
@@ -360,7 +455,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Loading....
         /// </summary>
-        public static string LoadingEllipsis {
+        internal static string LoadingEllipsis {
             get {
                 return ResourceManager.GetString("LoadingEllipsis", resourceCulture);
             }
@@ -369,7 +464,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to items.
         /// </summary>
-        public static string LoadingListenLater {
+        internal static string LoadingListenLater {
             get {
                 return ResourceManager.GetString("LoadingListenLater", resourceCulture);
             }
@@ -378,7 +473,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to playlist.
         /// </summary>
-        public static string LoadingPlaylist {
+        internal static string LoadingPlaylist {
             get {
                 return ResourceManager.GetString("LoadingPlaylist", resourceCulture);
             }
@@ -387,7 +482,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to tracks.
         /// </summary>
-        public static string LoadingTracks {
+        internal static string LoadingTracks {
             get {
                 return ResourceManager.GetString("LoadingTracks", resourceCulture);
             }
@@ -396,16 +491,70 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Loading {0}.
         /// </summary>
-        public static string LoadingWhat {
+        internal static string LoadingWhat {
             get {
                 return ResourceManager.GetString("LoadingWhat", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        internal static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out anyway.
+        /// </summary>
+        internal static string LogoutModalAccept {
+            get {
+                return ResourceManager.GetString("LogoutModalAccept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: your Listen Later list will also be deleted. Once deleted, there is no way to recover it..
+        /// </summary>
+        internal static string LogoutModalNote {
+            get {
+                return ResourceManager.GetString("LogoutModalNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        internal static string LogoutModalTitle {
+            get {
+                return ResourceManager.GetString("LogoutModalTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can control the playback with the &apos;play/pause&apos;, &apos;previous track&apos; and &apos;next track&apos; media buttons..
+        /// </summary>
+        internal static string MediaControls {
+            get {
+                return ResourceManager.GetString("MediaControls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Media controls.
+        /// </summary>
+        internal static string MediaControlsTitle {
+            get {
+                return ResourceManager.GetString("MediaControlsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Month.
         /// </summary>
-        public static string MonthOfYear {
+        internal static string MonthOfYear {
             get {
                 return ResourceManager.GetString("MonthOfYear", resourceCulture);
             }
@@ -414,7 +563,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to No results found.
         /// </summary>
-        public static string NoResults {
+        internal static string NoResults {
             get {
                 return ResourceManager.GetString("NoResults", resourceCulture);
             }
@@ -423,16 +572,25 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Normalized score.
         /// </summary>
-        public static string NormalizedScore {
+        internal static string NormalizedScore {
             get {
                 return ResourceManager.GetString("NormalizedScore", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, there&apos;s nothing at this address..
+        /// </summary>
+        internal static string NotFound {
+            get {
+                return ResourceManager.GetString("NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  saved tracks.
         /// </summary>
-        public static string NumSavedTracks {
+        internal static string NumSavedTracks {
             get {
                 return ResourceManager.GetString("NumSavedTracks", resourceCulture);
             }
@@ -441,16 +599,16 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to {0} out of {1}.
         /// </summary>
-        public static string OutOf {
+        internal static string OutOf {
             get {
                 return ResourceManager.GetString("OutOf", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Playback: {0}.
+        ///   Looks up a localized string similar to Logged in as: {0}.
         /// </summary>
-        public static string Playback {
+        internal static string Playback {
             get {
                 return ResourceManager.GetString("Playback", resourceCulture);
             }
@@ -459,7 +617,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Playback.
         /// </summary>
-        public static string PlaybackMenuItem {
+        internal static string PlaybackMenuItem {
             get {
                 return ResourceManager.GetString("PlaybackMenuItem", resourceCulture);
             }
@@ -468,7 +626,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to PLAYLIST.
         /// </summary>
-        public static string Playlist {
+        internal static string Playlist {
             get {
                 return ResourceManager.GetString("Playlist", resourceCulture);
             }
@@ -477,7 +635,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Playlists.
         /// </summary>
-        public static string Playlists {
+        internal static string Playlists {
             get {
                 return ResourceManager.GetString("Playlists", resourceCulture);
             }
@@ -486,7 +644,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Popularity.
         /// </summary>
-        public static string Popularity {
+        internal static string Popularity {
             get {
                 return ResourceManager.GetString("Popularity", resourceCulture);
             }
@@ -495,7 +653,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Popular tracks.
         /// </summary>
-        public static string PopularTracks {
+        internal static string PopularTracks {
             get {
                 return ResourceManager.GetString("PopularTracks", resourceCulture);
             }
@@ -504,7 +662,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Private.
         /// </summary>
-        public static string Private {
+        internal static string Private {
             get {
                 return ResourceManager.GetString("Private", resourceCulture);
             }
@@ -513,7 +671,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Public.
         /// </summary>
-        public static string Public {
+        internal static string Public {
             get {
                 return ResourceManager.GetString("Public", resourceCulture);
             }
@@ -522,7 +680,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
-        public static string SearchInputPlaceholder {
+        internal static string SearchInputPlaceholder {
             get {
                 return ResourceManager.GetString("SearchInputPlaceholder", resourceCulture);
             }
@@ -531,7 +689,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
-        public static string SearchMenuItem {
+        internal static string SearchMenuItem {
             get {
                 return ResourceManager.GetString("SearchMenuItem", resourceCulture);
             }
@@ -540,7 +698,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Search results will appear here.
         /// </summary>
-        public static string SearchResultsWillAppearHere {
+        internal static string SearchResultsWillAppearHere {
             get {
                 return ResourceManager.GetString("SearchResultsWillAppearHere", resourceCulture);
             }
@@ -549,7 +707,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please wait, you should be getting redirected soon. Communicating with the Cærostris authorization server....
         /// </summary>
-        public static string ShouldBeRedirectedSoon {
+        internal static string ShouldBeRedirectedSoon {
             get {
                 return ResourceManager.GetString("ShouldBeRedirectedSoon", resourceCulture);
             }
@@ -558,7 +716,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to explicit.
         /// </summary>
-        public static string ShowExplicitColumn {
+        internal static string ShowExplicitColumn {
             get {
                 return ResourceManager.GetString("ShowExplicitColumn", resourceCulture);
             }
@@ -567,7 +725,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to filter row.
         /// </summary>
-        public static string ShowFilterRow {
+        internal static string ShowFilterRow {
             get {
                 return ResourceManager.GetString("ShowFilterRow", resourceCulture);
             }
@@ -576,7 +734,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to popularity.
         /// </summary>
-        public static string ShowPopularityColumn {
+        internal static string ShowPopularityColumn {
             get {
                 return ResourceManager.GetString("ShowPopularityColumn", resourceCulture);
             }
@@ -585,7 +743,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Show tracks.
         /// </summary>
-        public static string ShowTracks {
+        internal static string ShowTracks {
             get {
                 return ResourceManager.GetString("ShowTracks", resourceCulture);
             }
@@ -594,7 +752,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Show tracks around this value.
         /// </summary>
-        public static string ShowTracksAroundThisValue {
+        internal static string ShowTracksAroundThisValue {
             get {
                 return ResourceManager.GetString("ShowTracksAroundThisValue", resourceCulture);
             }
@@ -603,7 +761,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to song.
         /// </summary>
-        public static string Song {
+        internal static string Song {
             get {
                 return ResourceManager.GetString("Song", resourceCulture);
             }
@@ -612,7 +770,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to songs.
         /// </summary>
-        public static string Songs {
+        internal static string Songs {
             get {
                 return ResourceManager.GetString("Songs", resourceCulture);
             }
@@ -621,7 +779,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Songs with a duration of {0}.
         /// </summary>
-        public static string SongsWithADurationOf {
+        internal static string SongsWithADurationOf {
             get {
                 return ResourceManager.GetString("SongsWithADurationOf", resourceCulture);
             }
@@ -630,7 +788,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Songs with {0} around {1}.
         /// </summary>
-        public static string SongsWithPropertyAround {
+        internal static string SongsWithPropertyAround {
             get {
                 return ResourceManager.GetString("SongsWithPropertyAround", resourceCulture);
             }
@@ -639,25 +797,55 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Songs you saved in {0} {1}.
         /// </summary>
-        public static string SongsYouSavedIn {
+        internal static string SongsYouSavedIn {
             get {
                 return ResourceManager.GetString("SongsYouSavedIn", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stallman was right..
+        /// </summary>
+        internal static string StallmanWasRight {
+            get {
+                return ResourceManager.GetString("StallmanWasRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
-        public static string Title {
+        internal static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click on a column title: sort by the column / change the sort direction of the column.
+        ///Shift + click on a column title: select additional columns to sort by / change sort direction of the column.
+        ///Ctrl + click on a column title: reset current sort settings.
+        ///Right click on a row: show context menu..
+        /// </summary>
+        internal static string TrackGridControls {
+            get {
+                return ResourceManager.GetString("TrackGridControls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TrackGrid controls.
+        /// </summary>
+        internal static string TrackGridControlsTitle {
+            get {
+                return ResourceManager.GetString("TrackGridControlsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Track length.
         /// </summary>
-        public static string TrackLengthGraphShortName {
+        internal static string TrackLengthGraphShortName {
             get {
                 return ResourceManager.GetString("TrackLengthGraphShortName", resourceCulture);
             }
@@ -666,7 +854,7 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Track length distribution.
         /// </summary>
-        public static string TrackLengthGraphTitle {
+        internal static string TrackLengthGraphTitle {
             get {
                 return ResourceManager.GetString("TrackLengthGraphTitle", resourceCulture);
             }
@@ -675,9 +863,18 @@ namespace Caerostris.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Tracks.
         /// </summary>
-        public static string Tracks {
+        internal static string Tracks {
             get {
                 return ResourceManager.GetString("Tracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version:.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

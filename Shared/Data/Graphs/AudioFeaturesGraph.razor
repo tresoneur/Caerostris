@@ -24,33 +24,33 @@
         <DxChartPane Name=@Pane />
 
         <DxChartLineSeries Name="Tempo"
-                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           ArgumentField=@(((SavedTrack, TrackAudioFeatures) s) => GetMonth(s))
                            AggregationMethod=@Enumerable.Average
-                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Tempo)
+                           ValueField=@(((SavedTrack, TrackAudioFeatures) s) => s.Item2.Tempo)
                            Axis=@Bpm>
             <DxChartSeriesPoint Visible=@false />
         </DxChartLineSeries>
 
         <DxChartLineSeries Name="Acousticness"
-                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           ArgumentField=@(((SavedTrack, TrackAudioFeatures) s) => GetMonth(s))
                            AggregationMethod=@Enumerable.Average
-                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Acousticness)
+                           ValueField=@(((SavedTrack, TrackAudioFeatures) s) => s.Item2.Acousticness)
                            Axis=@Norm>
             <DxChartSeriesPoint Visible=@false />
         </DxChartLineSeries>
 
         <DxChartLineSeries Name="Valence"
-                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           ArgumentField=@(((SavedTrack, TrackAudioFeatures) s) => GetMonth(s))
                            AggregationMethod=@Enumerable.Average
-                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Valence)
+                           ValueField=@(((SavedTrack, TrackAudioFeatures) s) => s.Item2.Valence)
                            Axis=@Norm>
             <DxChartSeriesPoint Visible=@false />
         </DxChartLineSeries>
 
         <DxChartLineSeries Name="Danceability"
-                           ArgumentField=@(((SavedTrack, AudioFeatures) s) => GetMonth(s))
+                           ArgumentField=@(((SavedTrack, TrackAudioFeatures) s) => GetMonth(s))
                            AggregationMethod=@Enumerable.Average
-                           ValueField=@(((SavedTrack, AudioFeatures) s) => s.Item2.Danceability)
+                           ValueField=@(((SavedTrack, TrackAudioFeatures) s) => s.Item2.Danceability)
                            Axis=@Norm>
             <DxChartSeriesPoint Visible=@false />
         </DxChartLineSeries>
@@ -76,10 +76,10 @@
 @code
 {
     [Parameter]
-    public IEnumerable<AudioFeatures> AudioFeatures { get; set; } = default!;
+    public IEnumerable<TrackAudioFeatures> AudioFeatures { get; set; } = default!;
 
 
-    private IEnumerable<(SavedTrack, AudioFeatures)>? data;
+    private IEnumerable<(SavedTrack, TrackAudioFeatures)>? data;
 
     private const string Pane = "pane", Bpm = "bpm", Norm = "norm";
 
@@ -91,7 +91,7 @@
             .OrderBy(s => s.Item1.AddedAt);
     }
 
-    private string GetMonth((SavedTrack, AudioFeatures) dataPoint) =>
+    private string GetMonth((SavedTrack, TrackAudioFeatures) dataPoint) =>
         dataPoint.Item1.AddedAt.ToString("yyyy-MM", CultureInfo.InvariantCulture);
 
     private string GetFormattedFloat(float f) =>
@@ -102,7 +102,7 @@
 
     private async Task OnValueSelected(string property, float value)
     {
-        float Prop((SavedTrack, AudioFeatures) s) => property switch
+        float Prop((SavedTrack, TrackAudioFeatures) s) => property switch
         {
             "Tempo" => s.Item2.Tempo,
             "Acousticness" => s.Item2.Acousticness,

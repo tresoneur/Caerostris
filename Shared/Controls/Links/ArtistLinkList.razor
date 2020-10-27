@@ -4,21 +4,25 @@
 @inject SpotifyService Spotify
 
 
+@if (Artists is not null)
+{
     @foreach (var (artist, isLast) in Artists.Select(a => (a, Artists.Last() == a)))
     {
         <ContextLink Title=@artist.Name
                      ContextId=@artist.Id
                      ContextExternalUrls=@artist.ExternalUrls
                      LocalUrl=@Spotify.ExploreArtistUrl />
-    
+
         @if (!isLast)
         {
             <text>, </text>
         }
     }
+}
+
 
 @code
 {
     [Parameter]
-    public List<SimpleArtist> Artists { get; set; } = default!;
+    public List<SimpleArtist>? Artists { get; set; } = default!;
 }

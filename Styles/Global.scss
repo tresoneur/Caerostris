@@ -6,6 +6,8 @@ html {
     --caerostris-primary-background-color-from: #122131;
     --caerostris-primary-background-color-to: #181818;
     --caerostris-secondary-background-color: rgba(255, 255, 255, 0.2);
+    --caerostris-control-surface-color: #1a2128;
+    --caerostris-menu-color: #080e15;
     --scrollbar-background-color: transparent;
     --scrollbar-thumb-background-color: rgba(255, 255, 255, 0.4);
     --scrollbar-thumb-background-color-de-emphasized: rgba(255, 255, 255, 0.1);
@@ -18,22 +20,21 @@ html {
     --caerostris-animation-duration: 0.2s;
 }
 
+html, body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: white;
+    height: 100%;
+}
+
 @supports (font-variation-settings: normal) {
     html, body {
         font-family: 'Inter var', sans-serif;
     }
 }
-
-
-html, body {
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    color: white;
-    height: 100%;
-}
-
 
 a, a:hover {
     color: white;
@@ -55,18 +56,15 @@ a, a:hover {
 
     *::-webkit-scrollbar-thumb {
         background-color: var(--scrollbar-thumb-background-color);
-        border-radius: 2px;
+        border-radius: var(--caerostris-border-radius);
     }
 
-
-img:not([src]) {
-    visibility: hidden;
+img[src=""], img:not([src]) {
+    background: var(---caerostris-primary-background-color-from);
+    border: 1px solid var(--caerostris-primary-background-color-from);
+    text-indent: -99999vw; // Hide that hideous chrome 'broken image' icon and white border.
 }
 
-.clickable { 
-
+.clickable:hover {
+    cursor: pointer;
 }
-    
-    .clickable:hover {
-        cursor: pointer;
-    }

@@ -7,8 +7,11 @@
     <NavigationThumbnailCard Url=@($"{Spotify.ExploreArtistUrl}{Artist.Id}")
                              ContextUri=@Artist.Uri
                              Thumbnail=@Artist.Images
-                             Title=@Artist.Name
-                             Details=@Artist.GetGenres(limit: 2) />
+                             Title=@Artist.Name>
+
+        <Details>@Artist.GetGenres(limit: 2)</Details>
+
+    </NavigationThumbnailCard>
 
 
 @code

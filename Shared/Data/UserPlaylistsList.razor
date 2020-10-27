@@ -1,4 +1,7 @@
-﻿@namespace Caerostris.Shared.Data
+﻿@using Caerostris.Shared.Controls.Links
+
+
+@namespace Caerostris.Shared.Data
 
 
 @inject IStringLocalizer<Text> L
@@ -15,7 +18,11 @@
 
                 @foreach (var playlist in playlists)
                 {
-                    <li>@((MarkupString)playlist.GetName(link: true, localUrl: Spotify.ExplorePlaylistUrl))</li>
+                    <li>
+                
+                        <ContextLink Title=@playlist.Name ContextId=@playlist.Id ContextExternalUrls=playlist.ExternalUrls LocalUrl=@Spotify.ExplorePlaylistUrl />
+                    
+                    </li>
                 }
 
             </ol>

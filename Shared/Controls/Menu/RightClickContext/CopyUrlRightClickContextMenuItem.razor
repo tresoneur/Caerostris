@@ -1,0 +1,20 @@
+﻿@using Caerostris.Services
+
+
+@namespace Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+@inject IStringLocalizer<Text> L
+@inject ClipboardService Clipboard
+
+
+    <RightClickContextMenuItem Icon="link"
+                               Text=@L["CopySpotifyUrl"]
+                               OnClick=@(() => { Clipboard.Write(Url); return Task.CompletedTask; }) />
+
+
+@code 
+{
+    [Parameter]
+    public string Url { get; set; } = default!;
+}

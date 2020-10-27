@@ -1,7 +1,9 @@
-﻿@using Caerostris.Services.Spotify.Web.ViewModels
+﻿@using Caerostris.Services.Spotify.Web
+@using Caerostris.Services.Spotify.Web.ViewModels
 @using Caerostris.Shared
 @using Caerostris.Shared.Context 
 @using Caerostris.Shared.Controls.Buttons
+@using Caerostris.Shared.Controls.Links
 @using Caerostris.Shared.Data.TrackGrid
 @using Caerostris.Shared.Data.TrackGrid.Columns
 @using Caerostris.Shared.Data.TrackGrid.Extensions
@@ -16,30 +18,43 @@
 @inject IStringLocalizer<Text> L
 
 
-<div class="d-flex flex-row justify-content-start align-items-center pb-4 mb-4">
+<div class="d-flex flex-row justify-content-start align-items-center pb-4 mb-4 context-page-heading">
 
     <img src=@Image.OrderBy(i => i.Height).LastOrDefault()?.Url class="mr-4 context-page-heading-image" />
 
     <div class="d-flex flex-column justify-content-center align-items-start flex-fill h-100">
 
-        <p class="context-page-heading-type">@Type</p>
+        <p class="context-page-heading-type">@Type.ToUpper()</p>
 
-        <h4 class="context-page-heading-title">@((MarkupString)Title)</h4>
+        <h4 class="context-page-heading-title">
+
+            <ContextLink Title=@Title ContextId=@WebApiModelExtensions.IdFromUri(Uri) ContextExternalUrls=@ExternalUrls />
+
+        </h4>
 
         @if (By is not null)
         {
-            <div><span class="context-page-heading-by">@L["By"]</span> @((MarkupString)By)</div>
+            <div><span class="context-page-heading-by">@L["By"]</span> @By</div>
         }
 
         <div class="context-page-heading-childcontent">
 
             @ChildContent
 
+        </div>
+
+        <div class="mt-2 context-page-heading-controls">
+
             <PrimaryPlayPauseButton ContextUri=@Uri />
 
             <span class="mx-2"></span>
 
             <ListenLaterButton Uri=@Uri />
+
+            <span class="mx-1"></span>
+
+            <SecondaryIconButton Icon="more_horiz" OnClickWithEventArgs=@OnMoreClick />
+
         </div>
 
     </div>
@@ -62,8 +77,21 @@
     public string Uri { get; set; } = default!;
 
     [Parameter]
-    public string? By { get; set; }
+    public string LocalUrl { get; set; } = default!;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; } = default!;
+    public Dictionary<string, string> ExternalUrls { get; set; } = default!;
+
+    [Parameter]
+    public RenderFragment? By { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter]
+    public RightClickContextMenu? RightClickMenu { get; set; }
+
+
+    private void OnMoreClick(MouseEventArgs e) => 
+        RightClickMenu?.Show(e, @<CopyUrlRightClickContextMenuItem Url="@ExternalUrls["spotify"]" />);
 }

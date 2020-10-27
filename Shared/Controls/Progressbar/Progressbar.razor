@@ -32,15 +32,15 @@
 
     [Parameter]
     public double Percent { get; set; }
-
-    private const string JsHelper = "CaerostrisUtils";
     private readonly string Id = "progressbar-" + new Random().Next().ToString("x");
 
     private async void OnProgressbarClick(MouseEventArgs e)
     {
-        // I refrain from commenting on the current state of JSInterop, but I had to write JS functions to get some attributes of a DOM object
-        double progressbarWidth = await JsRuntime.InvokeAsync<double>($"{JsHelper}.GetWidth", $"#{Id}");
-        double progressbarPosition = await JsRuntime.InvokeAsync<double>($"{JsHelper}.GetClientPositionX", $"#{Id}");
+        double progressbarWidth = await JsRuntime.InvokeAsync<double>(
+            $"{NativeResources.JsUtils}.{NativeResources.GetWidthFunction}", $"#{Id}");
+
+        double progressbarPosition = await JsRuntime.InvokeAsync<double>(
+            $"{NativeResources.JsUtils}.{NativeResources.GetClientPositionXFunction}", $"#{Id}");
 
         double position = e.ClientX - progressbarPosition;
         double progress = position / progressbarWidth;

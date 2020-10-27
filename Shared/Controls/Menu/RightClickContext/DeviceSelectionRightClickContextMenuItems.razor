@@ -1,0 +1,24 @@
+﻿@namespace Caerostris.Shared.Controls.Menu.RightClickContext
+
+
+@inject SpotifyService Spotify
+
+
+@if (devices is not null)
+{
+    @foreach (var device in devices)
+    {
+        <DeviceSelectionRightClickContextMenuItem Device=@device />
+    }
+}
+
+
+@code 
+{
+    private IEnumerable<Device>? devices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        devices = await Spotify.GetDevices();
+    }
+}

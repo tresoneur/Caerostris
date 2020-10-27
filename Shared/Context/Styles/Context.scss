@@ -1,6 +1,11 @@
-﻿.context-page-heading-image {
+﻿.context-page-heading {
+    line-height: 1.5;
+}
+
+.context-page-heading-image {
     height: 30vh;
-    width: auto;
+    width: 30vh;
+    object-fit: cover;
     border-radius: var(--caerostris-border-radius);
     filter: drop-shadow(0px 0px 10px black);
 }
@@ -29,6 +34,6 @@
         opacity: var(--info-opacity);
     }
 
-    .context-page-heading-childcontent > .btn {
+    .context-page-heading-controls > .btn {
         margin: 0 !important; /* Overriding Bootstrap !important */
     }
