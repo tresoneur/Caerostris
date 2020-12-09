@@ -46,6 +46,10 @@ table.trackgrid {
         border-bottom: 1px solid var(--trackgrid-cue-color) !important;
     }
 
+    .trackgrid tr.track-row:last-of-type {
+        border-bottom: 1px solid transparent !important;
+    }
+
     .trackgrid tr.track-row:hover {
         background-color: var(--trackgrid-cue-color);
         border-bottom: 1px solid transparent !important;
@@ -82,3 +86,20 @@ table.trackgrid {
         .trackgrid .clearable-text-input label {
             margin-right: 0.5em;
         }
+
+    .trackgrid .explicit-mark {
+        opacity: var(--info-opacity);
+        color: white !important; /* Overriding currently-playing rules. */
+        font-size: 0.66rem;
+        display: block;
+        text-align: center;
+        width: 55px;
+        margin: 0 auto;
+        padding: 2px 0;
+        border: 1px solid white;
+        border-radius: 2px;
+    }
+
+    .trackgrid .material-icons.rem-inline {
+        line-height: 0;
+    }

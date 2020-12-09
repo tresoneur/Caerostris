@@ -11,28 +11,36 @@
 
         <DxChartTitle Text=@L["TrackLengthGraphTitle"] />
 
-        <DxChartLegend Orientation=@Orientation.Vertical
-                       HorizontalAlignment=@HorizontalAlignment.Right
-                       VerticalAlignment=@VerticalEdge.Top
-                       Position=@RelativePosition.Inside
-                       AllowToggleSeries=@true />
+        <DxChartCommonSeries NameField=@(_ => string.Empty)
+                             ArgumentField=@((SavedTrack s) => GetMinInterval(s))
+                             AggregationMethod=@Enumerable.Sum
+                             ValueField=@(_ => 1)
+                             SeriesType=@ChartSeriesType.Bar>
 
-        <DxChartPieSeries ArgumentField=@((SavedTrack s) => GetMinInterval(s))
-                          AggregationMethod=@Enumerable.Sum
-                          ValueField=@(_ => 1) />
+            <SeriesTemplate>
+                <DxChartBarSeries Settings=@context>
+                    <DxChartSeriesLabel Visible=@true />
+                </DxChartBarSeries>
+            </SeriesTemplate>
+
+        </DxChartCommonSeries>
 
         <DxChartTooltip>
 
             <div class="p-2 d-flex flex-column align-items-center">
+
                 <p><b>@context.Point.Argument</b></p>
 
                 <p><b>@context.Point.Value</b> @L["NumSavedTracks"]</p>
 
                 <ActionText Text=@L["ShowTracks"]
-                            OnClick=@(() => OnIntervalSelected(context.Point.Argument.ToString())) />
+                            OnClick=@(() => OnIntervalSelected(context.Point.Argument.ToString()!)) />
+
             </div>
 
         </DxChartTooltip>
+
+        <DxChartLegend Visible=@false />
 
     </DxChart>
 
@@ -62,7 +70,7 @@
         SelectedTracksAndDescription = new
         (
             Tracks.Where(s => IsInMinInterval(s, min, max)),
-            L["SongsWithADurationOf", label]
+            L["SongsWithADurationOf", label]!
         );
 
         await OnSelectedTracksAndDescriptionChanged();

@@ -1,16 +1,4 @@
-﻿.explicit-mark { /* needs to be applied within dxdatagrid */
-    opacity: var(--info-opacity);
-    font-size: 0.66rem !important;
-    display: block !important;
-    text-align: center !important;
-    width: 55px !important;
-    margin: 0 auto !important;
-    padding: 2px 0 !important;
-    border: 1px solid white !important;
-    border-radius: 2px !important;
-}
-
-.user-playlists-container {
+﻿.user-playlists-container {
     min-height: 0;
 }
 

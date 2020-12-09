@@ -19,30 +19,33 @@ namespace Caerostris
                 .AddScoped<ClipboardService>()
                 .AddScoped<Text>()
                 .AddLocalization()
-                .AddSpotify(authServerApiBase: "https://caerostrisauthserver.azurewebsites.net/auth")
+                .AddSpotify(new()
+                {
+                    AuthServerApiBase = "https://caerostrisauthserver.azurewebsites.net/auth",
+                    PlayerDeviceName = "Cærostris",
+                    ClientId = "87b0c14e92bc4958b1b6fe15259d2577",
+                    PermissionScopes = new[]
+                    {
+                        "user-read-private",
+                        "user-read-email",
+                        "user-read-playback-state",
+                        "user-modify-playback-state",
+                        "user-library-read",
+                        "user-library-modify",
+                        "user-read-currently-playing",
+                        "playlist-read-private",
+                        "playlist-read-collaborative",
+                        "playlist-modify-private",
+                        "playlist-modify-public",
+                        "streaming"
+                    }
+                })
                 .AddBlazoredModal()
                 .AddDevExpressBlazor();
 
             var host = builder.Build();
 
-            await host.Services.InitializeSpotify(
-                playerDeviceName: "Cærostris",
-                clientId: "87b0c14e92bc4958b1b6fe15259d2577", 
-                permissionScopes: new()
-                {
-                    "user-read-private",
-                    "user-read-email",
-                    "user-read-playback-state",
-                    "user-modify-playback-state",
-                    "user-library-read",
-                    "user-library-modify",
-                    "user-read-currently-playing",
-                    "playlist-read-private",
-                    "playlist-read-collaborative",
-                    "playlist-modify-private",
-                    "playlist-modify-public",
-                    "streaming"
-                });
+            await host.Services.InitializeSpotify();
         
             await host.RunAsync();
         }

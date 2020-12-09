@@ -4,13 +4,13 @@
 @inject SpotifyService Spotify
 
 
-@if (devices is not null)
-{
-    @foreach (var device in devices)
+    @if (devices is not null)
     {
-        <DeviceSelectionRightClickContextMenuItem Device=@device />
+        @foreach (var device in devices)
+        {
+            <DeviceSelectionRightClickContextMenuItem Device=@device />
+        }
     }
-}
 
 
 @code 
@@ -19,6 +19,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        devices = await Spotify.GetDevices();
+        devices = await Spotify.Playback.GetDevices();
     }
 }

@@ -21,7 +21,7 @@
 
     private Task OnCheckedChanged(ChangeEventArgs e)
     {
-        Checked = (bool)e.Value;
+        Checked = (bool)e.Value!;
         return CheckedChanged.InvokeAsync(Checked);
     }
 }

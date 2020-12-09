@@ -27,17 +27,17 @@
     {
         if (IsRelevantPlaying())
         {
-            await Spotify.Pause();
+            await Spotify.Playback.Pause();
         }
         else
         {
             if (TrackUri is not null)
             {
                 if (IsCurrentTrack(TrackUri))
-                    await Spotify.Play();
+                    await Spotify.Playback.Play();
 
                 else if (ContextUri is not null)
-                    await Spotify.PlayTrack(ContextUri, TrackUri);
+                    await Spotify.Playback.PlayTrack(ContextUri, TrackUri);
 
                 else
                     await Delegate();
@@ -45,10 +45,10 @@
             else if (ContextUri is not null)
             {
                 if (IsCurrentContext(ContextUri))
-                    await Spotify.Play();
+                    await Spotify.Playback.Play();
 
                 else
-                    await Spotify.PlayTrack(ContextUri, trackUri: null);
+                    await Spotify.Playback.PlayTrack(ContextUri, trackUri: null);
             }
             else
             {

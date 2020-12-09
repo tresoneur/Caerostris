@@ -6,21 +6,21 @@
 @namespace Caerostris.Shared.Data.TrackGrid.Parts
 
 
-<tr class="track-row @(IsPlaying(Track) ? "currently-playing" : "")"
-    @key=@Track.UniqueId
-    @oncontextmenu=@OnTrackRowClick 
-    @oncontextmenu:preventDefault=@true>
+    <tr class="track-row @(IsPlaying(Track) ? "currently-playing" : "")"
+        @key=@Track.UniqueId
+        @oncontextmenu=@OnTrackRowClick 
+        @oncontextmenu:preventDefault=@true>
 
-    @foreach (var column in VisibleColumns)
-    {
-        <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
+        @foreach (var column in VisibleColumns)
+        {
+            <td class=@column.Class style="text-align: @HorizontalAlignmentValue(column)">
 
-            @column.FieldTemplate(Track)
+                @column.FieldTemplate(Track)
 
-        </td>
-    }
+            </td>
+        }
 
-</tr>
+    </tr>
 
 
 @code

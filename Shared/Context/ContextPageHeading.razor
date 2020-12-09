@@ -18,48 +18,48 @@
 @inject IStringLocalizer<Text> L
 
 
-<div class="d-flex flex-row justify-content-start align-items-center pb-4 mb-4 context-page-heading">
+    <div class="d-flex flex-row justify-content-start align-items-center pb-4 mb-4 context-page-heading">
 
-    <img src=@Image.OrderBy(i => i.Height).LastOrDefault()?.Url class="mr-4 context-page-heading-image" />
+        <img src=@Image.OrderBy(i => i.Height).LastOrDefault()?.Url class="mr-4 context-page-heading-image" />
 
-    <div class="d-flex flex-column justify-content-center align-items-start flex-fill h-100">
+        <div class="d-flex flex-column justify-content-center align-items-start flex-fill h-100">
 
-        <p class="context-page-heading-type">@Type.ToUpper()</p>
+            <p class="context-page-heading-type">@Type.ToUpper()</p>
 
-        <h4 class="context-page-heading-title">
+            <h4 class="context-page-heading-title">
 
-            <ContextLink Title=@Title ContextId=@WebApiModelExtensions.IdFromUri(Uri) ContextExternalUrls=@ExternalUrls />
+                <ContextLink Title=@Title ContextId=@WebApiModelExtensions.IdFromUri(Uri) ContextExternalUrls=@ExternalUrls />
 
-        </h4>
+            </h4>
 
-        @if (By is not null)
-        {
-            <div><span class="context-page-heading-by">@L["By"]</span> @By</div>
-        }
+            @if (By is not null)
+            {
+                <div><span class="context-page-heading-by">@L["By"]</span> @By</div>
+            }
 
-        <div class="context-page-heading-childcontent">
+            <div class="context-page-heading-childcontent">
 
-            @ChildContent
+                @ChildContent
 
-        </div>
+            </div>
 
-        <div class="mt-2 context-page-heading-controls">
+            <div class="mt-2 context-page-heading-controls">
 
-            <PrimaryPlayPauseButton ContextUri=@Uri />
+                <PrimaryPlayPauseButton ContextUri=@Uri />
 
-            <span class="mx-2"></span>
+                <span class="mx-2"></span>
 
-            <ListenLaterButton Uri=@Uri />
+                <ListenLaterButton Uri=@Uri />
 
-            <span class="mx-1"></span>
+                <span class="mx-1"></span>
 
-            <SecondaryIconButton Icon="more_horiz" OnClickWithEventArgs=@OnMoreClick />
+                <SecondaryIconButton Icon="more_horiz" OnClickWithEventArgs=@OnMoreClick />
+
+            </div>
 
         </div>
 
     </div>
-
-</div>
 
 
 @code

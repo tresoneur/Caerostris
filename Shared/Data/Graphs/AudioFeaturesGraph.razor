@@ -19,8 +19,6 @@
             <DxChartAxisTitle Text=@L["NormalizedScore"] />
         </DxChartValueAxis>
 
-        <DxChartLegend AllowToggleSeries=@true />
-
         <DxChartPane Name=@Pane />
 
         <DxChartLineSeries Name="Tempo"
@@ -98,16 +96,19 @@
         f.ToString("0.##");
 
     private float ParseAsFloat(object o) =>
-        float.Parse(o.ToString());
+        float.Parse(o.ToString()!);
 
     private async Task OnValueSelected(string property, float value)
     {
+        if (data is null)
+            return;
+
         float Prop((SavedTrack, TrackAudioFeatures) s) => property switch
         {
-            "Tempo" => s.Item2.Tempo,
-            "Acousticness" => s.Item2.Acousticness,
-            "Valence" => s.Item2.Valence,
-            "Danceability" => s.Item2.Danceability,
+            nameof(TrackAudioFeatures.Tempo) =>         s.Item2.Tempo,
+            nameof(TrackAudioFeatures.Acousticness) =>  s.Item2.Acousticness,
+            nameof(TrackAudioFeatures.Valence) =>       s.Item2.Valence,
+            nameof(TrackAudioFeatures.Danceability) =>  s.Item2.Danceability,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -118,7 +119,7 @@
                 .OrderBy(a => a.Distance)
                 .Take(25)
                 .Select(a => a.Item.Item1),
-            L["SongsWithPropertyAround", property.ToLowerInvariant(), GetFormattedFloat(value)]
+            L["SongsWithPropertyAround", property.ToLowerInvariant(), GetFormattedFloat(value)]!
         );
 
         await OnSelectedTracksAndDescriptionChanged();

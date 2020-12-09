@@ -5,6 +5,9 @@
 @namespace Caerostris.Shared.Auth
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 @inject NavigationManager NavManager
@@ -19,17 +22,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.AuthStateChanged += OnAuthStateChanged;
+        Spotify.Auth.AuthStateChanged += OnAuthStateChanged;
 
         // The event won't fire if the user hasn't connected their account yet.
         // Check for auth state right away.
-        if (!(await Spotify.IsAuthGranted()))
+        if (!(await Spotify.Auth.IsUserLoggedIn()))
             OnAuthStateChanged(false);
     }
 
     private async void OnAuthStateChanged(bool state)
     {
-        await InvokeAsync(() => { if (!state && !NavManager.Uri.Contains(Spotify.RelativeCallbackUrl)) ShowModal(); });
+        await InvokeAsync(() => { if (!state && !NavManager.Uri.Contains(Spotify.Auth.RelativeCallbackUrl)) ShowModal(); });
     }
 
     private void ShowModal() =>
@@ -38,4 +41,9 @@
             HideCloseButton = true,
             DisableBackgroundCancel = true
         });
+
+    public void Dispose()
+    {
+        Spotify.Auth.AuthStateChanged -= OnAuthStateChanged;
+    }
 }

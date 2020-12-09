@@ -28,7 +28,7 @@
             <div class="p-2 d-flex flex-column align-items-center">
 
                 <p>
-                    <b>@($"{WebApiModelExtensions.HumanReadableMonth(int.Parse(context.Point.Argument.ToString()))} {context.Point.SeriesName}")</b>
+                    <b>@($"{WebApiModelExtensions.HumanReadableMonth(int.Parse(context.Point.Argument.ToString()!))} {context.Point.SeriesName}")</b>
                 </p>
 
                 <p>
@@ -36,7 +36,7 @@
                 </p>
 
                 <ActionText Text=@L["ShowTracks"]
-                            OnClick=@(() => OnMonthSelected(context.Point.SeriesName.ToString(), context.Point.Argument.ToString())) />
+                            OnClick=@(() => OnMonthSelected(context.Point.SeriesName, context.Point.Argument.ToString()!)) />
 
             </div>
 
@@ -53,7 +53,7 @@
         SelectedTracksAndDescription = new
         (
             Tracks.Where(t => t.AddedAt.Year == year && t.AddedAt.Month == month),
-            L["SongsYouSavedIn", WebApiModelExtensions.HumanReadableMonth(month), year]
+            L["SongsYouSavedIn", WebApiModelExtensions.HumanReadableMonth(month), year]!
         );
 
         await OnSelectedTracksAndDescriptionChanged();

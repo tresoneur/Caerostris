@@ -4,6 +4,9 @@
 @using Caerostris.Shared.Controls.Progressbar
 
 
+@implements IDisposable
+
+
 @inject SpotifyService Spotify
 
 
@@ -33,7 +36,7 @@
 
     protected override void OnInitialized()
     {
-        Spotify.PlaybackDisplayUpdate += UpdateDisplay;
+        Spotify.Playback.PlaybackDisplayUpdate += UpdateDisplay;
         ResetProgress();
     }
 
@@ -65,4 +68,9 @@
 
     private string FormatTimeSpan(TimeSpan timeSpan) =>
         $"{Math.Floor(timeSpan.TotalMinutes)}:{timeSpan.Seconds:00}";
+
+    public void Dispose()
+    {
+        Spotify.Playback.PlaybackDisplayUpdate -= UpdateDisplay;
+    }
 }

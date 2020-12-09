@@ -11,6 +11,9 @@
 @using Caerostris.Services.Spotify.Web.ViewModels
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
@@ -65,15 +68,22 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (await Spotify.IsAuthGranted())
-            tracks = (await Spotify.GetSavedTracks()).Select((t, i) => t.AsTrack(i)).ToList();
+        tracks = (await Spotify.Library.GetSavedTracks())
+            .Select((t, i) => t.AsTrack(i))
+            .OrderByDescending(t => t.AddedAt)
+            .ToList();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            Spotify.LibraryLoadingProgress += loadingIndicator.Update;
+            Spotify.Library.LibraryLoadingProgress += loadingIndicator.Update;
         }
+    }
+
+    public void Dispose()
+    {
+        Spotify.Library.LibraryLoadingProgress -= loadingIndicator.Update;
     }
 }

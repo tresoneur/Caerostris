@@ -16,14 +16,14 @@
 @inject SpotifyService Spotify
 
 
-    <div class="d-flex flex-column justify-content-start h-100 pt-4 px-4">
+    <div class="d-flex flex-column justify-content-start h-100 pt-4">
 
-        <ClearableTextInput Class="ml-3 p-1 search-query-form"
+        <ClearableTextInput Class="ml-3 mb-4 p-1 search-query-form"
                             Icon="search"
                             Placeholder=@L["SearchInputPlaceholder"]
                             @bind-Input=@Query />
 
-        <div class="d-flex flex-column justify-content-start overflow-auto pt-4 flex-grow-1">
+        <div class="d-flex flex-column justify-content-start overflow-auto flex-grow-1">
 
             @if (results is null)
             {
@@ -43,7 +43,7 @@
 {
     // One would normally use the System.Reactive (Async)Observable class for the pattern implemented below.
     // In this case, however, an additional dependency that the user would have to download isn't worth it 
-    // given that this is the only place in the application where it could be used.
+    // given that this is the only place in the application where it would be used.
 
     private Sections? results;
 
@@ -59,7 +59,7 @@
         set
         {
             query = value;
-            Spotify.SearchQuery = value;
+            Spotify.Explore.SearchQuery = value;
             hasQueryChanged = true;
         }
     }
@@ -87,7 +87,7 @@
             period: 200
         );
 
-        Query = Spotify.SearchQuery;
+        Query = Spotify.Explore.SearchQuery;
     }
 
     public void Dispose()
@@ -99,7 +99,7 @@
     {
         if (!string.IsNullOrWhiteSpace(query))
         {
-            var searchResults = await Spotify.Search(query);
+            var searchResults = await Spotify.Explore.Search(query);
             if (!cancellationToken.IsCancellationRequested)
             {
                 results = searchResults;

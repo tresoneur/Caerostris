@@ -153,9 +153,9 @@
   <data name="AuthModalNote" xml:space="preserve">
     <value>Megjegyzés: az alkalmazás teljeskörű használatához Spotify Premium fiókot kell csatlakoztatnod. 
 
-A Cærostris sütiket tárol el a böngésződben a Spotify-fiók csatlakoztatásához. Az adataid sosem hagyják el a böngészőt, ezalól az egyetlen kivételt a felhatalmazáshoz használt token képezi, melyet a Cærostris authorizációs szerver kezel. A Cærostris-nak adott engedélyeket bármikor visszavonhatod a Spotify-fiókod beállításaiban.
+A Cærostris sütiket tárol el a böngésződben a Spotify-fiók csatlakoztatásához. Az adataid sosem hagyják el a böngészőt, ezalól az egyetlen kivételt a felhatalmazáshoz használt token képezi, melyet a Cærostris felhatalmazási szervere kezel. A Cærostris-nak adott engedélyeket bármikor visszavonhatod a Spotify-fiókod beállításaiban.
 
-A Cærostris a Spotify Playback SDK-t használja a böngészőbeli zenelejátszáshoz, amely betölti a Google Analytics-et. Ha szeretnéd megakadályozni, hogy a Google adatokat gyűjtsön rólad, telepítsd a uBlock Origin kiegészítőt a böngésződben.</value>
+A Cærostris a Spotify Web Playback SDK-t használja a böngészőbeli zenelejátszáshoz, amely betölti a Google Analytics-et. Ha szeretnéd megakadályozni, hogy a Google adatokat gyűjtsön rólad, telepítsd a uBlock Origin kiegészítőt a böngésződben.</value>
   </data>
   <data name="AuthModalTitle" xml:space="preserve">
     <value>Spotify-fiók csatlakoztatása szükséges</value>
@@ -389,7 +389,8 @@ Jobbkattintás egy soron: kontextusmenü mutatása.</value>
     <value>Jogi tudnivalók</value>
   </data>
   <data name="Disclaimers" xml:space="preserve">
-    <value>Cærostris is not affiliated, associated, authorized, endorsed by or in any way officially connected to Spotify.
+    <value>A jogi tudnivalók szándékosan csak angolul állnak rendelkezésre.
+Cærostris is not affiliated, associated, authorized, endorsed by or in any way officially connected to Spotify.
 The Spotify Platform, Spotify Service, Spotify Content and any Spotify Marks are the property of Spotify or Spotify’s licensors and protected by intellectual property rights.
 És úgy egyébként nagy általánosságban az életemért esengek.</value>
   </data>

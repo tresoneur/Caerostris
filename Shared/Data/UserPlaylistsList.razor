@@ -4,6 +4,9 @@
 @namespace Caerostris.Shared.Data
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
@@ -20,7 +23,7 @@
                 {
                     <li>
                 
-                        <ContextLink Title=@playlist.Name ContextId=@playlist.Id ContextExternalUrls=playlist.ExternalUrls LocalUrl=@Spotify.ExplorePlaylistUrl />
+                        <ContextLink Title=@playlist.Name ContextId=@playlist.Id ContextExternalUrls=playlist.ExternalUrls LocalUrl=@Spotify.Explore.ExplorePlaylistUrl />
                     
                     </li>
                 }
@@ -37,24 +40,36 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
-        Spotify.UserPlaylistsChanged += () => InvokeAsync(async () => await FillPlaylists(forceReload: true));
+        Spotify.Auth.AuthStateChanged += OnAuthAcquired;
+        Spotify.Library.UserPlaylistsChanged += OnUserPlaylistsChanged;
 
-        if (await Spotify.IsAuthGranted())
+        if (await Spotify.Auth.IsUserLoggedIn())
             await FillPlaylists();
     }
 
-    private async void OnAuthAcquired()
+    private async void OnAuthAcquired(bool acquired)
     {
-        await InvokeAsync(async () => await FillPlaylists());
+        if (acquired)
+            await InvokeAsync(() => FillPlaylists());
+    }
+
+    private async Task OnUserPlaylistsChanged()
+    {
+        await InvokeAsync(() => FillPlaylists(forceReload: true));
     }
 
     private async Task FillPlaylists(bool forceReload = false)
     {
         if (forceReload || playlists is null)
         {
-            playlists = await Spotify.GetUserPlaylists();
+            playlists = await Spotify.Library.GetUserPlaylists();
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        Spotify.Auth.AuthStateChanged -= OnAuthAcquired;
+        Spotify.Library.UserPlaylistsChanged -= OnUserPlaylistsChanged;
     }
 }

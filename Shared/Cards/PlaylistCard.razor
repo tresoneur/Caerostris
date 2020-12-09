@@ -4,7 +4,7 @@
 @inject SpotifyService Spotify
 
 
-    <NavigationThumbnailCard Url=@($"{Spotify.ExplorePlaylistUrl}{Playlist.Id}")
+    <NavigationThumbnailCard Url=@($"{Spotify.Explore.ExplorePlaylistUrl}{Playlist.Id}")
                              ContextUri=@Playlist.Uri
                              Thumbnail=@Playlist.Images
                              Title=@Playlist.Name>

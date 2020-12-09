@@ -16,7 +16,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        addedToListenLater = await Spotify.IsAddedToListenLater(Uri);
+        addedToListenLater = await Spotify.Explore.IsAddedToListenLater(Uri);
 
         await base.OnInitializedAsync();
     }
@@ -24,9 +24,9 @@
     private async Task OnButtonClick()
     {
         if (addedToListenLater)
-            await Spotify.RemoveListenLaterItem(Uri);
+            await Spotify.Explore.RemoveListenLaterItem(Uri);
         else
-            await Spotify.AddListenLaterItem(Uri);
+            await Spotify.Explore.AddListenLaterItem(Uri);
 
         addedToListenLater = !addedToListenLater;
         StateHasChanged();

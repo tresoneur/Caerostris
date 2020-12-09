@@ -19,7 +19,7 @@
                 }
                 else if (TrackUri is not null)
                 { 
-                    <PrimaryPlayPauseButton TrackUri=@TrackUri StartPlaybackAtTrack=@(t => Spotify.PlayTrack(contextUri: null, trackUri: t)) />  
+                    <PrimaryPlayPauseButton TrackUri=@TrackUri StartPlaybackAtTrack=@(t => Spotify.Playback.PlayTrack(contextUri: null, trackUri: t)) />  
                 }
 
             </div>
@@ -28,7 +28,9 @@
         <div class="card-body pt-2">
 
             <a href=@Url>
+
                 <h5 class="card-title">@Title</h5>
+
             </a>
 
             @if (Details is not null)

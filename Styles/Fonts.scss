@@ -1,8 +1,9 @@
-﻿@font-face {
+﻿@import url('https://rsms.me/inter/inter.css');
+
+@font-face {
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url(/icons/MaterialIcons-Regular.eot); /* For IE6-8 */
     src: local('Material Icons'), local('MaterialIcons-Regular'), url(/icons/MaterialIcons-Regular.woff2) format('woff2'), url(/icons/MaterialIcons-Regular.woff) format('woff'), url(/icons/MaterialIcons-Regular.ttf) format('truetype');
 }
 
@@ -10,7 +11,7 @@
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px; /* Preferred icon size */
+    font-size: 24px;
     display: inline-block;
     text-transform: none;
     letter-spacing: normal;
@@ -35,12 +36,6 @@
 
     .material-icons.md-36 {
         font-size: 36px;
-        line-height: 1;
-        vertical-align: middle;
-    }
-
-    .material-icons.md-24-inline { // TODO: same as md-24
-        font-size: 24px;
         line-height: 1;
         vertical-align: middle;
     }

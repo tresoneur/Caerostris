@@ -15,7 +15,7 @@
 @inject SpotifyService Spotify
 
 
-    <CascadingValue Value=@this>
+    <CascadingValue Value=@this IsFixed=@true>
 
         <PlayButtonColumn OnClick=@Play />
 
@@ -31,7 +31,7 @@
 
             <table class="w-100 trackgrid">
 
-                <ColGroup Columns=@VisibleColumns />
+                <ColGroup VisibleColumns=@VisibleColumns />
 
                 <thead>
 
@@ -114,14 +114,14 @@
 
             <table class="w-100 trackgrid">
 
-                <ColGroup Columns=@VisibleColumns />
+                <ColGroup VisibleColumns=@VisibleColumns />
 
                 <tbody>
 
                     <Virtualize Items=@SortedFilteredTracks Context="track" OverscanCount="10">
-                        
+
                         <TrackRow Track=@track VisibleColumns=@VisibleColumns />
-                
+
                     </Virtualize>
 
                 </tbody>
@@ -163,26 +163,26 @@
     public string? Class { get; set; }
 
 
-    private IEnumerable<Track>? tracksReference;
+    private IEnumerable<Track>? lastTracksReference;
 
-    private List<IColumn> columns = new ();
+    private List<IColumn> columns = new();
 
-    private Dictionary<string, bool> prefetchedSavedState = new ();
+    private Dictionary<string, bool> prefetchedSavedState = new();
 
     private string SearchQuery { get; set; } = string.Empty;
 
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!ReferenceEquals(Tracks, tracksReference))
+        if (!ReferenceEquals(Tracks, lastTracksReference))
         {
-            tracksReference = Tracks;
+            lastTracksReference = Tracks; // TODO: l. todos
 
             foreach (var track in Tracks)
                 prefetchedSavedState[track.Id] = AllSaved;
 
             if (!AllSaved)
-                foreach (var idIsSavedPair in await Spotify.AreTracksSaved(Tracks.Select(t => (t.Id, t.LinkedFromId))))
+                foreach (var idIsSavedPair in await Spotify.Library.AreTracksSaved(Tracks.Select(t => (t.Id, t.LinkedFromId))))
                     prefetchedSavedState[idIsSavedPair.Key] = idIsSavedPair.Value;
         }
 
@@ -192,6 +192,11 @@
     public void AddColumn(IColumn column)
     {
         columns.Add(column);
+        StateHasChanged();
+    }
+
+    public void ColumnStateChanged()
+    {
         StateHasChanged();
     }
 
@@ -265,18 +270,19 @@
             || columns.Any(c => c.SortSettings.Direction != SortDirection.Unsorted)
             || columns.Any(c => IsFilterQueryValid(c.FilterQuery)))
         {
-            await Spotify.PlayTracks(
+            // A playback started in the Library will stop before reaching the end,
+            // because the library context is not accessible through the API.
+            // Shuffling is turned off to ensure that tracks will play in the selected order.
+            await Spotify.Playback.SetShuffle(false);
+            await Spotify.Playback.PlayTracks(
                 SortedFilteredTracks
                     .SkipWhile(t => !t.Uri.Equals(trackUri))
                     .Select(t => t.Uri)
                     .Take(100));
-            // Which means that a playback started in the Library will stop before reaching the end,
-            // because the library context is not accessible through the API.
-            // Shuffle won't work as expected either.
         }
         else
         {
-            await Spotify.PlayTrack(ContextUri, trackUri);
+            await Spotify.Playback.PlayTrack(ContextUri, trackUri);
         }
     }
 }

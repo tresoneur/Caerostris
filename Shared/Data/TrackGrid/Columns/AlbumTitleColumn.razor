@@ -19,13 +19,13 @@
             @<ContextLink Title=@track.AlbumTitle 
                           ContextId=@track.AlbumId 
                           ContextExternalUrls=@track.AlbumExternalUrls
-                          LocalUrl=@Spotify.ExploreAlbumUrl />;
+                          LocalUrl=@Spotify.Explore.ExploreAlbumUrl />;
 
         base.OnInitialized();
     }
 
 
-    public override string Title => L["Album"];
+    public override string Title => L["Album"]!;
 
     public override int MinWidthPx => 300;
 

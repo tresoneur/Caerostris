@@ -1,6 +1,9 @@
 ﻿@namespace Caerostris.Shared.Controls.Buttons
 
 
+@implements IDisposable
+
+
 @inject SpotifyService Spotify
 
 
@@ -29,24 +32,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.AuthStateChanged += async (acquired) =>
-        {
-            if (acquired)
-                await InvokeAsync(FillSavedIfFetchingAutonomously);
-        };
-
-        Spotify.SavedStateChanged += async (id, saved) =>
-        {
-            await InvokeAsync(() =>
-            {
-                if (id.Equals(TrackId) || id.Equals(LinkedFromId))
-                {
-                    ignorePrefetched = true;
-                    isSaved = saved;
-                    StateHasChanged();
-                }
-            });
-        };
+        Spotify.Auth.AuthStateChanged += OnAuthStateChanged;
+        Spotify.Library.SavedStateChanged += OnSavedStateChanged;
 
         await FillSavedIfFetchingAutonomously();
     }
@@ -56,6 +43,25 @@
         await FillSavedIfFetchingAutonomously();
 
         await base.OnParametersSetAsync();
+    }
+
+    private async void OnAuthStateChanged(bool acquired)
+    {
+        if (acquired)
+            await InvokeAsync(FillSavedIfFetchingAutonomously);
+    }
+
+    private async void OnSavedStateChanged(string id, bool saved)
+    {
+        await InvokeAsync(() =>
+        {
+            if (id.Equals(TrackId) || id.Equals(LinkedFromId))
+            {
+                ignorePrefetched = true;
+                isSaved = saved;
+                StateHasChanged();
+            }
+        });
     }
 
     private bool IsPrefetchedStateAvailable =>
@@ -71,9 +77,9 @@
 
     private async Task FillSavedIfFetchingAutonomously()
     {
-        if (ShouldFetchAutonomously && (TrackId is not null) && await Spotify.IsAuthGranted())
+        if (ShouldFetchAutonomously && (TrackId is not null) && await Spotify.Auth.IsUserLoggedIn())
         {
-            isSaved = await Spotify.IsTrackSaved(TrackId, LinkedFromId);
+            isSaved = await Spotify.Library.IsTrackSaved(TrackId, LinkedFromId);
             StateHasChanged();
         }
     }
@@ -81,6 +87,12 @@
     private async Task OnClick()
     {
         if (TrackId is not null)
-            await Spotify.ToggleTrackSaved(TrackId, LinkedFromId);
+            await Spotify.Library.ToggleTrackSaved(TrackId, LinkedFromId);
+    }
+
+    public void Dispose()
+    {
+        Spotify.Auth.AuthStateChanged -= OnAuthStateChanged;
+        Spotify.Library.SavedStateChanged -= OnSavedStateChanged;
     }
 }

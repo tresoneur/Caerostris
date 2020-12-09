@@ -9,13 +9,13 @@
 
         <ContextPageHeading Type=@L["Playlist"]
                             Uri=@CompletePlaylist.Playlist.Uri
-                            LocalUrl=@Spotify.ExplorePlaylistUrl
+                            LocalUrl=@Spotify.Explore.ExplorePlaylistUrl
                             ExternalUrls=@CompletePlaylist.Playlist.ExternalUrls
                             Title=@CompletePlaylist.Playlist.Name
                             Image=@CompletePlaylist.Playlist.Images>
 
             <By>
-                @CompletePlaylist.Playlist.Owner.DisplayName
+                @CompletePlaylist.Playlist.Owner?.DisplayName
             </By>
 
             <ChildContent>

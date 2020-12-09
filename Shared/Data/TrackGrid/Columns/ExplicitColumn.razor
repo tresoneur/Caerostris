@@ -23,9 +23,9 @@
     public override bool IsFixedWidth { get; set; } = true;
 
 
-    public override string Title => L["Explicit"];
+    public override string Title => L["Explicit"]!;
 
-    public override int MinWidthPx => 100;
+    public override int MinWidthPx => 110;
 
     public override HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
 

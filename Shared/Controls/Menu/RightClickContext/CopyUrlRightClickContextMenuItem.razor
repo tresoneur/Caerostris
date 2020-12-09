@@ -10,7 +10,7 @@
 
     <RightClickContextMenuItem Icon="link"
                                Text=@L["CopySpotifyUrl"]
-                               OnClick=@(() => { Clipboard.Write(Url); return Task.CompletedTask; }) />
+                               OnClick=@(() => Clipboard.Write(Url)) />
 
 
 @code 

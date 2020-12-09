@@ -6,7 +6,7 @@
 
     <colgroup>
 
-        @foreach (var column in Columns)
+        @foreach (var column in VisibleColumns)
         {
             <col style="@($"{(column.IsFixedWidth ? "width" : "min-width")}: {column.MinWidthPx}px;")" />
         }
@@ -17,5 +17,5 @@
 @code 
 {
     [Parameter]
-    public List<IColumn> Columns { get; set; } = default!;
+    public List<IColumn> VisibleColumns { get; set; } = default!;
 }

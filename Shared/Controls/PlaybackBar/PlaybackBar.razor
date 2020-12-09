@@ -7,95 +7,98 @@
 @using Caerostris.Services.Spotify.Web.ViewModels
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-<div class="mt-auto d-flex flex-column playbackbar">
+    <div class="mt-auto d-flex flex-column playbackbar">
 
-    <div class="d-flex flex-row justify-content-between align-items-center flex-fill">
+        <div class="d-flex flex-row justify-content-between align-items-center flex-fill">
 
-        <div class="d-flex flex-row justify-content-start track-metadata">
+            <div class="d-flex flex-row justify-content-start track-metadata">
 
-            <a href=@($"{Spotify.ExploreAlbumUrl}{PlaybackContext?.ValidTrackItemOrNull()?.Album?.Id}")>
-                <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.ValidTrackItemOrNull()?.Album?.Images?.AtLeastOfHeight(50) />
-            </a>
+                <a href=@($"{Spotify.Explore.ExploreAlbumUrl}{PlaybackContext?.ValidTrackItemOrNull()?.Album?.Id}")>
+                    <img class="m-3 track-album-thumbnail" src=@PlaybackContext?.ValidTrackItemOrNull()?.Album?.Images?.AtLeastOfHeight(50) />
+                </a>
 
-            <div class="d-flex flex-column justify-content-center">
+                <div class="d-flex flex-column justify-content-center">
 
-                <div class="d-flex">
+                    <div class="d-flex">
 
-                    <div class="mr-3 pb-1 track-title">
+                        <div class="mr-3 pb-1 track-title">
 
-                        @if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
-                        {
-                            <a href="/context">@track.Name</a>
-                        }
-                        else if (PlaybackContext is null)
-                        {
-                            @L["LoadingEllipsis"]
-                        }
-                        else if(PlaybackContext.Item is null)
-                        {
-                            @L["CurrentTrackUnavailable"]
-                        }
+                            @if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
+                            {
+                                <a href="/context">@track.Name</a>
+                            }
+                            else if (PlaybackContext is null)
+                            {
+                                @L["LoadingEllipsis"]
+                            }
+                            else if(PlaybackContext.Item is null)
+                            {
+                                @L["CurrentTrackUnavailable"]
+                            }
+
+                        </div>
+
+                        <SaveButton TrackId=@PlaybackContext?.ValidTrackItemOrNull()?.Id />
 
                     </div>
-
-                    <SaveButton TrackId=@PlaybackContext?.ValidTrackItemOrNull()?.Id />
+                
+                    <div class="track-artist"><ArtistLinkList Artists=@PlaybackContext?.ValidTrackItemOrNull()?.Artists /></div>
 
                 </div>
-                
-                <div class="track-artist"><ArtistLinkList Artists=@PlaybackContext?.ValidTrackItemOrNull()?.Artists /></div>
 
             </div>
 
-        </div>
+            <div class="d-flex flex-column justify-content-start align-items-center flex-fill h-100">
 
-        <div class="d-flex flex-column justify-content-start align-items-center flex-fill h-100">
+                <div class="d-flex flex-row align-items-center pt-2">
 
-            <div class="d-flex flex-row align-items-center pt-2">
+                    <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
 
-                <SecondaryIconButton OnClick=@OnSkipToPreviousButtonClick Icon="skip_previous" />
+                    <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(PlaybackContext.IsPlaying() ? "pause" : "play_arrow") />
 
-                <PrimaryIconButton OnClick=@OnPlayPauseButtonClick Icon=@(PlaybackContext.IsPlaying() ? "pause" : "play_arrow") />
+                    <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
 
-                <SecondaryIconButton OnClick=@OnSkipToNextButtonClick Icon="skip_next" />
+                </div>
 
-            </div>
+                <DurationDisplay OnClick=@OnProgressbarClick />
 
-            <DurationDisplay OnClick=@OnProgressbarClick />
+                </div>
 
-            </div>
+            <div class="d-flex flex-row justify-content-end align-items-center playback-extra-controls">
 
-        <div class="d-flex flex-row justify-content-end align-items-center playback-extra-controls">
+                <SecondaryIndicatorIconButton OnClick=@OnShuffleButtonClick
+                                              Icon="shuffle"
+                                              On=PlaybackContext.GetShuffleState() />
 
-            <SecondaryIndicatorIconButton OnClick=@OnShuffleButtonClick
-                                          Icon="shuffle"
-                                          On=PlaybackContext.GetShuffleState() />
+                <SecondaryIndicatorIconButton OnClick=@OnRepeatButtonClick
+                                              Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track.AsString() ? "repeat_one" : "repeat")
+                                              On=@(PlaybackContext.GetRepeatState() != RepeatState.Off.AsString()) />
 
-            <SecondaryIndicatorIconButton OnClick=@OnRepeatButtonClick
-                                          Icon=@(PlaybackContext.GetRepeatState() == RepeatState.Track.AsString() ? "repeat_one" : "repeat")
-                                          On=@(PlaybackContext.GetRepeatState() != RepeatState.Off.AsString()) />
+                <DeviceSelectionButton />
 
-            <DeviceSelectionButton />
+                <SecondaryIndicatorIconButton OnClick=@OnMuteButtonClick
+                                              Icon=@(IsMuted ? "volume_off" : "volume_up")
+                                              On=@IsMuted />
 
-            <SecondaryIndicatorIconButton OnClick=@OnMuteButtonClick
-                                          Icon=@(IsMuted ? "volume_off" : "volume_up")
-                                          On=@IsMuted />
+                <div class="w-25 mr-5">
 
-            <div class="w-25 mr-5">
+                    <Progressbar OnClick=@OnVolumebarClick
+                                 Percent=@PlaybackContext.GetVolumePercent() />
 
-                <Progressbar OnClick=@OnVolumebarClick
-                             Percent=@PlaybackContext.GetVolumePercent() />
+                </div>
 
             </div>
 
         </div>
 
     </div>
-
-</div>
 
 
 @code
@@ -107,7 +110,7 @@
 
     protected override void OnInitialized()
     {
-        Spotify.PlaybackDisplayUpdate += UpdateDisplay;
+        Spotify.Playback.PlaybackDisplayUpdate += UpdateDisplay;
     }
 
     private async void UpdateDisplay(int progressMs)
@@ -119,32 +122,27 @@
     {
         if (PlaybackContext.HasValidTrackItem())
             if (PlaybackContext.IsPlaying)
-                await Spotify.Pause();
+                await Spotify.Playback.Pause();
             else
-                await Spotify.Play();
+                await Spotify.Playback.Play();
     }
 
     private async Task OnSkipToNextButtonClick()
     {
         if (PlaybackContext.HasValidTrackItem())
-            await Spotify.Next();
+            await Spotify.Playback.Next();
     }
 
     private async Task OnSkipToPreviousButtonClick()
     {
         if (PlaybackContext.HasValidTrackItem())
-        {
-            if (PlaybackContext.ProgressMs < 5 * 1000)
-                await Spotify.Previous();
-            else
-                await Spotify.Seek(0);
-        }
+            await Spotify.Playback.Previous();
     }
 
     private async Task OnProgressbarClick(double progress)
     {
         if (PlaybackContext.ValidTrackItemOrNull() is FullTrack track)
-            await Spotify.Seek(Convert.ToInt32(track.DurationMs * progress));
+            await Spotify.Playback.Seek(Convert.ToInt32(track.DurationMs * progress));
     }
 
     private async Task OnMuteButtonClick()
@@ -155,23 +153,23 @@
             if (!IsMuted)
             {
                 stashedVolumePercent = deviceVolumePercent;
-                await Spotify.SetVolume(0);
+                await Spotify.Playback.SetVolume(0);
             }
             else
             {
-                await Spotify.SetVolume(stashedVolumePercent);
+                await Spotify.Playback.SetVolume(stashedVolumePercent);
             }
         }
     }
 
     private async Task OnVolumebarClick(double progress) =>
-        await Spotify.SetVolume(Convert.ToInt32(progress * 100));
+        await Spotify.Playback.SetVolume(Convert.ToInt32(progress * 100));
 
     private async Task OnShuffleButtonClick() =>
-        await Spotify.SetShuffle(!PlaybackContext.GetShuffleState());
+        await Spotify.Playback.SetShuffle(!PlaybackContext.GetShuffleState());
 
     private async Task OnRepeatButtonClick() =>
-        await Spotify.SetRepeat(
+        await Spotify.Playback.SetRepeat(
             (PlaybackContext.GetRepeatState() == RepeatState.Off.AsString())
                 ? RepeatState.Context
                 : (PlaybackContext.GetRepeatState() == RepeatState.Context.AsString())
@@ -180,4 +178,9 @@
 
     private bool IsMuted =>
         PlaybackContext.GetVolumePercent() == 0;
+
+    public void Dispose()
+    {
+        Spotify.Playback.PlaybackDisplayUpdate -= UpdateDisplay;
+    }
 }

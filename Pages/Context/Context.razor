@@ -8,27 +8,30 @@
 @namespace Caerostris.Pages.Context
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject SpotifyService Spotify
 
 
-    @if (context is null)
+    @if (loading)
     {
         <CenteredLoadingIndicator LoadingWhat=@L["LoadingContext"] />
     }
     else
     {
-        @if (context?.Item1 is not null)
+        @if (artistContext is not null)
         {
-            <ArtistPage ArtistProfile=@context?.Item1 />
+            <ArtistPage ArtistProfile=@artistContext />
         }
-        else if (context?.Item2 is not null)
+        else if (albumContext is not null)
         {
-            <AlbumPage CompleteAlbum=@context?.Item2 />
+            <AlbumPage CompleteAlbum=@albumContext />
         }
-        else if (context?.Item3 is not null)
+        else if (playlistContext is not null)
         {
-            <PlaylistPage CompletePlaylist=@context?.Item3 />
+            <PlaylistPage CompletePlaylist=@playlistContext />
         }
         else
         {
@@ -39,25 +42,52 @@
 
 @code
 {
-    private (ArtistProfile?, CompleteAlbum?, CompletePlaylist?)? context;
+    private ArtistProfile? artistContext;
+    private CompleteAlbum? albumContext;
+    private CompletePlaylist? playlistContext;
+    private bool loading = true;
+
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.ContextChanged += OnContextChanged;
-        await OnContextChanged(await Spotify.GetPlayback());
+        Spotify.Context.ContextChanged += OnContextChanged;
+        await OnContextChanged(await Spotify.Playback.GetPlayback());
     }
 
     private async Task OnContextChanged(CurrentlyPlayingContext? playback)
     {
         await InvokeAsync(async () =>
         {
-            if (playback is not null)
+            if (!string.IsNullOrEmpty(playback?.Context?.Uri))
             {
-                context = null;
+                ResetContext();
+                loading = true;
                 StateHasChanged();
-                context = await Spotify.GetContext(playback.Context);
-                StateHasChanged();
+
+                var id = WebApiModelExtensions.IdFromUri(playback.Context.Uri);
+                switch (playback.Context.Type)
+                {
+                    case "artist":      artistContext = await Spotify.Context.GetArtist(id);        break;
+                    case "album":       albumContext = await Spotify.Context.GetAlbum(id);          break;
+                    case "playlist":    playlistContext = await Spotify.Context.GetPlaylist(id);    break;
+                    default: break;
+                };
             }
+
+            loading = false;
+            StateHasChanged();
         });
+    }
+
+    private void ResetContext()
+    {
+        artistContext = null;
+        albumContext = null;
+        playlistContext = null;
+    }
+
+    public void Dispose()
+    {
+        Spotify.Context.ContextChanged -= OnContextChanged;
     }
 }

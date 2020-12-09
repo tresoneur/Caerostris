@@ -12,6 +12,13 @@
 @inherits LayoutComponentBase
 
 
+@implements IDisposable
+
+
+@inject SpotifyService Spotify
+@inject NavigationManager NavManager
+
+
     <CascadingValue Value=@sidebarMenu>
     <CascadingValue Value=@rightClickMenu>
     <PlaybackContextProvider>
@@ -32,7 +39,10 @@
 
                 <div class="pt-3 px-3 h-100 flex-fill">
 
-                    @Body
+                    @if (ShouldRenderBody)
+                    {
+                        @Body
+                    }
 
                 </div>
 
@@ -64,4 +74,32 @@
     private ContextMenu? sidebarMenu;
 
     private RightClickContextMenu? rightClickMenu;
+
+    private bool authAquired = false;
+
+    // Centralizes the authorization check.
+    // The only exception is the callback page, where the user is shown a message about the impending redirect while the application is aquiring authorization.
+    private bool ShouldRenderBody =>
+        (authAquired || NavManager.Uri.Contains(Spotify.Auth.RelativeCallbackUrl));
+
+    protected override async Task OnInitializedAsync()
+    {
+        Spotify.Auth.AuthStateChanged += OnAuthStateChanged;
+
+        authAquired = await Spotify.Auth.IsUserLoggedIn();
+    }
+
+    private async void OnAuthStateChanged(bool aquired)
+    {
+        await InvokeAsync(() =>
+        {
+            authAquired = aquired;
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        Spotify.Auth.AuthStateChanged -= OnAuthStateChanged;
+    }
 }

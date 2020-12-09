@@ -6,7 +6,7 @@
         
         <ol class="m-0 p-0">
 
-            <CascadingValue Value=@this>
+            <CascadingValue Value=@this IsFixed=@true>
 
                 @ChildContent
 
@@ -32,11 +32,13 @@
     public RenderFragment? ChildContent { get; set; }
 
 
-    private DateTimeOffset suppressHide = DateTimeOffset.UnixEpoch;
+    private DateTimeOffset suppressHideEpoch = DateTimeOffset.UnixEpoch;
 
     private string CssStyle =>
-        (InvertedPositioning ? $"bottom: calc(100vh - {Y}px); right: calc(100vw - {X}px);" : $"top: {Y+1}px; left: {X+1}px;") +
-        $" visibility:{(ChildContent is not null).ToString().ToLowerInvariant()};";
+        (InvertedPositioning 
+            ? $"bottom: calc(100vh - {Y}px); right: calc(100vw - {X}px);" 
+            : $"top: {Y+1}px; left: {X+1}px;")
+        + $"visibility:{(ChildContent is not null).ToString().ToLowerInvariant()};";
 
 
     public void Show(MouseEventArgs eventArgs, RenderFragment items, bool invertedPositioning = false)
@@ -46,13 +48,13 @@
         InvertedPositioning = invertedPositioning;
         ChildContent = items;
 
-        suppressHide = DateTimeOffset.Now;
+        suppressHideEpoch = DateTimeOffset.Now;
         StateHasChanged();
     }
 
     public void Hide(bool fromChildItem = false)
     {
-        if (fromChildItem || suppressHide.AddMilliseconds(100) < DateTimeOffset.Now)
+        if (fromChildItem || suppressHideEpoch.AddMilliseconds(100) < DateTimeOffset.Now)
         {
             ChildContent = null;
             StateHasChanged();

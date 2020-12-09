@@ -218,7 +218,7 @@ namespace Caerostris.Resources {
         ///
         ///All of your data stays on your device, with the single exception of an authorization token that may be sent to the Cærostris authorization server. You can revoke this token at any time in your Spotify account settings. 
         ///
-        ///Cærostris uses the Spotify Playback SDK to play music in the browser, which loads Google Analytics. To preven [rest of string was truncated]&quot;;.
+        ///Cærostris uses the Spotify Web Playback SDK to play music in the browser, which loads Google Analytics. To pr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AuthModalNote {
             get {

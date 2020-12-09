@@ -8,6 +8,9 @@
 @namespace Caerostris.Pages.Playback
 
 
+@implements IDisposable
+
+
 @inject IStringLocalizer<Text> L
 @inject IModalService ModalService
 @inject SpotifyService Spotify
@@ -41,18 +44,14 @@
     private string? coverImage;
     private string? albumUrl;
 
-    private string? Username => username ?? L["LoadingEllipsis"];
+    private string Username => username ?? L["LoadingEllipsis"]!;
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.PlaybackChanged += OnPlaybackChanged;
+        Spotify.Playback.PlaybackChanged += OnPlaybackChanged;
+        Spotify.Auth.AuthStateChanged += OnAuthStateChanged;
 
-        Spotify.AuthStateChanged += (acquired) => { if (acquired) OnAuthAcquired(); };
-
-        if (await Spotify.IsAuthGranted())
-        {
-            await FillUsername();
-        }
+        await FillUsername();
     }
 
     private async Task OnPlaybackChanged(CurrentlyPlayingContext playback)
@@ -61,29 +60,36 @@
         {
             var image = playback?.ValidTrackItemOrNull()?.Album?.Images?.OrderBy((img) => -img.Height).FirstOrDefault();
             coverImage = image?.Url;
-            albumUrl = $"{Spotify.ExploreAlbumUrl}{playback?.ValidTrackItemOrNull()?.Album?.Id}";
+            albumUrl = $"{Spotify.Explore.ExploreAlbumUrl}{playback?.ValidTrackItemOrNull()?.Album?.Id}";
 
             StateHasChanged();
         });
     }
 
-    private async void OnAuthAcquired()
+    private void OnAuthStateChanged(bool acquired)
     {
-        await InvokeAsync(async () =>
-        {
-            await FillUsername();
-            StateHasChanged();
-        });
+        if (acquired)
+            InvokeAsync(() => FillUsername());
     }
 
     private async Task FillUsername()
     {
-        username ??= await Spotify.GetUsername();
+        if (await Spotify.Auth.IsUserLoggedIn())
+        {
+            username ??= await Spotify.User.GetUsername();
+            StateHasChanged();
+        }
     }
 
     private Task ShowLogoutModal()
     {
         ModalService.Show<LogoutModal>(title: L["LogoutModalTitle"]);
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        Spotify.Playback.PlaybackChanged -= OnPlaybackChanged;
+        Spotify.Auth.AuthStateChanged -= OnAuthStateChanged;
     }
 }

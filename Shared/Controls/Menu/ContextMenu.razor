@@ -33,6 +33,9 @@
         StateHasChanged();
     }
 
+    public bool IsSet =>
+        (ItemAttributes is not null);
+
     public void Clear()
     {
         ItemAttributes = null;

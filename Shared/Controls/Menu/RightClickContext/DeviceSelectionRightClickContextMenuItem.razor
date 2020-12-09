@@ -13,7 +13,7 @@
 @code 
 {
     [Parameter]
-    public Device Device { get; set; }
+    public Device Device { get; set; } = default!;
 
 
     private string DeviceIcon =>
@@ -27,5 +27,5 @@
         };
 
     private async Task OnPlaybackTransfer() =>
-        await Spotify.TransferPlayback(Device.Id);
+        await Spotify.Playback.TransferPlayback(Device.Id);
 }

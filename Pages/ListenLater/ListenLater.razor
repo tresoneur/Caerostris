@@ -11,7 +11,7 @@
 @inject SpotifyService Spotify
 
 
-    <div class="d-flex h-100 pt-4 px-4">
+    <div class="d-flex h-100 pt-4">
 
         <div class="d-flex flex-column justify-content-start flex-grow-1 overflow-auto">
 
@@ -35,6 +35,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        listenLaterItems = await Spotify.GetListenLaterItems();
+        listenLaterItems = await Spotify.Explore.GetListenLaterItems();
     }
 }

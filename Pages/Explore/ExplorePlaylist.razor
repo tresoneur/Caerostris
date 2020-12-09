@@ -33,11 +33,10 @@
     private async Task Update()
     {
         if (lastId != Id)
-        { 
+        {
             playlist = null;
-            playlist = await Spotify.GetPlaylist(Id);
-
             lastId = Id;
+            playlist = await Spotify.Context.GetPlaylist(Id);
         }
     }
 }

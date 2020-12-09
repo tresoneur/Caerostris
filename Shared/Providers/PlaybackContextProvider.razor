@@ -1,6 +1,9 @@
 ﻿@namespace Caerostris.Shared.Providers
 
 
+@implements IDisposable
+
+
 @inject SpotifyService Spotify
 
 
@@ -22,10 +25,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Spotify.PlaybackChanged += ContextChanged;
+        Spotify.Playback.PlaybackChanged += ContextChanged;
 
-        if (await Spotify.IsAuthGranted())
-            PlaybackContext = await Spotify.GetPlayback();
+        if (await Spotify.Auth.IsUserLoggedIn())
+            PlaybackContext = await Spotify.Playback.GetPlayback();
     }
 
 
@@ -36,5 +39,10 @@
             PlaybackContext = context;
             StateHasChanged();
         });
+    }
+
+    public void Dispose()
+    {
+        Spotify.Playback.PlaybackChanged -= ContextChanged;
     }
 }

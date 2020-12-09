@@ -16,6 +16,6 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        await Spotify.ContinueAuthOnCallback(NavManager.ToAbsoluteUri(Spotify.RelativeCallbackUrl).ToString());
+        await Spotify.Auth.ContinueAuthOnCallback(NavManager.ToAbsoluteUri(Spotify.Auth.RelativeCallbackUrl).ToString());
     }
 }

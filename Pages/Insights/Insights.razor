@@ -16,7 +16,7 @@
 
 @if (features is null)
 {
-    <CenteredLoadingIndicator @ref=@loadingIndicator LoadingWhat=@L["LoadingAnalytics"] ShowProgress />
+    <CenteredLoadingIndicator @ref=@loadingIndicator LoadingWhat=@($"{L["LoadingAnalytics"]} ({loadingStage}/{loadingStages})") ShowProgress />
 }
 else
 {
@@ -77,30 +77,32 @@ else
         AudioFeaturesRoute = "audio-features",
         TrackLengthRoute = "track-length";
 
-    private IQueryable<SavedTrack>? tracks;
-    private IQueryable<TrackAudioFeatures>? features;
+    private IEnumerable<SavedTrack>? tracks;
+    private IEnumerable<TrackAudioFeatures>? features;
 
     Tuple<IEnumerable<SavedTrack>, string>? selectedTracksAndDescription;
 
     private CenteredLoadingIndicator loadingIndicator = default!;
+    private int loadingStage = 1;
+    private const int loadingStages = 2;
 
     protected override async Task OnInitializedAsync()
     {
-        if (await Spotify.IsAuthGranted())
-        {
-            tracks = (await Spotify.GetSavedTracks()).AsQueryable();
-            features = (await Spotify.GetAudioFeaturesForSavedTracks()).AsQueryable();
-        }
+        tracks = await Spotify.Library.GetSavedTracks();
+        features = await Spotify.Library.GetAudioFeaturesForSavedTracks();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            Spotify.LibraryLoadingProgress += loadingIndicator.Update;
-            Spotify.AnalyticsLoadingProgress += loadingIndicator.Update;
-            SetContextMenu();
+            Spotify.Library.LibraryLoadingProgress += loadingIndicator.Update;
+            Spotify.Library.AnalyticsLoadingProgress += loadingIndicator.Update;
+            Spotify.Library.AnalyticsLoadingProgress += AdvanceLoadingStage;
         }
+
+        if (!(ContextMenu?.IsSet ?? true))
+            SetContextMenu();
     }
 
     private void SetContextMenu()
@@ -130,12 +132,23 @@ else
     private async Task SaveAsPlaylist()
     {
         if (selectedTracksAndDescription is not null)
-            await Spotify.CreatePlaylist(
+            await Spotify.Library.CreatePlaylist(
                 selectedTracksAndDescription.Item2,
-                L["CreatedWithCaerostrisInsights"],
+                L["CreatedWithCaerostrisInsights"]!,
                 selectedTracksAndDescription.Item1);
     }
 
-    public void Dispose() =>
+    private void AdvanceLoadingStage(int current, int total)
+    {
+        loadingStage = 2;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Spotify.Library.LibraryLoadingProgress -= loadingIndicator.Update;
+        Spotify.Library.AnalyticsLoadingProgress -= loadingIndicator.Update;
+        Spotify.Library.AnalyticsLoadingProgress -= AdvanceLoadingStage;
         ContextMenu?.Clear();
+    }
 }

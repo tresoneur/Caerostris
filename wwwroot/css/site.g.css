@@ -1,5 +1,4 @@
-﻿@import url("/css/open-iconic/font/css/open-iconic-bootstrap.min.css");
-@import url("https://rsms.me/inter/inter.css");
+﻿@import url("https://rsms.me/inter/inter.css");
 html {
   --caerostris-primary-color: #517ec8;
   --caerostris-primary-background-color-from: #122131;
@@ -49,7 +48,7 @@ a, a:hover {
   border-radius: var(--caerostris-border-radius); }
 
 img[src=""], img:not([src]) {
-  background: var(---caerostris-primary-background-color-from);
+  background: var(--caerostris-primary-background-color-from);
   border: 1px solid var(--caerostris-primary-background-color-from);
   text-indent: -99999vw; }
 
@@ -60,8 +59,6 @@ img[src=""], img:not([src]) {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(/icons/MaterialIcons-Regular.eot);
-  /* For IE6-8 */
   src: local("Material Icons"), local("MaterialIcons-Regular"), url(/icons/MaterialIcons-Regular.woff2) format("woff2"), url(/icons/MaterialIcons-Regular.woff) format("woff"), url(/icons/MaterialIcons-Regular.ttf) format("truetype"); }
 
 .material-icons {
@@ -69,7 +66,6 @@ img[src=""], img:not([src]) {
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
-  /* Preferred icon size */
   display: inline-block;
   text-transform: none;
   letter-spacing: normal;
@@ -92,11 +88,6 @@ img[src=""], img:not([src]) {
 
 .material-icons.md-36 {
   font-size: 36px;
-  line-height: 1;
-  vertical-align: middle; }
-
-.material-icons.md-24-inline {
-  font-size: 24px;
   line-height: 1;
   vertical-align: middle; }
 
@@ -149,6 +140,9 @@ app {
 
 .blazored-modal hr {
   border-top: 1px solid var(--info-color); }
+
+.blazored-modal p {
+  white-space: pre-line; }
 
 .dx-blazor-widget {
   color: white; }
@@ -468,18 +462,6 @@ tr:hover .inline-play-track-button:hover {
   background-color: var(--caerostris-secondary-background-color);
   color: white; }
 
-.explicit-mark {
-  /* needs to be applied within dxdatagrid */
-  opacity: var(--info-opacity);
-  font-size: 0.66rem !important;
-  display: block !important;
-  text-align: center !important;
-  width: 55px !important;
-  margin: 0 auto !important;
-  padding: 2px 0 !important;
-  border: 1px solid white !important;
-  border-radius: 2px !important; }
-
 .user-playlists-container {
   min-height: 0; }
 
@@ -542,6 +524,9 @@ table.trackgrid {
 .trackgrid tr.title-row, .trackgrid tr.filter-row, .trackgrid tr.track-row:not(:last-of-type) {
   border-bottom: 1px solid var(--trackgrid-cue-color) !important; }
 
+.trackgrid tr.track-row:last-of-type {
+  border-bottom: 1px solid transparent !important; }
+
 .trackgrid tr.track-row:hover {
   background-color: var(--trackgrid-cue-color);
   border-bottom: 1px solid transparent !important; }
@@ -571,6 +556,22 @@ table.trackgrid {
 
 .trackgrid .clearable-text-input label {
   margin-right: 0.5em; }
+
+.trackgrid .explicit-mark {
+  opacity: var(--info-opacity);
+  color: white !important;
+  /* Overriding currently-playing rules. */
+  font-size: 0.66rem;
+  display: block;
+  text-align: center;
+  width: 55px;
+  margin: 0 auto;
+  padding: 2px 0;
+  border: 1px solid white;
+  border-radius: 2px; }
+
+.trackgrid .material-icons.rem-inline {
+  line-height: 0; }
 
 .centered-info {
   opacity: var(--info-opacity); }
@@ -612,18 +613,14 @@ table.trackgrid {
   visibility: hidden; }
 
 .insights-playlist-header {
-  position: relative;
-  top: -10px; }
+  margin-top: 16px; }
 
 .insights-playlist-header .inline-icon-button {
   position: relative;
-  top: 4px; }
+  top: 3px; }
 
 .library-controls {
   opacity: var(--info-opacity); }
-
-.library-controls .form-check-inline:first-of-type {
-  padding-left: 0.75rem; }
 
 .playback-cover-image-container {
   text-align: center; }

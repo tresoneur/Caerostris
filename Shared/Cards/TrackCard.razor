@@ -7,7 +7,7 @@
 @inject SpotifyService Spotify
 
 
-    <NavigationThumbnailCard Url=@($"{Spotify.ExploreAlbumUrl}{Track.Album.Id}")
+    <NavigationThumbnailCard Url=@($"{Spotify.Explore.ExploreAlbumUrl}{Track.Album.Id}")
                              TrackUri=@Track.Uri
                              Thumbnail=@Track.Album.Images
                              Title=@Track.Name>

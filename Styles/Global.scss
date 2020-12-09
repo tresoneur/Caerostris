@@ -1,7 +1,4 @@
-﻿@import url('/css/open-iconic/font/css/open-iconic-bootstrap.min.css');
-@import url('https://rsms.me/inter/inter.css');
-
-html {
+﻿html {
     --caerostris-primary-color: #517ec8;
     --caerostris-primary-background-color-from: #122131;
     --caerostris-primary-background-color-to: #181818;
@@ -60,9 +57,9 @@ a, a:hover {
     }
 
 img[src=""], img:not([src]) {
-    background: var(---caerostris-primary-background-color-from);
+    background: var(--caerostris-primary-background-color-from);
     border: 1px solid var(--caerostris-primary-background-color-from);
-    text-indent: -99999vw; // Hide that hideous chrome 'broken image' icon and white border.
+    text-indent: -99999vw; // Hide that hideous Chrome 'broken image' icon and white border.
 }
 
 .clickable:hover {

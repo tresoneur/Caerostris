@@ -19,6 +19,6 @@
 {
     private async Task OnConnectAccountButtonClick()
     {
-        await Spotify.StartAuth(NavManager.ToAbsoluteUri(Spotify.RelativeCallbackUrl).ToString());
+        await Spotify.Auth.StartAuth(NavManager.ToAbsoluteUri(Spotify.Auth.RelativeCallbackUrl).ToString());
     }
 }
