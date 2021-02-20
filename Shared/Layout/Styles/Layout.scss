@@ -1,1 +1,3 @@
-﻿
+﻿.app-body {
+    width: calc(100vw - 2 * var(--sidebar-width));
+}

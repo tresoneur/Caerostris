@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <AssemblyVersion>1.0.*</AssemblyVersion>
     <Deterministic>False</Deterministic>
@@ -19,14 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazored.Modal" Version="4.0.0" />
-	  <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
-	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
+    <PackageReference Include="Blazored.Modal" Version="4.1.0" />
+	  <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.1.21103.6" />
 	  <PackageReference Include="DevExpress.Blazor" Version="20.1.9" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.1.21103.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.1.21103.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-preview.1.21103.6" />
   </ItemGroup>
 
   <ItemGroup>

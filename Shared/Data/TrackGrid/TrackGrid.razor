@@ -176,7 +176,7 @@
     {
         if (!ReferenceEquals(Tracks, lastTracksReference))
         {
-            lastTracksReference = Tracks; // TODO: l. todos
+            lastTracksReference = Tracks;
 
             foreach (var track in Tracks)
                 prefetchedSavedState[track.Id] = AllSaved;
